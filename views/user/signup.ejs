@@ -1,0 +1,92 @@
+<%- include("../../views/partials/user/header") %>
+    <div class="container mt-5 mb-1">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body signup-section">
+              <div class="signup-form">
+                <h3 class="card-title text-center">Sign Up</h3>
+
+                <form  method="post" action="/signup" >
+                  <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                      type="text" 
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      placeholder="Enter Name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control"
+                      id="email"
+                      placeholder="Enter email"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" />
+                    
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      id="password"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input
+                      type="password"
+                      name="cPassword"
+                      class="form-control"
+                      id="confirm-password"
+                      placeholder="Confirm Password"
+                    />
+                  </div>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <button type="submit" class="btn btn-primary">
+                      Sign Up
+                    </button>
+                    <div class="mt-2px">
+                      <p>or sign up with</p>
+                      <button type="button" class="btn btn-outline-danger">
+                        <img src="/images/googlesignup.png" alt="Google Logo" 
+                        style="width: 24px; height: 24px"/>
+
+                      </button>
+                    </div>
+                    <div class="social-btns">
+                      
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="signup-image">
+                
+                <div class="text-center mt-2">
+                  <a href="#" class="sign-in-link"
+                    >Already registered? Log in</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../../views/partials/user/footer") %>
+</html>
+
