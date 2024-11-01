@@ -1,0 +1,112 @@
+<%- include("../../views/partials/admin/header") %>
+<style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .col-md-6 {
+      padding: 30px;
+    }
+  
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .form-label {
+      font-weight: 600;
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+    }
+  
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+  
+    .form-control:focus {
+      color: #495057;
+      background-color: #fff;
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
+  
+    .btn-primary {
+      font-size: 16px;
+      font-weight: 500;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+  
+    .btn-primary:hover {
+      background-color: #0056b3;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    }
+  
+    .d-grid {
+      display: flex;
+      justify-content: flex-end;
+    }
+  
+    .mt-60 {
+      margin-top: 60px;
+    }
+  
+    .mt-30 {
+      margin-top: 30px;
+    }
+  
+    .mb-4 {
+      margin-bottom: 20px;
+    }
+  </style>
+  
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 mt-60">
+        <form method="post" action="/admin/editCategory/<%=category._id%>">
+          <div class="d-grid text-end mt-30 col-md-5">
+            <button class="btn btn-primary" type="submit">Update Category</button>
+          </div>
+          <div class="mb-4 mt-30">
+            <label for="product_name" class="form-label">Name</label>
+            <input type="text" name="categoryName" value="<%=category.name%>" class="form-control border" />
+          </div>
+  
+          <div class="mb-4">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control border"><%=category.description%></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+<%- include("../../views/partials/admin/footer") %>

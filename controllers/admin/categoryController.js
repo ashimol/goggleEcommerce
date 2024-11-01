@@ -47,8 +47,78 @@ const addCategory = async (req, res) => {
     }
 };
 
+const getUnlistCategory = async (req, res) => {
+    try {
+        let id = req.query.id;
+        await Category.updateOne({ _id: id }, { $set: { isListed: false } });
+        console.log(`Category ${id} unlisted`);
+        res.redirect("/admin/category");
+    } catch (error) {
+        res.redirect('/pageerror');
+    }
+};
+
+const getListCategory = async (req, res) => {
+    try {
+        let id = req.query.id;
+        await Category.updateOne({ _id: id }, { $set: { isListed: true } });
+        console.log(`Category ${id} listed`);
+        res.redirect("/admin/category");
+    } catch (error) {
+        res.redirect('/pageerror');
+    }
+};
+
+const getEditCategory = async (req,res) =>{
+    try {
+        
+        const id = req.query.id;
+        const category =await Category.findOne({_id:id});
+        res.render("edit-category",{category:category});
+
+    } catch (error) {
+
+        res.redirect('/pageerror');
+        
+    }
+
+};
+
+const editCategory = async (req,res) =>{
+    try {
+        const id = req.params.id;
+        const {categoryName,description} = req.body;
+        const existingCategory = await Category.findOne({name:categoryName});
+
+        if(existingCategory){
+            return res.status(400).json({error:"Category exists ,Please choose anotheer name"});
+        }
+
+        const updateCategory = await Category.findByIdAndUpdate(id,{
+            name:categoryName,
+            description:description,
+        },{new:true});
+
+        if(updateCategory){
+            res.redirect('/admin/category');
+
+        }else{
+            res.status(404).json({erro:"Category not found"});
+        }
+
+    } catch (error) {
+        res.status(500).json({error:"Internal Server Error"})
+        
+    }
+}
+
 
 module.exports ={
     categoryInfo,
     addCategory,
+    getListCategory,
+    getUnlistCategory,
+    getEditCategory,
+    editCategory,
+
 }

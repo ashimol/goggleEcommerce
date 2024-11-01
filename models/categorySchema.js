@@ -11,10 +11,10 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // isListed : { 
-    //     type : String,
-    //     required : true, 
-    // },
+    isListed : { 
+        type : String,
+        required : true, 
+    },
     // categoryOffer : {
     //     type : Number,
     //     default : 0
