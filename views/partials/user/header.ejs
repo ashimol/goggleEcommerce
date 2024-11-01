@@ -28,6 +28,39 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
 	    rel="stylesheet">
+		<style>
+			.dropdown{
+				position: relative;
+				display: inline-block;
+			}
+			.dropdown-content{
+				display: none;
+				position: absolute;
+				background-color: aqua;
+				min-width: 160px;
+				box-shadow: 0px 8px 16px 6px rgba(0, 0, 0,2);
+				z-index: 1000;
+				right: 0;
+
+			}
+			.dropdown-content a {
+				color: black;
+				padding: 12px 16px;
+				text-decoration: none;
+				display: block;
+				width: 100%;
+			}
+			.dropdown-content a:hover{
+				background-color:whitesmoke;
+			}
+			.dropdown:hover .dropdown-content{
+				display: block;
+			}
+			.header{
+				position: relative;
+				z-index: 500;
+			}
+		</style>
 </head>
 <body>
 	<div class="banner-top container-fluid" id="home">
@@ -51,14 +84,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 				<div class="col-md-3 top-info-cart text-right mt-lg-4">
 					<ul class="cart-inner-info">
-						 <li class="button-log">
-							<a class="btn-open" href="#">
-								<span class="fa fa-user" aria-hidden="true"></span>
-							</a> 
-							
-						</li>
-						<a href="/signup" class = "sign-in-link"> Sign Up</a>
-						<a href="/login" class = "sign-in-link"> Log In</a>
+						
+						<% if (locals.user) { %>
+							<div class="dropdown">
+								<a href="#" class="sign-in-link"> <%= locals.user.name %></a>
+								<div class="dropdown-content">
+									<a href="/userprofile">Profile</a>
+									<a href="/logout">Logout</a>
+								</div>
+							</div>
+						<% } else { %>
+							<a href="/signup" class="sign-in-link">Sign Up</a>
+							<a href="/login" class="sign-in-link">Log In</a>
+						<% } %>
+						
+						
 						<li class="galssescart galssescart2 cart cart box_1">
 							<form action="#" method="post" class="last">
 								<input type="hidden" name="cmd" value="_cart">
@@ -70,37 +110,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</form>
 						</li>
 					</ul>
-					<!---->
-					<div class="overlay-login text-left">
-						<button type="button" class="overlay-close1">
-							<i class="fa fa-times" aria-hidden="true"></i>
-						</button>
-						<div class="wrap">
-							<h5 class="text-center mb-4">Login Now</h5>
-							<div class="login p-5 bg-dark mx-auto mw-100">
-								<form action="#" method="post">
-									<div class="form-group">
-										<label class="mb-2">Email address</label>
-										<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="" required="">
-										<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-									</div>
-									<div class="form-group">
-										<label class="mb-2">Password</label>
-										<input type="password" class="form-control" id="exampleInputPassword1" placeholder="" required="">
-									</div>
-									<div class="form-check mb-2">
-										<input type="checkbox" class="form-check-input" id="exampleCheck1">
-										<label class="form-check-label" for="exampleCheck1">Check me out</label>
-									</div>
-									<!--<button type="submit" class="btn btn-primary submit mb-4">Sign In</button>
-									<button type="submit" class="btn btn-primary submit mb-4">Sign Up</button> -->
-
-								</form>
-							</div>
-							<!---->
-						</div>
-					</div>
-					<!---->
+					
 				</div>
 			</div>
 			<div class="search">
@@ -136,7 +146,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav nav-mega mx-auto">
 						<li class="nav-item active">
-							<a class="nav-link ml-lg-0" href="index.html">Home
+							<a class="nav-link ml-lg-0" href="home.ejs">Home
 								<span class="sr-only">(current)</span>
 							</a>
 						</li>
