@@ -21,7 +21,7 @@ const pageNotFound = async (req,res) =>{
 
 const loadHomepage = async (req, res) => {
     try {
-      let userId;
+        let userId;
      
         if (req.user) {
         userId = req.user;
