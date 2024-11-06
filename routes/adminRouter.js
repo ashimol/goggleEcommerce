@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const session=require('express-session');
 
 const adminController = require('../controllers/admin/adminController');
 const customerController = require('../controllers/admin/customerController');
@@ -11,6 +10,7 @@ const productController = require('../controllers/admin/productController');
 const {userAuth,adminAuth}=require('../middlewares/auth');
 const multer = require("multer");
 const storage = require('../helpers/multer');
+
 const uploads = multer({storage:storage});
 
 router.get('/pageerror',adminController.pageerror);
@@ -34,8 +34,8 @@ router.post('/editCategory/:id',adminAuth,categoryController.editCategory);
 
 
 router.get('/addProducts',adminAuth,productController.getProductAddPage);
-
-
+//router.post('/addProducts', adminAuth,uploads.array('images', 3), productController.addProducts);
+router.post("/addProducts",adminAuth,uploads.array('images',3),productController.addProducts);
 
 
 module.exports = router;

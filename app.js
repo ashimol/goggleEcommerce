@@ -26,8 +26,14 @@ app.use(session({
 }));
 
 
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req,res,next) =>{
+    res.set("cache-controll","no-store");
+    next();
+})
 
 app.set("view engine", "ejs");
 

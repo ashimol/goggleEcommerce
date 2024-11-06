@@ -12,7 +12,8 @@ const productSChema = new Schema({
     },
     brand : {
         type :String,
-        required: true
+        default: 'Unknown'
+       // required: true
     },
     category : {
         type: Schema.Types.ObjectId,
