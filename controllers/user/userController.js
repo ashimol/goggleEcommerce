@@ -1,12 +1,11 @@
-const mongoose = require("mongoose");
 const User = require("../../models/userSchema");
+const Category = require('../../models/categorySchema');
+const Product = require('../../models/productSchema');
+const mongoose = require("mongoose");
 const env = require("dotenv").config();
-
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const session = require('express-session');
-
-
 
 
 const pageNotFound = async (req,res) =>{
@@ -18,12 +17,22 @@ const pageNotFound = async (req,res) =>{
 };
 
 
-
 const loadHomepage = async (req, res) => {
     try {
-        let userId;
+        
+      let userId;
+  
+      const categories = await Category.find({ isListed: true });
+  
+      const products = await Product.find({
+        isBlocked: false,
+        category: { $in: categories.map((category) => category._id) },
+        quantity: { $gt: 0 },
+      });
+  
      
-        if (req.user) {
+  
+      if (req.user) {
         userId = req.user;
       } else if (req.session.user) {
         userId = req.session.user;
@@ -33,15 +42,22 @@ const loadHomepage = async (req, res) => {
         const userData = await User.findById(userId);
         return res.render("home", {
           user: userData,
+          products,
+     
         });
       } else {
-        return res.render("home");
+        return res.render("home", {
+          products,
+          
+        });
       }
     } catch (error) {
       console.log("Home page not found", error);
       res.status(500).send("Server error");
     }
   };
+  
+
 
 
 const loadSignup = async (req,res) =>{
@@ -106,13 +122,18 @@ const signup=async(req,res)=>{
          }
     
         const otp=generateOtp();
-    
+        console.log("Generated OTP:", otp); 
+
         const emailSent=await sendVerificationEmail(email,otp);
          if(!emailSent){
-            return res.json("email.error")
+            return res.json({ message: "Error sending verification email. Please try again later." });
+
          }
          req.session.userOtp=otp;
          req.session.userData={name,phone,email,password};
+
+         console.log(req.session.userData);
+         
     
          res.render("verify-otp");
          console.log("OTP Sent",otp);
@@ -134,10 +155,11 @@ const securePassword=async(password)=>{
 
 
 
-const verifyOtp=async(req,res)=>{
+const verifyOtp = async(req,res)=>{
     try {
      const {otp}=req.body;
      console.log(otp);
+     
      if(otp===req.session.userOtp){
          const user=req.session.userData
          const passwordHash=await securePassword(user.password);
@@ -158,9 +180,12 @@ const verifyOtp=async(req,res)=>{
      console.error("Error Verifying OTP",error);
      res.status(500).json({success:false,message:"An error occured"})
     }
- }
+ };
 
-const resendOtp = async (req,res) =>{
+
+
+
+const resendOtp=async (req,res) =>{
     try{
 
         const {email} = req.session.userData;
@@ -220,9 +245,8 @@ const login=async(req,res)=>{
 
         const passwordMatch = await bcrypt.compare(password,user.password);
 
-        console.log("Entered password:", password); // Plain password entered by the user
-       
-        console.log("Password match result:", passwordMatch); // Result of bcrypt comparison
+        console.log("Entered password:", password); 
+        console.log("Password match result:", passwordMatch);
 
         if(!passwordMatch){
             return res.render("login",{message:"Incorrect Password"})
@@ -250,24 +274,53 @@ const loadShopping = async (req,res)=>{
 };
 
 
-const logout = async (req,res) =>{
-
+const logout=async (req,res)=>{
     try {
-        
-        req.session.destroy( (err) => {
-            if(err){
-                console.log("Sessiondestructionerror",err.message);
-                return res.redirect("/pageNotFound");
-                
+        req.session.destroy((err)=>{
+            if (err){
+               console.log("session destruction error",err.message);
+               return res.redirect("pageNotFound");
             }
-            return res.redirect("/login");
+            return res.redirect("/");
         })
     } catch (error) {
-        console.log('Logout error ',error);
-        res.redirect("/pageNotFound");
-        
+        console.log("Logout error",error);
+        res.redirect("pageNotFound")
     }
-}
+};
+
+const productDetails = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const userId = req.session.user || req.user; 
+        console.log('Session:', req.session);
+        console.log('User ID:', userId);
+
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Please login' });
+            
+        }
+
+        const product = await Product.findById(productId).populate('category').lean().exec();
+        const relatedProducts = await Product.find({});
+
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+        if (!product.category || !product.category.isListed) {
+            return res.status(403).send('This product is under an unlisted category.');
+        }
+        
+        const limitedRelatedProducts = relatedProducts.slice(0, 4);
+
+        res.render('product-details', { product, products: limitedRelatedProducts });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
 
 
 
@@ -282,5 +335,6 @@ module.exports = {
     login,
     loadShopping,
     logout,
+    productDetails,
     
 }

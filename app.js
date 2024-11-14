@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const dotenv = require("dotenv").config();
+const env = require("dotenv").config();
 const session = require("express-session");
 const passport = require("./config/passport");
 const userRouter = require("./routes/userRouter");
@@ -43,6 +43,8 @@ app.set("views", [path.join(__dirname, 'views/user'), path.join(__dirname, 'view
 
 
 app.use(express.static(path.join(__dirname, "public"))); // Serving static files
+app.use('/css', express.static(path.join(__dirname, 'public/css')));
+
 
 app.use("/", userRouter);
 app.use('/admin',adminRouter);

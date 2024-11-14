@@ -1,136 +1,179 @@
-<%- include("../../views/partials/user/header")%>
-    <style>
-      body,
-      html {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f3f4f6;
-        font-family: "Nunito Sans", sans-serif;
-      }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-DyZv1hY5mVh6y4G5U8j5Z5c5D5U5S5e5G5U5y5U5y5U5y5U5y5U5y5U5y5U5" crossorigin="anonymous">
+    
 
-      .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
 
-      .card {
-        width: 100%;
-        max-width: 850px;
-        border: none;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      }
+<style>
+  body,
+  html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f4f6;
+    font-family: "Nunito Sans", sans-serif;
+  }
 
-      .login-section {
-        display: flex;
-        justify-content: space-between;
-        background-color: #ffffff;
-      }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px; /* Added padding for better spacing */
+  }
 
-      .login-form,
-      .login-image {
-        flex: 1;
-        padding: 2rem;
-      }
+  .card {
+    width: 100%;
+    max-width: 850px;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s; /* Added hover effect */
+  }
 
-      .login-form {
-        max-width: 50%;
-      }
+  .card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+  }
 
-      .login-image {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        max-width: 50%;
-        background-color: #f8f9fa;
-      }
+  .login-section {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 12px; /* Rounded corners for the card */
+  }
 
-      .login-image img {
-        max-width: 80%;
-        height: auto;
-      }
+  .login-form,
+  .login-image {
+    flex: 1;
+    padding: 2rem;
+  }
 
-      .card-title {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #333;
-        text-align: center;
-        margin-bottom: 1rem;
-      }
+  .login-form {
+    max-width: 50%;
+  }
 
-      .form-group label {
-        font-size: 0.9rem;
-        color: #555;
-        font-weight: 600;
-      }
+  .login-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 50%;
+    background-color: #f8f9fa;
+    border-left: 1px solid #eaeaea; /* Added border for separation */
+  }
 
-      .form-control {
-        font-size: 0.9rem;
-        padding: 0.6rem;
-        border-radius: 8px;
-        border: 1px solid #ced4da;
-      }
+  .login-image img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 12px; /* Rounded corners for the image */
+  }
 
-      .btn-primary {
-        padding: 0.6rem 1.2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        border-radius: 8px;
-        background-color: #4a90e2;
-        border: none;
-      }
+  .card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
 
-      .btn-primary:hover {
-        background-color: #357abd;
-      }
+  .form-group label {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 600;
+  }
 
-      .social-btns {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-      }
+  .form-control {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s; /* Transition for focus effect */
+  }
 
-      .social-btns a {
-        color: #ffffff;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        background-color: #db4437;
-      }
+  .form-control:focus {
+    border-color: #4a90e2; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+  }
 
-      .social-btns a:hover {
-        background-color: #c23321;
-      }
+  .btn-primary {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background-color: #4a90e2;
+    border: none;
+    transition: background-color 0.3s; /* Transition for button */
+  }
 
-      .error-message {
-        color: #ff4d4d;
-        font-size: 0.75rem;
-        margin-top: 5px;
-      }
+  .btn-primary:hover {
+    background-color: #357abd;
+  }
 
-      .sign-up-link {
-        color: #4a90e2;
-        text-decoration: none;
-        font-weight: 600;
-      }
+  .social-btns {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
 
-      .sign-up-link:hover {
-        color: #357abd;
-      }
-    </style>
- 
-  <body>
+  .social-btns a {
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background-color: #b3a7a6;
+    transition: background-color 0.3s; /* Transition for social buttons */
+  }
+
+  .social-btns a:hover {
+    background-color: #c7c0bf;
+  }
+
+  .error-message {
+    color: #ff4d4d;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }
+
+  .sign-up-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s; /* Transition for sign-up link */
+  }
+
+  .sign-up-link:hover {
+    color: #357abd;
+  }
+
+  @media (max-width: 768px) {
+    .login-section {
+      flex-direction: column; /* Stack elements on smaller screens */
+    }
+
+    .login-form,
+    .login-image {
+      max-width: 100%; /* Full width on smaller screens */
+    }
+
+    .login-image {
+      border-left: none; /* Remove border on smaller screens */
+      border-top: 1px solid #eaeaea; /* Add border on top for separation */
+    }
+  }
+</style>
+</head>
+<body>
+  
     <div class="container">
       <div class="card">
         <div class="card-body login-section">
@@ -184,51 +227,7 @@
       </div>
    
 
-    <!-- <script>
-      const emailid = document.getElementById("email");
-      const passid = document.getElementById("password");
-      const error1 = document.getElementById("error1");
-      const error2 = document.getElementById("error2");
-      const loginform = document.getElementById("loginform");
-
-      function emailValidateChecking(e) {
-        const emailval = emailid.value;
-        const emailpattern =
-          /^[a-zA-Z0-9._-]+@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,4})$/;
-
-        if (!emailpattern.test(emailval)) {
-          error1.style.display = "block";
-          error1.innerHTML = "Invalid Format";
-        } else {
-          error1.style.display = "none";
-          error1.innerHTML = "";
-        }
-      }
-
-      function passValidateChecking(e) {
-        const passval = passid.value;
-        if (passval.length < 8) {
-          error2.style.display = "block";
-          error2.innerHTML = "Should contain at least 8 characters";
-        } else {
-          error2.style.display = "none";
-          error2.innerHTML = "";
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        loginform.addEventListener("submit", function (e) {
-          emailValidateChecking();
-          passValidateChecking();
-
-          if (error1.innerHTML || error2.innerHTML) {
-            e.preventDefault();
-          }
-        });
-      });
-    </script>
-  </body>
-  <%- include("../../views/partials/user/footer") %> -->
+    
 
   <script>
     const emailId = document.getElementById("email");
@@ -273,6 +272,3 @@
     emailId.addEventListener("input", emailValidationChecking);
     passId.addEventListener("input", passValidationChecking);
 </script>
-
-</body>
-</html>

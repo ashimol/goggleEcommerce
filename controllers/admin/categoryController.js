@@ -88,7 +88,7 @@ const editCategory = async (req,res) =>{
     try {
         const id = req.params.id;
         const {categoryName,description} = req.body;
-        const existingCategory = await Category.findOne({name:categoryName});
+        const existingCategory = await Category.findOne({name:categoryName ,description:description});
 
         if(existingCategory){
             return res.status(400).json({error:"Category exists ,Please choose anotheer name"});

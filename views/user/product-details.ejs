@@ -1,0 +1,581 @@
+
+	<!-- Author: W3layouts
+	Author URL: http://w3layouts.com
+	License: Creative Commons Attribution 3.0 Unported
+	License URL: http://creativecommons.org/licenses/by/3.0 -->
+
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Single :: w3layouts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
+	<link rel="stylesheet" type="text/css" href="/css/jquery-ui1.css">
+	<link href="/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="screen"/>
+	<link href="/css/style.css" rel='stylesheet' type='text/css'/>
+	<link href="/css/fontawesome-all.css" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+	    rel="stylesheet">
+</head>
+
+<body>
+	<div class="banner-top container-fluid" id="home">
+		<!-- header -->
+		<%-include("../../views/partials/user/header")%>
+		<!-- banner -->
+		<div class="banner_inner">
+			<div class="services-breadcrumb">
+				<div class="inner_breadcrumb">
+
+					<ul class="short">
+						<li>
+							<a href="/home">Home</a>
+							<i>|</i>
+						</li>
+						<li>Single Page</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		
+	</div>
+		<!--//banner -->
+		<!--/shop-->
+		<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+			<div class="container">
+				<div class="inner-sec-shop pt-lg-4 pt-3">
+					<div class="row">
+						<div class="col-lg-4 single-right-left">
+							<div class="grid images_3_of_2">
+								<div class="flexslider1">
+									<ul class="slides">
+										<% if (product.productImage && product.productImage.length > 0) { %>
+											<% product.productImage.forEach(image => { %>
+												<li>
+													<img src="/uploads/re-images/<%= image %>" data-imagezoom="true" class="img-fluid" alt=" ">
+												</li>
+											<% }) %>
+										<% } else { %>
+											<li>
+												<p>No images available</p>
+											</li>
+										<% } %>
+									</ul>
+									<!-- <div class="clearfix"></div> -->
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-8 single-right-left simpleCart_shelfItem">
+							<h3> <%= product.productName %>(<%= product.color %>)</h3>
+							<p>
+								<span class="price">₹<%= product.salePrice %></span>
+							  </p>
+							  
+							  <div class="rating1">
+								<ul class="stars">
+								  <% for (let i = 1; i <= 5; i++) { %>
+									<li>
+									  <a href="#">
+										<% if (product.averageRating >= i) { %>
+										  <i class="fa fa-star" aria-hidden="true"></i>
+										<% } else if (product.averageRating > i - 1 && product.averageRating < i) { %>
+										  <i class="fa fa-star-half-o" aria-hidden="true"></i>
+										<% } else { %>
+										  <i class="fa fa-star-o" aria-hidden="true"></i>
+										<% } %>
+									  </a>
+									</li>
+								  <% } %>
+								</ul>
+							  
+								<% if (product.totalRatings > 0) { %>
+								  <span class="rating-count">(<%= product.totalRatings %> reviews)</span>
+								<% } %>
+							  </div>
+							<br>
+							<div class="color-quality">
+								<div style="display: flex; align-items: center;">
+									<h5 style="margin-right: 10px;">Category:</h5>
+									<p style="margin: 0;">
+										<%= product.category? product.category.name : 'No Category' %>
+									</p>
+								</div>
+
+
+							</div>
+							
+							
+							<div class="occasional">
+							
+							</div>
+							<div class="occasion-cart">
+								<div class="googles single-item singlepage" style="display: flex; gap: 10px;">
+									<form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
+										<input type="hidden" name="productId" value="<%= product._id %>">
+										<input type="hidden" name="quantity" value="1">
+										<button type="button" class="googles-cart pgoogles-cart" onclick="">
+											Add to Cart
+										</button>
+									</form>
+									<form id="addToWishlistForm-<%= product._id %>" onsubmit="return false;">
+										<input type="hidden" name="productId" value="<%= product._id %>">
+										<button type="button" class="googles-cart pgoogles-cart" onclick="">
+											<i class="fas fa-heart"></i>
+										</button>
+									</form>
+								</div>
+							</div>
+							
+							<ul class="footer-social text-left mt-lg-4 mt-3">
+								<li>Share On : </li>
+								<li class="mx-2">
+									<a href="#">
+										<span class="fab fa-facebook-f"></span>
+									</a>
+								</li>
+								<li class="mx-2">
+									<a href="#">
+										<span class="fab fa-twitter"></span>
+									</a>
+								</li>
+								<li class="mx-2">
+									<a href="#">
+										<span class="fab fa-google-plus-g"></span>
+									</a>
+								</li>
+								<li class="mx-2">
+									<a href="#">
+										<span class="fab fa-linkedin-in"></span>
+									</a>
+								</li>
+								<li class="mx-2">
+									<a href="#">
+										<span class="fas fa-rss"></span>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="clearfix"> </div>
+						<!--/tabs-->
+						<div class="responsive_tabs"  style="width: 500px;">
+							<div id="horizontalTab" >
+								<ul class="resp-tabs-list">
+									<li>Description</li>
+								</ul>
+								<div class="resp-tabs-container">
+									<!--/tab_one-->
+									<div class="tab1">
+										<div class="single_page">
+											<h6 ><%= product.description %>...</h6>
+											<p></p>
+										</div>
+									</div>
+									<!--//tab_one-->
+									
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<!--//tabs-->
+					</div>	
+				</div>
+				<br>
+			</div>
+			<!-- Related Products Section -->
+<!-- Related Products Section -->
+
+
+</div>
+
+		</section>
+		<!--footer -->
+		<%-include("../../views/partials/user/footer")%>
+		<!-- //footer -->
+		<!--jQuery-->
+		<script src="/js/jquery-2.2.3.min.js"></script>
+		<!-- newsletter modal -->
+		<!--search jQuery-->
+		<script src="/js/modernizr-2.6.2.min.js"></script>
+		<script src="/js/classie-search.js"></script>
+		<script src="/js/demo1-search.js"></script>
+		<!--//search jQuery-->
+		<!-- cart-js -->
+		<script src="/js/minicart.js"></script>
+		<script>
+			googles.render();
+
+			googles.cart.on('googles_checkout', function (evt) {
+				var items, len, i;
+
+				if (this.subtotal() > 0) {
+					items = this.items();
+
+					for (i = 0, len = items.length; i < len; i++) {}
+				}
+			});
+		</script>
+		<!-- //cart-js -->
+		<script>
+			$(document).ready(function () {
+				$(".button-log a").click(function () {
+					$(".overlay-login").fadeToggle(200);
+					$(this).toggleClass('btn-open').toggleClass('btn-close');
+				});
+			});
+			$('.overlay-close1').on('click', function () {
+				$(".overlay-login").fadeToggle(200);
+				$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
+				open = false;
+			});
+		</script>
+		<!-- carousel -->
+		<!-- price range (top products) -->
+		<script src="/js/jquery-ui.js"></script>
+		<script>
+			//<![CDATA[ 
+			$(window).load(function () {
+				$("#slider-range").slider({
+					range: true,
+					min: 0,
+					max: 9000,
+					values: [50, 6000],
+					slide: function (event, ui) {
+						$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+					}
+				});
+				$("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+
+			}); //]]>
+		</script>
+		<!-- //price range (top products) -->
+
+		<script src="/js/owl.carousel.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('.owl-carousel').owlCarousel({
+					loop: true,
+					margin: 10,
+					responsiveClass: true,
+					responsive: {
+						0: {
+							items: 1,
+							nav: true
+						},
+						600: {
+							items: 2,
+							nav: false
+						},
+						900: {
+							items: 3,
+							nav: false
+						},
+						1000: {
+							items: 4,
+							nav: true,
+							loop: false,
+							margin: 20
+						}
+					}
+				})
+			})
+		</script>
+
+		<!-- //end-smooth-scrolling -->
+
+		<!-- single -->
+		<script src="/js/imagezoom.js"></script>
+		<!-- single -->
+		<!-- script for responsive tabs -->
+		<script src="/js/easy-responsive-tabs.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('#horizontalTab').easyResponsiveTabs({
+					type: 'default', //Types: default, vertical, accordion           
+					width: 'auto', //auto or any width like 600px
+					fit: true, // 100% fit in a container
+					closed: 'accordion', // Start closed if in accordion view
+					activate: function (event) { // Callback function if tab is switched
+						var $tab = $(this);
+						var $info = $('#tabInfo');
+						var $name = $('span', $info);
+						$name.text($tab.text());
+						$info.show();
+					}
+				});
+				$('#verticalTab').easyResponsiveTabs({
+					type: 'vertical',
+					width: 'auto',
+					fit: true
+				});
+			});
+		</script>
+		<!-- FlexSlider -->
+		<script src="/js/jquery.flexslider.js"></script>
+		<script>
+			$(window).on('load', function() {
+				$('.flexslider1').flexslider({
+					animation: "slide",
+					// controlNav: "thumbnails",
+					start: function(slider) {
+						slider.resize();
+					}
+				});
+			});
+		</script>
+	<!-- <script>
+		$(window).on('load', function() {
+			$('.flexslider1').imagesLoaded(function() {
+				$('.flexslider1').flexslider({
+					animation: "slide",
+					controlNav: "thumbnails",
+					controlNav: true, // Show navigation controls (dots)
+					directionNav: true, // Show prev/next arrows
+					slideshow: true, // Enable automatic sliding
+					slideshowSpeed: 5000, // Time interval between slides in milliseconds
+					animationSpeed: 600, // Animation speed for sliding transition
+					start: function(slider) {
+						slider.resize();
+					}
+				});
+			});
+		});
+	</script> -->
+
+		<!-- //FlexSlider-->
+
+		<!-- dropdown nav -->
+		<script>
+			$(document).ready(function () {
+				$(".dropdown").hover(
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+						$(this).toggleClass('open');
+					},
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+						$(this).toggleClass('open');
+					}
+				);
+			});
+		</script>
+		<!-- //dropdown nav -->
+	<script src="/js/move-top.js"></script>
+    <script src="/js/easing.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 900);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            
+            						var defaults = {
+            							  containerID: 'toTop', // fading element id
+            							containerHoverID: 'toTopHover', // fading element hover id
+            							scrollSpeed: 1200,
+            							easingType: 'linear' 
+            						 };
+            						
+
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+
+        });
+    </script>
+    <!--// end-smoth-scrolling -->
+
+
+		<script src="/js/bootstrap.js"></script>
+		<!-- js file -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
+
+
+<script>
+	function addToCart(productId) {
+  const form = document.getElementById(`addToCartForm-${productId}`);
+  const formData = new FormData(form);
+
+  fetch("/add-cart", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+    credentials: 'include' 
+  })
+  .then(response => {
+    return response.json().then(data => {
+      if (!response.ok) {
+        throw data;
+      }
+      return data;
+    });
+  })
+  .then(data => {
+    if (data.message === 'Item already in cart') {
+      Swal.fire({
+        icon: 'info',
+        title: 'Already in Cart',
+        text: 'This item is already in your cart.'
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: data.message
+      });
+    }
+    if (data.cartItemsCount !== undefined) {
+      updateCartItemCount(data.cartItemsCount);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    if (error.error === 'Please login to add items to cart') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Required',
+        text: 'Please login to add items to cart',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/login';
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.error || 'An error occurred, please login and try again'
+      });
+    }
+  });
+}
+
+function updateCartItemCount(count) {
+  const cartCountElement = document.querySelector('.cart-count');
+  if (cartCountElement) {
+    if (count > 0) {
+      cartCountElement.textContent = count;
+      cartCountElement.style.display = 'inline';
+    } else {
+      cartCountElement.textContent = '';
+      cartCountElement.style.display = 'none';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const cartCountElement = document.querySelector('.cart-count');
+  if (cartCountElement) {
+    const initialCount = parseInt(cartCountElement.textContent, 10);
+    updateCartItemCount(initialCount || 0);
+  }
+});
+		</script>
+
+<script>
+    function addToWishlist(productId) {
+        const form = document.getElementById(`addToWishlistForm-${productId}`);
+        const formData = new FormData(form);
+    
+        fetch("/add-wishlist", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+            credentials: 'include'
+        })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    throw data;
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            if (data.message === 'Item already in wishlist') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already in Wishlist',
+                    text: 'This item is already in your Wishlist.'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message
+                });
+            }
+            if (data.wishlistItemsCount) {
+                updateWishlistItemCount(data.wishlistItemsCount);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.error === 'Please login to add items to Wishlist') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Authentication Required',
+                    text: 'Please login to add items to Wishlist',
+                    showCancelButton: true,
+                    confirmButtonText: 'Login',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/login';
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.error || 'An error occurred, please login and try again'
+                });
+            }
+        });
+    }
+
+    function updateWishlistItemCount(count) {
+        const wishlistCountElement = document.getElementById('wishlistItemCount');
+        if (wishlistCountElement) {
+            wishlistCountElement.textContent = count;
+        }
+    }
+</script>

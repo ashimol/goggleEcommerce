@@ -128,7 +128,7 @@
                 <button type="submit" class="btn btn-primary">Verify Email</button>
                 <div class="form-group text-center">
                     <div id="otpTimer" class="otp-timer">
-                        <span id="timerValue">60</span>
+                        <span id="timerValue">30</span>
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="return resendOTP()">
                         Resend OTP
@@ -151,7 +151,7 @@
 <script>
     document.getElementById("otp").focus();
 
-    let timer = 60;
+    let timer = 30;
     let timerInterval;
 
     function startTimer() {
@@ -162,7 +162,9 @@
                 clearInterval(timerInterval);
                 document.getElementById("timerValue").classList.add("expired");
                 document.getElementById("timerValue").textContent = "Expired";
-                document.getElementById("otp").disabled = false;
+                document.getElementById("otp").disabled = true;
+                //document.getElementById("otp").disabled = false;
+                
             }
         }, 1000);
     }
@@ -206,12 +208,13 @@
     }
 
     function resendOTP() {
-    clearInterval(timerInterval); // Stop the current timer
-    timer = 60; // Reset the timer to 60 seconds
-    document.getElementById("otp").disabled = false; // Enable OTP input
-    document.getElementById("timerValue").classList.remove("expired"); // Remove expired class
-    document.getElementById("timerValue").textContent = timer; // Reset timer display
-    startTimer(); // Start the timer again
+
+        clearInterval(timerInterval); // Stop the current timer
+        timer = 30; // Reset the timer to 60 seconds
+        document.getElementById("otp").disabled = false; // Enable OTP input
+        document.getElementById("timerValue").classList.remove("expired"); // Remove expired class
+        document.getElementById("timerValue").textContent = timer; // Reset timer display
+        startTimer(); // Start the timer again
 
     $.ajax({
         type: "POST",
