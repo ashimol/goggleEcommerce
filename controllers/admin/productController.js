@@ -68,13 +68,11 @@ const addProducts = async (req, res) => {
         const newProduct = new Product({
             productName: products.productName,
             description: products.description,
-            SKUNumber: products.SKUNumber,
             category: categoryId._id,
             regularPrice: products.regularPrice,
             salePrice: products.salePrice,
             createdOn: new Date(),
             quantity: products.quantity,
-            size: products.size,
             color: products.color,
             productImage: images,
             status: productStatus,
@@ -182,117 +180,6 @@ const getEditProduct = async (req,res) =>{
 
 
 
-// const editProduct = async (req, res) => {
-//     try {
-//         const id = req.params.id;
-//         const data = req.body;
-
-//         const existingProduct = await Product.findOne({
-//             productName: data.productName,
-//             _id: { $ne: id }
-//         });
-
-//         if (existingProduct) {
-//             return res.status(400).json({ error: "Product with this name already exists. Please try another name." });
-//         }
-
-//         const category = await Category.findOne({ name: data.category });
-//         if (!category) {
-//             return res.status(400).json({ error: "Invalid category name" });
-//         }
-
-//         const updateFields = {
-//             productName: data.productName,
-//             category: category._id, 
-//             regularPrice: data.regularPrice,
-//             salePrice: data.salePrice,
-//             quantity: data.quantity,
-            
-//         };
-
-       
-//         const currentProduct = await Product.findById(id);
-//         let updatedImages = [...currentProduct.productImage];
-
-//         for (let i = 0; i < 3; i++) {
-
-//             if (req.files[`images${i+1}`] && req.files[`images${i+1}`].length > 0) {
-              
-//                 let originalImagePath = req.files[`images${i+1}`][0].path;
-//                 let filename = `product_${id}_${i+1}_${Date.now()}.jpg`;
-//                 let resizedImagePath = path.join('public', 'uploads', 're-images', filename);
-
-//                 await sharp(originalImagePath)
-//                     .resize({ width: 440, height: 440 })
-//                     .toFile(resizedImagePath);
-
-            
-//                 try {
-//                     if (fs.existsSync(originalImagePath)) {
-//                         fs.unlinkSync(originalImagePath);
-//                         console.log(`Original file ${originalImagePath} deleted successfully`);
-//                     }
-//                 } catch (err) {
-//                     console.error('Error deleting original file:', err);
-//                 }
-
-               
-//                 if (i < updatedImages.length) {
-                  
-//                     if (updatedImages[i]) {
-//                         let oldImagePath = path.join('public', 'uploads', 're-images', updatedImages[i]);
-//                         try {
-//                             if (fs.existsSync(oldImagePath)) {
-//                                 fs.unlinkSync(oldImagePath);
-//                                 console.log(`Old image file ${oldImagePath} deleted successfully`);
-//                             }
-//                         } catch (err) {
-//                             console.error('Error deleting old image file:', err);
-//                         }
-//                     }
-//                     updatedImages[i] = filename;
-//                 } else {
-//                     updatedImages.push(filename);
-//                 }
-//             }
-//         }
-
-       
-//         while (updatedImages.length > 3) {
-//             let removedImage = updatedImages.pop();
-//             let removedImagePath = path.join('public', 'uploads', 'product-images', removedImage);
-//             try {
-//                 if (fs.existsSync(removedImagePath)) {
-//                     fs.unlinkSync(removedImagePath);
-//                     console.log(`Excess image file ${removedImagePath} deleted successfully`);
-//                 }
-//             } catch (err) {
-//                 console.error('Error deleting excess image file:', err);
-//             }
-//         }
-
-//         updateFields.productImage = updatedImages;
-
-
-
-//         const updatedProduct = await Product.findByIdAndUpdate(id, updateFields, { new: true });
-
-//         // if (updatedProduct.quantity == 0) {
-//         //     updatedProduct.status = "out of stock";
-//         // } else {
-//         //     updatedProduct.status = "Available";
-//         // }
-
-//         await updatedProduct.save();
-
-        
-//         res.redirect("/admin/products");
-
-//     } catch (error) {
-//         console.error(error);
-//         res.redirect("/admin/pageerror");
-//     }
-// };
 
 const editProduct = async (req, res) => {
     try {
@@ -328,25 +215,26 @@ const editProduct = async (req, res) => {
        
         console.log('Preparing update fields...');
 
+       
+
         const updateFields = {
             productName: data.productName,
             description: data.descriptionData,
             regularPrice: data.regularPrice,
             salePrice: data.salePrice,
             color: data.color,
-            
+            quantity:data.quantity,
         };
 
-        // Handle category update
+       
         if (data.category) {
-            // If category is stored as ObjectId in the database
+          
             const category = await Category.findOne({ name: data.category });
             if (category) {
                 updateFields.category = category._id;
             } else {
                 console.log('Category not found:', data.category);
-                // Handle the case where the category doesn't exist
-                // You might want to create a new category here, or skip updating this field
+                
             }
         }
         
@@ -368,7 +256,7 @@ const editProduct = async (req, res) => {
     } catch (error) {
         console.error('Error in editProduct:', error);
         res.status(500).json({ error: 'An error occurred while updating the product. Please try again.', details: error.message });
-    }
+    }
 };
 
 const deleteSingleImage = async (req,res)=>{

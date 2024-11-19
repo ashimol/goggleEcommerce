@@ -293,27 +293,27 @@ const productDetails = async (req, res) => {
     try {
         const productId = req.params.id;
         const userId = req.session.user || req.user; 
+        
         console.log('Session:', req.session);
         console.log('User ID:', userId);
 
-        if (!userId) {
-            return res.status(401).json({ success: false, message: 'Please login' });
+        // if (!userId) {
+        //     return res.status(401).json({ success: false, message: 'Please login' });
             
-        }
+        // }
+       
 
         const product = await Product.findById(productId).populate('category').lean().exec();
-        const relatedProducts = await Product.find({});
-
+       
         if (!product) {
             return res.status(404).send('Product not found');
         }
         if (!product.category || !product.category.isListed) {
             return res.status(403).send('This product is under an unlisted category.');
         }
-        
-        const limitedRelatedProducts = relatedProducts.slice(0, 4);
 
-        res.render('product-details', { product, products: limitedRelatedProducts });
+         
+        res.render('product-details', { product});
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

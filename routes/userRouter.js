@@ -12,7 +12,7 @@ router.get('/',userAuth,userController.loadHomepage);
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);
-router.get('/shop',userAuth,userController.loadShopping);
+//router.get('/shop',userAuth,userController.loadShopping);
 
 router.post("/verify-otp",userController.verifyOtp);
 router.post("/resend-otp",userController.resendOtp);

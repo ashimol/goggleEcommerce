@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const session=require('express-session');
 
 const customerInfo  = async (req, res) => {
+  
     try {
       let search = "";
       if (req.query.search) {
@@ -29,7 +30,7 @@ const customerInfo  = async (req, res) => {
         .limit(limit * 1) 
         .skip((page - 1) * limit)  
         .exec();
-      console.log("user date " ,userData);
+      console.log("user data " ,userData);
       
       
       const count = await User.find({
@@ -52,6 +53,8 @@ const customerInfo  = async (req, res) => {
       console.log("Error in user management page", error);
       res.redirect("/pageError"); 
     }
+
+    
   };
 
 

@@ -48,7 +48,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 					<ul class="short">
 						<li>
-							<a href="/home">Home</a>
+							<a href="/">Home</a>
 							<i>|</i>
 						</li>
 						<li>Single Page</li>
@@ -89,29 +89,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h3> <%= product.productName %>(<%= product.color %>)</h3>
 							<p>
 								<span class="price">₹<%= product.salePrice %></span>
-							  </p>
+							</p>
 							  
-							  <div class="rating1">
-								<ul class="stars">
-								  <% for (let i = 1; i <= 5; i++) { %>
-									<li>
-									  <a href="#">
-										<% if (product.averageRating >= i) { %>
-										  <i class="fa fa-star" aria-hidden="true"></i>
-										<% } else if (product.averageRating > i - 1 && product.averageRating < i) { %>
-										  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-										<% } else { %>
-										  <i class="fa fa-star-o" aria-hidden="true"></i>
-										<% } %>
-									  </a>
-									</li>
-								  <% } %>
-								</ul>
 							  
-								<% if (product.totalRatings > 0) { %>
-								  <span class="rating-count">(<%= product.totalRatings %> reviews)</span>
-								<% } %>
-							  </div>
 							<br>
 							<div class="color-quality">
 								<div style="display: flex; align-items: center;">

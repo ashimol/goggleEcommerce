@@ -308,10 +308,16 @@ function validateForm() {
         isValid = false;
     }
 
-    if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) < 0) {
+    if (parseFloat(price) < parseFloat(saleprice)) {
+      displayErrorMessage('regularPrice-error', 'Regular price must be greater than sale price.');
+      isValid = false;
+    } 
+     if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) < 0) {
         displayErrorMessage('regularPrice-error', 'Please enter a valid non-negative price.');
         isValid = false;
     }
+
+    
 
     return isValid;
 }
