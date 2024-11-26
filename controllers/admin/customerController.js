@@ -58,33 +58,54 @@ const customerInfo  = async (req, res) => {
   };
 
 
-  const customerBlocked = async (req,res) =>{
-    try {
-      let id = req.query.id;
-      await User.updateOne({_id:id},{$set :{isBlocked:true}});
-      res.redirect('/admin/users');
-    } catch (error) {
-      res.redirect('/pageerror');
+//   const customerBlocked = async (req,res) =>{
+//     try {
+//       let id = req.query.id;
+//       await User.updateOne({_id:id},{$set :{isBlocked:true}});
+//       res.redirect('/admin/users');
+//     } catch (error) {
+//       res.redirect('/pageerror');
       
-    }
-  };
+//     }
+//   };
 
 
- const customerunBlocked =async (req,res) =>{
-  try {
-    let id =req.query.id;
-    await User.updateOne({_id:id},{$set:{isBlocked:false}});
-    res.redirect('/admin/users');
+//  const customerunBlocked =async (req,res) =>{
+//   try {
+//     let id =req.query.id;
+//     await User.updateOne({_id:id},{$set:{isBlocked:false}});
+//     res.redirect('/admin/users');
 
-  } catch (error) {
-    res.redirect('pageerror');
-  }
- };
+//   } catch (error) {
+//     res.redirect('pageerror');
+//   }
+//  };
   
+
+const toggleCustomerBlockStatus = async (req, res) => {
+  try {
+    let id = req.query.id;
+    let action = req.query.action; // Assuming action can be 'block' or 'unblock'
+
+    if (action === 'block') {
+      await User.updateOne({ _id: id }, { $set: { isBlocked: true } });
+    } else if (action === 'unblock') {
+      await User.updateOne({ _id: id }, { $set: { isBlocked: false } });
+    } else {
+      return res.redirect('/pageerror'); // Handle invalid action
+    }
+
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.redirect('/pageerror');
+  }
+};
 
 module.exports={
     customerInfo,
-    customerBlocked,
-    customerunBlocked,
+    // customerBlocked,
+    // customerunBlocked,
+    toggleCustomerBlockStatus,
 
 }

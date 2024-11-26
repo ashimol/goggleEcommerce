@@ -1,0 +1,263 @@
+
+
+
+      
+ <style>
+    body {
+    font-family: sans-serif;
+}
+
+.dashboard-container {
+    display: flex; /* Use flexbox to align sidebar and content */
+    width: 100%; 
+}
+
+.sidebar {
+    width: 250px; /* Set a fixed width for the sidebar */
+    border-right: 1px solid #ccc; /* Optional: Add a border to separate sidebar */
+}
+
+.dashboard-content {
+    flex: 1; /* Allow the content area to take up the remaining space */
+    padding: 20px; /* Add some padding */
+}
+
+.container {
+    width: 100%; /* Make the container take the full width of the dashboard content */
+    max-width: 400px; /* Optional: Set a max width */
+    margin: 0 auto; /* Center the container */
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+h2 {
+    color: #e74c3c;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+</style>
+
+  <div class="container-fluid">
+    <%- include("../../views/partials/user/header") %>
+
+    
+    
+    <div class="dashboard-container">
+      <!-- Include the sidebar partial -->
+      <%- include("../../views/partials/user/sidebar") %>
+        <div class="dashboard-content" id="dashboardContent">
+
+        
+            <div class="container">
+                 <h2>Add Address</h2>
+        
+            <form id="addressForm" method="post" action="">
+
+
+                <label for="house">House:</label>
+                <input type="text" id="house" name="house">
+                <div id="houseError" class="error">Please enter a valid house name/number.</div>
+        
+                <!-- <label for="place">Place:</label>
+                <input type="text" id="place" name="place">
+                <div id="placeError" class="error">Place can only contain alphabets and spaces.</div>
+         -->
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city">
+                <div id="cityError" class="error">City can only contain alphabets and spaces.</div>
+        
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state">
+                <div id="stateError" class="error">State can only contain alphabets and spaces.</div>
+        
+                <label for="pin">Pin:</label>
+                <input type="text" id="pin" name="pin">
+                <div id="pinError" class="error">Pin must be a 6-digit number.</div>
+        
+                <label for="landMark">Landmark:</label>
+                <input type="text" id="landMark" name="landMark">
+                <div id="landmarkError" class="error">Landmark can only contain alphabets and spaces.</div>
+        
+                <label for="contactNo">Contact No:</label>
+                <input type="text" id="contactNo" name="contactNo">
+                <div id="contactError" class="error">Contact number must be a 10-digit number.</div>
+        
+                <div class="buttons">
+                    <a href=""><button type="button">Cancel</button></a>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        
+
+      </div>
+    </div>
+    
+    <%- include("../../views/partials/user/footer") %>
+  </div>
+  
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('addressForm').addEventListener('submit', function(event) {
+      event.preventDefault(); 
+  
+      
+      const house = document.getElementById('house').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const pin = document.getElementById('pin').value;
+      const landmark = document.getElementById('landMark').value;
+      const contactNo = document.getElementById('contactNo').value;
+  
+      let isValid = true;
+  
+      
+      const alphabetRegex = /^[A-Za-z\s]+$/; 
+      const pinRegex = /^[0-9]{6}$/;         
+      const contactRegex = /^[0-9]{10}$/;    
+  
+      // Validate fields
+      if (house === '') {
+          document.getElementById('houseError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('houseError').style.display = 'none';
+      }
+  
+     
+      if (!alphabetRegex.test(city)) {
+          document.getElementById('cityError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('cityError').style.display = 'none';
+      }
+  
+      if (!alphabetRegex.test(state)) {
+          document.getElementById('stateError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('stateError').style.display = 'none';
+      }
+  
+      if (!pinRegex.test(pin)) {
+          document.getElementById('pinError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('pinError').style.display = 'none';
+      }
+  
+      if (!alphabetRegex.test(landmark)) {
+          document.getElementById('landmarkError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('landmarkError').style.display = 'none';
+      }
+  
+      if (!contactRegex.test(contactNo)) {
+          document.getElementById('contactError').style.display = 'block';
+          isValid = false;
+      } else {
+          document.getElementById('contactError').style.display = 'none';
+      }
+  
+      if (!isValid) {
+          return; 
+      }
+  
+      
+      const formData = new FormData(event.target);
+      const data = {};
+      formData.forEach((value, key) => {
+          data[key] = value;
+      });
+  
+      fetch("/user/add-new-address", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+          Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: data.message
+          });
+  
+          document.getElementById('addressForm').reset(); 
+          updateAddressList(); 
+      })
+      .catch(error => {
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops',
+              text: error.message || 'An error occurred while adding the address'
+          });
+      });
+  });
+  
+  function updateAddressList() {
+      fetch("/user/address") 
+          .then(response => response.json())
+          .then(data => {
+              const tbody = document.querySelector("#address-list");
+              tbody.innerHTML = ""; 
+              data.address.forEach(address => {
+                  const row = document.createElement('tr'); 
+                  row.innerHTML = `
+                      <td>House: <span>${address.house}</span></td>
+                      <td>City: <span>${address.city}</span></td>
+                      <td>State: <span>${address.state}</span></td>
+                      <td>Pin: <span>${address.pin}</span></td>
+                      <td>Landmark: <span>${address.landMark}</span></td>
+                      <td>Contact No: <span>${address.contactNo}</span></td>
+                      <td><a href=""><button class="edit-btn">Edit</button></a></td>
+                      <td><a href=""><button class="delete-btn">Delete</button></a></td>
+                  `;
+                  tbody.appendChild(row);
+              });
+          })
+          .catch(error => {
+              console.error('Error updating address list:', error);
+          });
+  }
+  </script>
+  

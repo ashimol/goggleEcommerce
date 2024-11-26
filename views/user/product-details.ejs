@@ -69,8 +69,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<div class="grid images_3_of_2">
 								<div class="flexslider1">
 									<ul class="slides">
-										<% if (product.productImage && product.productImage.length > 0) { %>
-											<% product.productImage.forEach(image => { %>
+										<% if (products.productImage && products.productImage.length > 0) { %>
+											<% products.productImage.forEach(image => { %>
 												<li>
 													<img src="/uploads/re-images/<%= image %>" data-imagezoom="true" class="img-fluid" alt=" ">
 												</li>
@@ -86,9 +86,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</div>
 						</div>
 						<div class="col-lg-8 single-right-left simpleCart_shelfItem">
-							<h3> <%= product.productName %>(<%= product.color %>)</h3>
+							<h3> <%= products.productName %>(<%= products.color %>)</h3>
 							<p>
-								<span class="price">₹<%= product.salePrice %></span>
+								<span class="price">₹<%= products.salePrice %></span>
 							</p>
 							  
 							  
@@ -97,7 +97,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<div style="display: flex; align-items: center;">
 									<h5 style="margin-right: 10px;">Category:</h5>
 									<p style="margin: 0;">
-										<%= product.category? product.category.name : 'No Category' %>
+										<%= products.category? products.category.name : 'No Category' %>
 									</p>
 								</div>
 
@@ -110,15 +110,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</div>
 							<div class="occasion-cart">
 								<div class="googles single-item singlepage" style="display: flex; gap: 10px;">
-									<form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
-										<input type="hidden" name="productId" value="<%= product._id %>">
+									<form id="addToCartForm-<%= products._id %>" onsubmit="return false;">
+										<input type="hidden" name="productId" value="<%= products._id %>">
 										<input type="hidden" name="quantity" value="1">
 										<button type="button" class="googles-cart pgoogles-cart" onclick="">
 											Add to Cart
 										</button>
 									</form>
-									<form id="addToWishlistForm-<%= product._id %>" onsubmit="return false;">
-										<input type="hidden" name="productId" value="<%= product._id %>">
+									<form id="addToWishlistForm-<%= products._id %>" onsubmit="return false;">
+										<input type="hidden" name="productId" value="<%= products._id %>">
 										<button type="button" class="googles-cart pgoogles-cart" onclick="">
 											<i class="fas fa-heart"></i>
 										</button>
@@ -166,7 +166,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									<!--/tab_one-->
 									<div class="tab1">
 										<div class="single_page">
-											<h6 ><%= product.description %>...</h6>
+											<h6 ><%= products.description %>...</h6>
 											<p></p>
 										</div>
 									</div>

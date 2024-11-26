@@ -6,6 +6,8 @@ const session = require("express-session");
 const passport = require("./config/passport");
 const userRouter = require("./routes/userRouter");
 const adminRouter =require('./routes/adminRouter');
+const nocache = require('nocache');
+
 
 // Connect to the database
 const db = require("./config/db");
@@ -26,7 +28,7 @@ app.use(session({
 }));
 
 
-
+app.use(nocache());
 app.use(passport.initialize());
 app.use(passport.session());
 

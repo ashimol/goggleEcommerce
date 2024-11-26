@@ -1,0 +1,195 @@
+<style>
+    /* Centering the entire address list */
+    .address-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 20px;
+    }
+    
+    /* Centering individual addresses */
+    .address {
+        width: 50%; /* Adjust this width as per your preference */
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        text-align: center;
+    }
+  
+    /* Styling the text */
+    .address p {
+        font-size: 18px; /* Standard size for readability */
+        margin: 10px 0;
+    }
+  
+    .address span {
+        font-weight: bold;
+    }
+  
+    /* Styling the buttons */
+    .edit-btn, .delete-btn {
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px; /* Increased font size for readability */
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px;
+    }
+  
+    .edit-btn {
+        background-color: #4CAF50; /* Green for edit */
+    }
+  
+    .delete-btn {
+        background-color: #ff0000; /* Red for delete */
+    }
+  
+    /* Styling for when no addresses are found */
+    .address-list p {
+        font-size: 18px;
+        text-align: center;
+        color: #666;
+    }
+
+
+    .add-btn {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding for size */
+    font-size: 16px; /* Font size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.add-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.add-btn:focus {
+    outline: none; /* Remove default outline on focus */
+}
+
+.add-btn:active {
+    transform: translateY(0); /* Reset lift effect when clicked */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Adjust shadow on click */
+}
+  </style>
+        
+  <div class="container-fluid"  style="background-color: #f1f3f6;">
+      <%- include("../../views/partials/user/header") %>
+  
+           
+      <div class="dashboard-container">
+       
+       
+        
+  
+        <div class="dashboard-content" id="dashboardContent">
+  
+          <h1>Address List</h1>
+         <a href="/user/add-new-address"><button class="add-btn" style="float: left;">Add New Address</button></a> 
+          <br><br>
+          <div class="address-list" id="address-list">
+              <% if (address && address.length > 0) { %>
+                  <% address.forEach((address, index) => { %>
+                      <div class="address">
+                          <h1>Address <%= (currentPage - 1) * 1 + index + 1 %></h1> 
+                          <p>House: <span id="house"><%= address.house %></span></p>
+                          <p>City: <span id="city"><%= address.city %></span></p>
+                          <p>State: <span id="state"><%= address.state %></span></p>
+                          <p>Pin: <span id="pin"><%= address.pin %></span></p>
+                          <p>Land Mark: <span id="landMark"><%= address.landMark %></span></p>
+                          <p>Contact No: <span id="contactNo"><%= address.contactNo %></span></p>
+                          <a href="/user/edit-address/<%= address._id %>"><button class="edit-btn">Edit</button></a>
+                          <button class="btn btn-danger" onclick="confirmDelete('<%= address._id %>')">Delete</button>
+                      </div>
+                  <% }) %>
+              <% } else { %>
+                  <p>No addresses found.</p>
+              <% } %>
+          </div>
+          
+          <div class="pagination-container">
+              <% if (currentPage > 1) { %>
+                  <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+              <% } %>
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                  <% if (i === currentPage) { %>
+                      <span class="current-page"><%= i %></span>
+                  <% } else { %>
+                      <a href="?page=<%= i %>"><%= i %></a>
+                  <% } %>
+              <% } %>
+              <% if (currentPage < totalPages) { %>
+                  <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+              <% } %>
+          </div>
+          
+        </div>
+      </div>
+      
+      <%- include("../../views/partials/user/footer") %>
+    </div>
+    
+  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+    <script>
+        function confirmDelete(addressId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "If you press confirm, you won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteAddress(addressId);
+                }
+            });
+        }
+        
+        async function deleteAddress(addressId) { 
+            try {
+                const response = await fetch(`/user/deleteAddress?id=${addressId}`, { 
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                
+                if (response.ok && data.status === true) {
+                    Swal.fire(
+                        'Deleted!',
+                        'The Address has been deleted.',
+                        'success'
+                    ).then(() => {
+                        location.reload(); 
+                    });
+                } else {
+                    Swal.fire('Failed', data.message || 'Deleting address failed', 'error');
+                }
+            } catch (error) {
+                Swal.fire(
+                    'Error',
+                    'An error occurred while deleting the address',
+                    'error'
+                );
+                console.error('Error deleting address', error);
+            }
+        }
+    </script>
+    

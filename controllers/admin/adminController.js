@@ -51,13 +51,23 @@ const loadDashboard = async (req, res) => {
 const logout = async (req,res) =>{
     try {
         
-        req.session.destroy(err=>{
-            if(err){
-                console.log("Error destroying session :",err);
-                return res.redirect('/pageerror');
-            }
-            res.redirect('/admin/login');
-        })
+        // req.session.destroy(err=>{
+        //     if(err){
+        //         console.log("Error destroying session :",err);
+        //         return res.redirect('/pageerror');
+        //     }
+        //     res.redirect('/admin/login');
+        // })
+
+        if (req.session.admin) {
+            req.session.admin = null; // Or use req.session.destroy() if needed
+        }
+    
+        // Optionally clear the session cookie for the user
+        res.clearCookie('connect.sid');
+    
+        // Redirect or send a response
+        res.redirect('/admin/login'); 
     } catch (error) {
         
         console.log("Unexpected error during logout ",error);

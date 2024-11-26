@@ -18,12 +18,15 @@ router.get('/login',adminController.loadLogin);
 router.post('/login',adminController.login);
 router.get('/',adminAuth,adminController.loadDashboard);
 router.get("/dashboard",adminAuth,adminController.loadDashboard);
-router.get('/logout',adminController.logout);
+router.get('/logout',adminAuth,adminController.logout);
 
 //router.get('/users',adminAuth,customerController.customerInfo);
 router.get('/users',adminAuth,customerController.customerInfo);
-router.get('/blockCustomer',adminAuth,customerController.customerBlocked);
-router.get('/unblockCustomer',adminAuth,customerController.customerunBlocked);
+// router.get('/blockCustomer',adminAuth,customerController.customerBlocked);
+// router.get('/unblockCustomer',adminAuth,customerController.customerunBlocked);
+
+//router.get('/blockCustomer',adminAuth,customerController.custBlockOrUnblock);
+router.get('/togle-block',adminAuth,customerController.toggleCustomerBlockStatus);
 
 router.get('/category',adminAuth,categoryController.categoryInfo);
 router.post('/addCategory',adminAuth,categoryController.addCategory);

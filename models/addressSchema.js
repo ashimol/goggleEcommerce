@@ -2,17 +2,8 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const addressSchema = new Schema({
-    userId : {
-        type : Schema.Types.ObjectId,
-        ref: "User",
-        required :true,
-    },
-    address:[{
-        addressType:{
-            type:String,
-            required : true
-        },
-        name :{
+    
+        house :{
             type :String,
             required : true
         },
@@ -20,23 +11,27 @@ const addressSchema = new Schema({
             type: String,
             required: true
         },
-        landMark : {
-            type: String,
-            required :true
-        },
         state:{
             type:String,
             required :true,
         },
-        pincode:{
+        landMark : {
+            type: String,
+            required :true
+        },
+        pin:{
             type : Number,
             required :true
         },
-        phone:{
+        contactNo:{
             type: String,
             required :true
+        },
+        isDeliveryAddress: {
+            type:Boolean,
+            required:false
         }
-    }]
+   
 })
 
 const Address = mongoose.model("Address",addressSchema);

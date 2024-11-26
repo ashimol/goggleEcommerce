@@ -23,7 +23,7 @@ const userSchema = new Schema({
     googleId: { 
         type: String, 
         unique: true,
-        // sparse: true 
+        sparse: true 
     },
     password: {
         type: String,
@@ -37,6 +37,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    address: [
+        { type: Schema.Types.ObjectId, 
+        ref: 'Address' 
+    }],
     cart: [{
         type :Schema.Types.ObjectId,
         ref:"Cart",

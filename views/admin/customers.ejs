@@ -1,6 +1,7 @@
 <%- include("../../views/partials/admin/header") %>
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/>
+  
   <style>
     /* General Container and Layout */
     .content-main {
@@ -234,11 +235,11 @@
                                 <td>
                                     <% if(data[i].isBlocked === false) { %>
                                         <button class="btn btn-danger">
-                                            <a href="/admin/blockCustomer?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Block</a>
+                                            <a href="/admin/togle-block?id=<%= data[i]._id %>&action=block" class="text-white" style="text-decoration: none;">Block</a>
                                         </button>
                                     <% } else { %>
                                         <button class="btn btn-success">
-                                            <a href="/admin/unblockCustomer?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none;">Unblock</a>
+                                            <a href="/admin/togle-block?id=<%= data[i]._id %>&action=unblock" class="text-white" style="text-decoration: none;">Unblock</a>
                                         </button>
                                     <% } %>
                                 </td>

@@ -1,0 +1,287 @@
+
+<link rel="stylesheet" href="/css/user-account.css">
+<style>
+    /* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f1f3f6;
+    color: #333;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+/* Header and Footer */
+h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #007bff; /* Bootstrap primary color */
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+/* Input Styles */
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus {
+    border-color: #007bff; /* Bootstrap primary color */
+    outline: none;
+}
+
+/* Error Message Styles */
+.error-message {
+    font-size: 0.875rem;
+    color: #dc3545; /* Bootstrap danger color */
+    margin-top: 5px;
+}
+
+/* Button Styles */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#editBtn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+}
+
+#saveBtn {
+    background-color: #28a745; /* Bootstrap success color */
+    color: white;
+}
+
+#cancelBtn {
+    background-color: #6c757d; /* Bootstrap secondary color */
+    color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard-content {
+        margin: 0 auto; /* Center the content */
+    }
+}
+</style>
+
+<%- include("../../views/partials/user/header") %>
+
+<div class="container-fluid" style="background-color: #f1f3f6;">
+   
+    
+   
+    <div class="row">
+        
+        <div class="col-md-3">
+            <%- include("../../views/partials/user/sidebar") %>
+        </div>
+        <div class="col-md-6 dashboard-content" id="dashboardContent">
+            <div class="container">
+                <h2>Personal Information</h2>
+                <form id="personal-info-form" method="post">
+                    <input type="hidden" id="userId" name="userId" value="<%= user._id %>">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" value="<%= user.name %>" required disabled>
+                        <span class="error-message" id="nameError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address:</label>
+                        <input type="email" id="email" name="email" value="<%= user.email %>" required disabled>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number:</label>
+                        <input type="tel" id="mobile" name="mobile" value="<%= user.phone %>" required disabled>
+                        <span class="error-message" id="mobileError"></span>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" id="editBtn">Edit</button>
+                        <button type="button" id="saveBtn" style="display:none;">Save</button>
+                        <button type="button" id="cancelBtn" style="display:none;">Cancel</button>
+                    </div>
+                </form>
+
+                <br>
+                
+            </div>
+        </div>
+    </div>
+    <%- include("../../views/partials/user/footer") %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/user/user-account-delete.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/user/user-account-delete.js"></script>
+
+<script>
+   const form = document.getElementById('personal-info-form');
+const editBtn = document.getElementById('editBtn');
+const saveBtn = document.getElementById('saveBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const inputs = form.querySelectorAll('input');
+
+// Error message elements
+const nameError = document.getElementById('nameError');
+const genderError = document.getElementById('genderError');
+const emailError = document.getElementById('emailError');
+const mobileError = document.getElementById('mobileError');
+
+// Toggle the editing state of the form
+function toggleEditing(editable) {
+    inputs.forEach(input => input.disabled = !editable);
+    editBtn.style.display = editable ? 'none' : 'inline-block';
+    saveBtn.style.display = editable ? 'inline-block' : 'none';
+    cancelBtn.style.display = editable ? 'inline-block' : 'none';
+}
+
+// Clear previous error messages
+function clearErrorMessages() {
+    document.querySelectorAll('.error-message').forEach(errorElement => {
+        errorElement.textContent = '';
+    });
+}
+
+// Validate form data
+function validateForm(formData) {
+    let isValid = true;
+
+    if (!formData.name.trim()) {
+        nameError.textContent = 'Name cannot be left empty.';
+        isValid = false;
+    }
+    
+    if (!formData.email.includes('@')) {
+        emailError.textContent = 'Please enter a valid email address.';
+        isValid = false;
+    }
+    if (!/^\d{10}$/.test(formData.mobile)) {
+        mobileError.textContent = 'Mobile number must contain 10 digits.';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Event Listeners
+editBtn.addEventListener('click', () => toggleEditing(true));
+
+cancelBtn.addEventListener('click', () => {
+    toggleEditing(false);
+    clearErrorMessages();
+    form.reset(); 
+});
+
+saveBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    clearErrorMessages();
+
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        mobile: document.getElementById('mobile').value,
+    };
+
+    if (validateForm(formData)) {
+        const userId = document.getElementById('userId').value;
+
+        fetch(`/user/account/edit-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.success
+                });
+                toggleEditing(false);
+            } else if (data.message) {
+                if (data.message.includes("Mobile number already exists")) {
+                    mobileError.textContent = data.message;
+                } else if (data.message.includes("You can update contact details from Google")) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Information',
+                        text: data.message
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: data.message
+                    });
+                }
+            } else if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops',
+                text: 'An error occurred while updating the data.'
+            });
+        });
+    }
+});
+
+    </script>
+    

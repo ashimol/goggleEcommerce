@@ -30,8 +30,7 @@ const loadHomepage = async (req, res) => {
         quantity: { $gt: 0 },
       });
   
-     
-  
+       
       if (req.user) {
         userId = req.user;
       } else if (req.session.user) {
@@ -40,6 +39,7 @@ const loadHomepage = async (req, res) => {
   
       if (userId) {
         const userData = await User.findById(userId);
+
         return res.render("home", {
           user: userData,
           products,
@@ -236,6 +236,14 @@ const login=async(req,res)=>{
 
         const user=await User.findOne({isAdmin:0,email:email});
 
+        const categories = await Category.find({ isListed: true });
+        const products = await Product.find({
+            isBlocked: false,
+            category: { $in: categories.map((category) => category._id) },
+            quantity: { $gt: 0 },
+          });
+      
+
         if(!user){
             return res.render("login",{message:"User not found"})
         }
@@ -254,7 +262,9 @@ const login=async(req,res)=>{
         req.session.user=user._id;
         console.log("Session user after login:", req.session.user);
 
-        res.redirect("/");    
+        //res.redirect("/");    
+        res.render('home',{user:user,
+            products});
 
     } catch (error) {
         console.error("login error",error);
@@ -274,52 +284,111 @@ const loadShopping = async (req,res)=>{
 };
 
 
-const logout=async (req,res)=>{
+// const logout=async (req,res)=>{
+//     try {
+//         req.session.destroy((err)=>{
+//             if (err){
+//                console.log("session destruction error",err.message);
+//                return res.redirect("pageNotFound");
+//             }
+//             return res.redirect("/");
+//         })
+//     } catch (error) {
+//         console.log("Logout error",error);
+//         res.redirect("pageNotFound")
+//     }
+// };
+
+const logout = async (req, res) => {
     try {
-        req.session.destroy((err)=>{
-            if (err){
-               console.log("session destruction error",err.message);
-               return res.redirect("pageNotFound");
-            }
-            return res.redirect("/");
-        })
+        if (req.session.user) {
+            req.session.user = null; // Or use req.session.destroy() if needed
+        }
+    
+        // Optionally clear the session cookie for the user
+        res.clearCookie('connect.sid');
+    
+        // Redirect or send a response
+        res.redirect('/login'); // Redirect to login page or another page
     } catch (error) {
-        console.log("Logout error",error);
-        res.redirect("pageNotFound")
+        console.log("Logout error:", error.message);
+        res.redirect("pageNotFound");
     }
 };
+
+
+
+// const productDetails = async (req, res) => {
+//     try {
+//         const productId = req.params.id;
+//         const userId = req.session.user || req.user; 
+        
+//         // console.log('Session:', req.session);
+//         // console.log('User ID:', userId);
+
+//         // if (!userId) {
+//         //     return res.status(401).json({ success: false, message: 'Please login' });
+            
+//         // }
+       
+
+//         const product = await Product.findById(productId).populate('category').lean().exec();
+       
+//         if (!product) {
+//             return res.status(404).send('Product not found');
+//         }
+//         if (!product.category || !product.category.isListed) {
+//             return res.status(403).send('This product is under an unlisted category.');
+//         }
+
+         
+//         res.render('product-details', { product});
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// };
 
 const productDetails = async (req, res) => {
     try {
         const productId = req.params.id;
-        const userId = req.session.user || req.user; 
+        let userId ;
         
-        console.log('Session:', req.session);
-        console.log('User ID:', userId);
+        if (req.user) {
+            userId = req.user;
+          } else if (req.session.user) {
+            userId = req.session.user;
+          }
+        const products = await Product.findById(productId).populate('category').lean().exec();
 
-        // if (!userId) {
-        //     return res.status(401).json({ success: false, message: 'Please login' });
-            
+        if (userId) {
+            const userData = await User.findById(userId);
+            return res.render("product-details", {
+              user: userData,
+              products,
+         
+            });
+          } else {
+            return res.render("product-details", {
+              products,
+              
+            });
+          }
+       
+        // if (!product) {
+        //     return res.status(404).send('Product not found');
         // }
-       
-
-        const product = await Product.findById(productId).populate('category').lean().exec();
-       
-        if (!product) {
-            return res.status(404).send('Product not found');
-        }
-        if (!product.category || !product.category.isListed) {
-            return res.status(403).send('This product is under an unlisted category.');
-        }
+        // if (!product.category || !product.category.isListed) {
+        //     return res.status(403).send('This product is under an unlisted category.');
+        // }
 
          
-        res.render('product-details', { product});
+        // res.render('product-details', { product});
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 };
-
 
 
 

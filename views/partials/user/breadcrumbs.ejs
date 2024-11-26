@@ -1,0 +1,54 @@
+
+
+<style>
+
+
+    .breadcrumb {
+        list-style: none; 
+        padding: 0;       
+        margin: 0;       
+        display: flex;    
+        align-items: center; 
+    }
+    
+    
+    .breadcrumb li {
+        display: inline;  
+        margin-right: 8px; 
+    }
+    
+    
+    .breadcrumb li a {
+        text-decoration: none; 
+        color: #007bff;     
+    }
+    
+    .breadcrumb li a:hover {
+        text-decoration: underline; 
+    }
+    
+    
+    .breadcrumb li + li::before {
+        content: '>';      
+        margin-right: 8px;  
+        color: #6c757d;    
+    }
+    
+    
+    </style>
+    
+    
+    <nav>
+      <ul class="breadcrumb">
+          <% if (breadcrumbs && breadcrumbs.length) { %>
+              <% breadcrumbs.forEach(function(crumb, index) { %>
+                  <li>
+                      <a href="<%= crumb.link %>"><%= crumb.name %></a>
+                  </li>
+                  <% if (index < breadcrumbs.length - 1) { %>
+                      <li>&gt;</li>
+                  <% } %>
+              <% }); %>
+          <% } %>
+      </ul>
+    </nav>

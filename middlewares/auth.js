@@ -15,12 +15,12 @@ const userAuth = (req, res, next) => {
                 if (user && !user.isBlocked) {
                     next();
                 } else if (user && user.isBlocked) {
-                    req.session.user = null;
+                    //req.session.user = null;
                     return res.render("login", {
                         message: "Your account is blocked by admin",
                     });
                 } else {
-                    res.redirect('/login');
+                    res.redirect('/logout');
                 }
             })
             .catch(err => {

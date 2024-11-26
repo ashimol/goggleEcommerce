@@ -1,0 +1,43 @@
+<%- include("../../views/partials/user/header") %>
+
+<div class="container-fluid" style="background-color: #f1f3f6;">
+    <div class="dashboard-container d-flex">
+        <!-- Include the sidebar partial -->
+        <%- include("../../views/partials/user/sidebar") %>
+
+        <div class="dashboard-content flex-grow-1 p-4">
+            <h2 class="text-center mb-4" style="color: #343a40;">User  Profile</h2>
+
+            <div class="row mt-4">
+                <div class="col-md-6 mx-auto">
+                    <div class="dashboard-card account-info shadow-sm rounded">
+                        <div class="card-title" style="background-color: #343a40; color: white; padding: 15px; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;">
+                            Account Info
+                        </div>
+                        <div class="user-info p-4">
+                            <i class="fas fa-user fa-3x mb-3 text-primary"></i>
+                            <div class="user-details" style="color: #343a40;">
+                                <p><strong>Name:</strong> <span id="name"><%= user.name %></span></p>
+                                <p><strong>Email:</strong> <span><%= user.email %></span></p>
+                                <p><strong>Phone:</strong> <span><%= user.phone %></span></p>
+                            </div>
+                        </div>
+                        <a href="/user/account" class="btn" style="background-color: #343a40; color: white; margin-top: 10px; margin-bottom: 20px; border-radius: 5px; padding: 10px 15px; text-decoration: none;">
+                            Edit Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add some CSS for button hover effect -->
+<style>
+    .btn:hover {
+        background-color: #343a40;
+        color: white;
+    }
+</style>
+
+<%- include("../../views/partials/user/footer") %>

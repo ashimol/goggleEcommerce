@@ -356,7 +356,7 @@ function handleFormSubmit(event){
     if(name===""){
         displayErrorMessage("name-error","please enter a name");
         isValid=false;
-    }else if(!/^[a-zA-Z\S]+$/.test(name)){
+    }else if(!/^[a-zA-Z\s]+$/.test(name)){
         displayErrorMessage("name-error","Category name should contain only alphabetic characters");
         isValid=false;
     }

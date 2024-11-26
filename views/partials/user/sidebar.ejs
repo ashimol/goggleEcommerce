@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/profile.css">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #f1f3f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40; /* Dark Gray */
+            color: white;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .sidebar-heading {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-heading img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .sidebar-heading a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .sidebar-item {
+            margin: 10px 0;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 5px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #495057; /* Medium Gray */
+            transform: scale(1.02);
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-item a:hover {
+            background-color: #495057; /* Medium Gray */
+            text-decoration: none;
+        }
+
+        .sidebar-item i {
+            margin-right: 10px;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+    </style>
+
+
+    
+</head>
+<body>
+      
+     
+            <div class="sidebar">
+
+                <div class="sidebar-heading">
+                    <img  height="50px" width="50px" src="/images/profileImage.jpg">
+
+                    <a href="/userProfile"><%= locals.user.name %> </a>
+                </div>
+                  
+                  
+                <div class="sidebar-item">
+                    <i class="fas fa-user"></i>
+                    <a href="/userProfile">Account Details</a>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-credit-card"></i>
+                    <a href="/user/address">Address</a>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-list"></i>
+                    <a href="/user/my-order">My orders</a>
+                </div>
+                
+                <div class="sidebar-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <a href="/logout">Log-out</a>
+                </div>
+            </div>
+
+        
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
