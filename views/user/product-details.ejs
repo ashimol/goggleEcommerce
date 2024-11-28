@@ -87,10 +87,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>
 						<div class="col-lg-8 single-right-left simpleCart_shelfItem">
 							<h3> <%= products.productName %>(<%= products.color %>)</h3>
-							<p>
+							<!-- <p>
 								<span class="price">₹<%= products.salePrice %></span>
 							</p>
-							  
+							   -->
+
+							   <p>
+								<%  if (products.salePrice < products.regularPrice) { %>
+								
+								  <span class="item_price">₹<%= products.salePrice %></span>
+								  <del>₹<%= products.regularPrice %></del>
+								<% } else { %>
+								  
+								  <span class="item_price">₹<%= product.regularPrice %></span>
+								<% } %>
+							  </p>
 							  
 							<br>
 							<div class="color-quality">
@@ -108,12 +119,33 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<div class="occasional">
 							
 							</div>
+							<div class="product_sort_info font-xs mb-30">
+								<ul>
+									<li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year Warranty</li>
+									<li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
+									<li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
+								</ul>
+							</div>
+
+							
+							
+
 							<div class="occasion-cart">
 								<div class="googles single-item singlepage" style="display: flex; gap: 10px;">
+																			
+																		
+						
+														
+
 									<form id="addToCartForm-<%= products._id %>" onsubmit="return false;">
 										<input type="hidden" name="productId" value="<%= products._id %>">
-										<input type="hidden" name="quantity" value="1">
-										<button type="button" class="googles-cart pgoogles-cart" onclick="">
+										<select id="quantity-<%= products._id %>" class="frm-field required sect">
+											<option value="1">1 Qty</option>
+											<option value="2">2 Qty</option>
+											<option value="3">3 Qty</option>
+											<option value="4">4 Qty</option>
+										</select>
+										<button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%= products._id %>')">
 											Add to Cart
 										</button>
 									</form>
@@ -124,6 +156,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										</button>
 									</form>
 								</div>
+								<ul class="product-meta font-xs color-grey mt-50">
+									
+									<li>Availability:<span class="in-stock text-success ml-5">
+										<%= products.status === 'Out of Stock' ? 'Out of Stock' : products.quantity + ' Items in Stock' %>
+									</span></li>
+								</ul>
+
 							</div>
 							
 							<ul class="footer-social text-left mt-lg-4 mt-3">
@@ -403,68 +442,103 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 
 <script>
-	function addToCart(productId) {
-  const form = document.getElementById(`addToCartForm-${productId}`);
-  const formData = new FormData(form);
+	async function addToCart(productId) {
+    // Get the selected quantity from the dropdown
+    const quantitySelect = document.getElementById(`quantity-${productId}`);
+    const quantity = quantitySelect.value; // Get the selected quantity
 
-  fetch("/add-cart", {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(Object.fromEntries(formData)),
-    credentials: 'include' 
-  })
-  .then(response => {
-    return response.json().then(data => {
-      if (!response.ok) {
-        throw data;
-      }
-      return data;
-    });
-  })
-  .then(data => {
-    if (data.message === 'Item already in cart') {
-      Swal.fire({
-        icon: 'info',
-        title: 'Already in Cart',
-        text: 'This item is already in your cart.'
-      });
-    } else {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: data.message
-      });
-    }
-    if (data.cartItemsCount !== undefined) {
-      updateCartItemCount(data.cartItemsCount);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    if (error.error === 'Please login to add items to cart') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Required',
-        text: 'Please login to add items to cart',
-        showCancelButton: true,
-        confirmButtonText: 'Login',
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = '/login';
+    try {
+        const response = await fetch('/add-cart', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, quantity }) // Send both productId and quantity
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            Swal.fire({
+                title: 'Added to Cart!',
+                text: result.message || 'The product was added to your cart.',
+                icon: 'success',
+                confirmButtonText: 'Continue Shopping',
+                timer: 3000,
+                timerProgressBar: true
+            })
+            .then(() => {
+                window.location.reload();
+            });
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                title: 'Error',
+                text: errorData.message || 'Error adding product to cart.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
         }
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.error || 'An error occurred, please login and try again'
-      });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'An error occurred. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
-  });
 }
+
+// async function addToCart(productId ,quantity) {
+
+  
+//     try {
+//         const response = await fetch('/add-cart', { 
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ productId })
+//         });
+
+       
+        
+//         if (response.ok) {
+//             const result = await response.json();
+//             Swal.fire({
+//                 title: 'Added to Cart!',
+//                 text: result.message || 'The product was added to your cart.',
+//                 icon: 'success',
+//                 confirmButtonText: 'Continue Shopping',
+//                 timer: 3000,
+//                 timerProgressBar: true
+//             })
+//             .then(() => {
+        
+//         window.location.reload();
+//       });
+//         } else {
+//             const errorData = await response.json();
+//             Swal.fire({
+//                 title: 'Error',
+//                 text: errorData.message || 'Error adding product to cart.',
+//                 icon: 'error',
+//                 confirmButtonText: 'Try Again'
+//             });
+//         }
+//       } catch (error) {
+//         console.error('Error adding to cart:', error);
+//         Swal.fire({
+//             title: 'Error',
+//             text: 'An error occurred. Please try again later.',
+//             icon: 'error',
+//             confirmButtonText: 'OK'
+//    		});
+// 	}
+// }
+
+
+
 
 function updateCartItemCount(count) {
   const cartCountElement = document.querySelector('.cart-count');

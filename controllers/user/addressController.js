@@ -6,7 +6,15 @@ const session = require("express-session");
 const userAddress = async (req,res) =>{
 
     try {
-        const userId = req.session.user || req.user;
+       // const userId = req.session.user || req.user;
+
+       let userId ;
+        
+        if (req.user) {
+            userId = req.user;
+        } else if (req.session.user) {
+            userId = req.session.user;
+        }
 
         if (!userId) {
             return res.status(401).send('User not authenticated');
@@ -17,6 +25,7 @@ const userAddress = async (req,res) =>{
         if (!user || user.address.length === 0) {
             console.log('No addresses found');
             return res.render('address', { 
+                user:user,
                 address: [], 
                 currentPage: 1, 
                 totalPages: 1 
@@ -36,6 +45,7 @@ const userAddress = async (req,res) =>{
         const totalPages = Math.ceil(totalAddress / limit);
 
         res.render('address', {
+            user:user,
             address: paginatedAddresses,
             currentPage: page,
             totalPages: totalPages,

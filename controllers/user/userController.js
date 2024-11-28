@@ -274,15 +274,226 @@ const login=async(req,res)=>{
 
   
 const loadShopping = async (req,res)=>{
+
     try{
-        return res.render("shop");
+
+        let userId ;
+        
+        if (req.user) {
+            userId = req.user;
+        } else if (req.session.user) {
+            userId = req.session.user;
+        }
+
+        const user = req.session.user;
+        //const userData = await User.findOne({_id:user});
+        const categories = await Category.find({isListed:true});
+        const categoryId = categories.map( (category) =>category._id.toString());
+
+        const page= parseInt(req.query.page) || 1;
+        const limit = 9;
+        const skip = (page-1)*limit;
+        const products = await Product.find({
+            isBlocked:false,
+            category:{$in:categoryId},
+            quantity:{$gt:0},
+        }).sort({createdOn : -1}).skip(skip).limit(limit);
+
+
+        const totalProducts = await Product.countDocuments({
+            isBlocked:false,
+            category:{$in:categoryId},
+            quantity:{$gt:0},
+        });
+
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        const categoriesWithIds = categories.map(category =>({_id:category.id,name :category.name}));
+
+        if(userId){
+            const userData = await User.findById(userId);
+         res.render("shop",{
+            user:userData,
+            products:products,
+            category:categoriesWithIds,
+            totalProducts:totalProducts,
+            currentPage:page,
+            totalPages:totalPages
+         });
+        }else{
+            res.render("shop",{
+                //user:userData,
+                products:products,
+                category:categoriesWithIds,
+                totalProducts:totalProducts,
+                currentPage:page,
+                totalPages:totalPages
+            });
+        }
     } catch(error){
-        console.log("home page not found");
+        console.log("shopping page not found");
         res.status(500).send("Server error");
         
     }
 };
 
+const filterProducts  = async (req,res) =>{
+    try {
+        
+        const user = req.session.user;
+        const category = req.query.category;
+        const findCategory = category ? await Category.findOne({_id:category}) : null;
+        const query = {
+            isBlocked:false,
+            quantity:{$gt:0}
+        }
+
+        if(findCategory){
+            //query.Category = findCategory._id;
+            query.category = findCategory._id; 
+
+        }
+
+        let findProducts = await Product.find(query).lean();
+        findProducts.sort((a,b) =>new Date(b.createdOn)-new Date(a.createdOn));
+
+        const categories = await Category.find({isListed:true});
+
+
+        let itemsPerPage= 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage -1)*itemsPerPage;
+        let endIndex =startIndex+itemsPerPage;
+        let totalPages = Math.ceil(findProducts.length / itemsPerPage);
+        let currentProduct = findProducts.slice(startIndex,endIndex);
+
+        let userData = null;
+
+        if(user){
+            userData = await User.findOne({_id:user});
+            if(userData){
+                const searchEntry = {
+                    category:findCategory ? findCategory._id : null,
+                    searchedOn : new Date(),
+
+                }
+                userData.searchHistory.push(searchEntry);
+                await userData.save();
+            }
+        }
+
+        req.session.filteredProducts = currentProduct;
+        res.render('shop',{
+            user:userData,
+            products:currentProduct,
+            category:categories,
+            totalPages,
+            currentPage,
+            selectedCategory:category || null,
+
+        })
+
+    } catch (error) {
+
+        res.redirect('/pageNotFound');
+        
+    }
+}
+
+
+const filterByPrice = async (req,res) =>{
+    try {
+        
+        const user = req.session.user;
+        const userData = await User.findOne({_id:user});
+        const categories= await Category.find({isListed:true}).lean();
+
+        let findProducts = await Product .find({
+            salePrice:{$gt:req.query.gt,$lt:req.query.lt},
+            isBlocked:false,
+            quantity:{$gt :0},
+        }).lean();
+
+        findProducts.sort((a,b) => new Date(b.createdOn) - new Date(a.createdOn));
+
+        let itemsPerPage= 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage -1)*itemsPerPage;
+        let endIndex =startIndex + itemsPerPage;
+        let totalPages = Math.ceil(findProducts.length / itemsPerPage);
+        let currentProduct = findProducts.slice(startIndex,endIndex);
+
+        req.session.filteredProducts = findProducts;
+        res.render('shop',{
+            user:userData,
+            products:currentProduct,
+            category:categories,
+            totalPages,
+            currentPage,
+            selectedCategory:categories || null,
+
+        })
+
+
+    } catch (error) {
+        
+        console.error(error);
+        res.redirect('/pageNotFound')
+        
+    }
+}
+
+
+const searchProducts = async (req,res) =>{
+
+    try {
+        const user = req.session.user;
+        const userData = await User.findOne({_id:user});
+        const search = req.body.query;
+
+        const categories = await Category.find({isListed:true}).lean();
+        const categoryIds = categories.map(category =>category._id.toString());
+
+        let searchResult = [];
+
+        if(req.session.filteredProducts && req.session.filteredProducts.length>0){
+            searchResult = req.session.filteredProducts.filter(product => 
+                product.productName.toLowerCase().includes(search.toLowerCase())
+            )
+        }else{
+            searchResult = await Product.find({
+                productName:{$regex:'.*'+search+'.*',$options:'i'},
+                isBlocked:false,
+                quantity:{$gt:0},
+                category:{$in:categoryIds}
+            })
+        }
+        searchResult.sort( (a,b) => new Date(b.createdOn) - new Date(a.createdOn));
+        
+        let itemsPerPage= 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage -1)*itemsPerPage;
+        let endIndex =startIndex + itemsPerPage;
+        let totalPages = Math.ceil(searchResult.length / itemsPerPage);
+        let currentProduct = searchResult.slice(startIndex,endIndex);
+
+        res.render('shop',{
+            user:userData,
+            products:currentProduct,
+            category:categories,
+            totalPages,
+            currentPage,
+            count:searchResult.length,
+        })
+
+        
+    } catch (error) {
+    
+        console.error(error);
+        res.redirect('/pageNotFound');
+        
+    }
+}
 
 // const logout=async (req,res)=>{
 //     try {
@@ -318,36 +529,7 @@ const logout = async (req, res) => {
 
 
 
-// const productDetails = async (req, res) => {
-//     try {
-//         const productId = req.params.id;
-//         const userId = req.session.user || req.user; 
-        
-//         // console.log('Session:', req.session);
-//         // console.log('User ID:', userId);
 
-//         // if (!userId) {
-//         //     return res.status(401).json({ success: false, message: 'Please login' });
-            
-//         // }
-       
-
-//         const product = await Product.findById(productId).populate('category').lean().exec();
-       
-//         if (!product) {
-//             return res.status(404).send('Product not found');
-//         }
-//         if (!product.category || !product.category.isListed) {
-//             return res.status(403).send('This product is under an unlisted category.');
-//         }
-
-         
-//         res.render('product-details', { product});
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// };
 
 const productDetails = async (req, res) => {
     try {
@@ -405,5 +587,8 @@ module.exports = {
     loadShopping,
     logout,
     productDetails,
+    filterProducts ,
+    filterByPrice,
+    searchProducts,
     
 }

@@ -126,7 +126,7 @@
 							<h3>Men’s eyewear
 								<span>Cool summer sale 50% off</span>
 							</h3>
-							<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							<a href="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 						</div>
 					</div>
 					<div class="carousel-item item2">
@@ -134,7 +134,7 @@
 							<h3>Women’s eyewear
 								<span>Want to Look Your Best?</span>
 							</h3>
-							<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							<a href="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 
 						</div>
 					</div>
@@ -143,7 +143,7 @@
 							<h3>Men’s eyewear
 								<span>Cool summer sale 50% off</span>
 							</h3>
-							<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							<a href="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 
 						</div>
 					</div>
@@ -152,7 +152,7 @@
 							<h3>Women’s eyewear
 								<span>Want to Look Your Best?</span>
 							</h3>
-							<a href="shop.html" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+							<a href="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
 						</div>
 					</div>
 				</div>
@@ -188,11 +188,19 @@
 							</a>
 							<div class="desc">
 								<h5><a href="/product-details/<%= product._id %>"><%= product.productName %></a></h5>
-								<span class="price">₹<%= product.salePrice %></span>
-								<!-- <a href="/user/product-details">
-									<i class="fas fa-question-circle"></i>
-									<span>Single View</span>
-								</a> -->
+								
+
+								
+									<%  if (products.salePrice < products.regularPrice) { %>
+									
+									  <span class="item_price">₹<%= products.salePrice %></span>
+									  <del>₹<%= products.regularPrice %></del>
+									<% } else { %>
+									  
+									  <span class="item_price">₹<%= product.regularPrice %></span>
+									<% } %>
+								  
+								
 							</div>
 						</div>
 					</div>

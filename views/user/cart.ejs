@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Single :: w3layouts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
+	<link rel="stylesheet" type="text/css" href="/css/jquery-ui1.css">
+	<link href="/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="screen"/>
+	<link href="/css/style.css" rel='stylesheet' type='text/css'/>
+	<link href="/css/fontawesome-all.css" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+	    rel="stylesheet">
+
+
+        <style>
+            body {
+       font-family: Arial, sans-serif;
+       margin: 0;
+       padding: 0;
+       background-color: #f8f9fa;
+     }
+     
+     .cart-page {
+       width: 60%;
+       margin: 20px auto;
+       background: #fff;
+       padding: 20px;
+       border-radius: 10px;
+       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+     }
+     
+     header {
+       display: flex;
+       justify-content: space-between;
+       border-bottom: 1px solid #ddd;
+       padding-bottom: 10px;
+       margin-bottom: 20px;
+     }
+     
+     .delivery-section,
+     .cart-items,
+     .price-details,
+     footer {
+       margin-bottom: 20px;
+     }
+     
+     .delivery-section p {
+       margin: 5px 0;
+     }
+     
+     .cart-items .cart-item {
+       display: flex;
+       align-items: center;
+       margin-bottom: 15px;
+     }
+     
+     .cart-items img {
+       width: 80px;
+       height: 80px;
+       border-radius: 10px;
+       margin-right: 10px;
+     }
+     
+     .item-details p {
+       margin: 5px 0;
+     }
+     
+     .price-details h2 {
+       margin-bottom: 10px;
+     }
+     
+     .footer .place-order {
+       width: 100%;
+       background: orange;
+       color: white;
+       border: none;
+       padding: 10px;
+       font-size: 16px;
+       border-radius: 5px;
+       cursor: pointer;
+     }
+     
+     .footer .place-order:hover {
+       background: darkorange;
+     }
+     
+     </style>
+</head>
+
+<body>
+	<div class="banner-top container-fluid" id="home">
+		<!-- header -->
+		<%-include("../../views/partials/user/header")%>
+		<!-- banner -->
+		<div class="banner_inner">
+			<div class="services-breadcrumb">
+				<div class="inner_breadcrumb">
+
+					<ul class="short">
+						<li>
+							<a href="/">Home</a>
+							<i>|</i>
+						</li>
+						<li>cart</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		
+	</div>
+    
+</head>
+
+
+    <div class="cart-page">
+        <header>
+            <h1>Your Shopping Cart</h1>
+        </header>
+        
+        <section class="cart-items">
+            <% if (cart && cart.items.length > 0) { %>
+                <% cart.items.forEach(item => { %>
+                    <div class="cart-item">
+                        <img src="/uploads/re-images/<%= item.productId.productImage[0] %>" alt="<%= item.productId.productName %>">
+                        <div class="item-details">
+                            <p><strong><%= item.productId.productName %></strong></p>
+                            <p>₹<%= item.price.toFixed(2) %> <span class="discount">Discounted Price: ₹<%= item.totalPrice.toFixed(2) %></span></p>
+                            <p>Quantity: <%= item.quantity %></p>
+
+                            <div class="product-details">
+                                <div class="button-container">
+                                    <form id="updateQuantityForm-<%= item.productId._id %>" onsubmit="return false;">
+                                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                        <div class="quantity-buttons">
+                                            <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
+                                            <button type="button" class="btn btn-primary"><%= item.quantity %></button>
+                                            <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
+                                        </div>
+                                    </form>
+                                    <form id="removeItemForm-<%= item.productId._id %>" onsubmit="return false;">
+                                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                        <button type="button" class="btn btn-danger" onclick="removeFromCart('<%= item.productId._id %>')">REMOVE</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Your cart is empty.</p>
+            <% } %>
+        </section>
+
+        <section class="price-details">
+            <h2>Price Details</h2>
+            <p  class="footer">Total Amount: ₹<%= cart.items.reduce((total, item) => total + item.totalPrice, 0).toFixed(2) %></p>
+        </section>
+
+        <div class="footer">
+            <button class="place-order">Place Order</button>
+        </div>
+    </div>
+    <%-include("../../views/partials/user/footer")%>
+    <script>
+        async function removeFromCart(productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to remove this item from the cart?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, remove it!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch('/cart/remove', { 
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ productId }) 
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            Swal.fire('Removed!', 'The item has been removed from your cart.', 'success')
+                            .then(() => {
+                                location.reload(); 
+                            });
+                        } else {
+                            Swal.fire('Failed', data.message || 'Failed to remove the item', 'error');
+                        }
+                    } catch (error) {
+                        Swal.fire('Error', 'An error occurred while removing the item', 'error');
+                        console.error('Error removing item:', error);
+                    }
+                }
+            });
+        }
+
+
+        function updateQuantity(productId, change) {
+    fetch('/cart/update-quantity', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify({ 
+            productId, 
+            change,
+           
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+        
+        // Update quantity display
+        const form = document.querySelector(`#updateQuantityForm-${productId}`);
+        if (form) {
+            const quantityDisplay = form.querySelector('.quantity-display');
+            if (quantityDisplay) {
+                quantityDisplay.textContent = data.updatedQuantity;
+            }
+        }
+
+        // Update cart summary with new calculations
+        updateCartSummary(data.cartSummary);
+        
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Quantity updated',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: error.message,
+            showConfirmButton: false,
+            timer: 2000
+        });
+    });
+}
+
+
+    </script>
+
