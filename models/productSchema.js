@@ -10,10 +10,10 @@ const productSChema = new Schema({
         type :String,
         required: true
     },
-    brand : {
-        type :String,
-        default: 'Unknown'
-       // required: true
+    brand: {
+        type: Schema.Types.ObjectId,
+        ref: "Brand",
+        required: false,
     },
     category : {
         type: Schema.Types.ObjectId,
@@ -28,7 +28,7 @@ const productSChema = new Schema({
         type :Number,
         required: true
     },
-    productOffer : {
+    offerPrice: {
         type : Number,
         default : 0
     },
@@ -51,6 +51,7 @@ const productSChema = new Schema({
     status: {
         type:String,
         enum: [ "Available","Out of Stock","Discontinued"],
+        required: true,
         default:"Available"
     },
 

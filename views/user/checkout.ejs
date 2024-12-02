@@ -1,0 +1,25 @@
+<div class="checkout-summary">
+    <h3>Checkout Summary</h3>
+    <div class="summary-item">
+        <span>Total Price</span>
+        <span>₹<%= checkoutData.totalPrice %></span>
+    </div>
+    <div class="summary-item">
+        <span>Discount</span>
+        <span>-₹<%= Math.round(checkoutData.totalDiscount) || 0 %></span>
+    </div>
+    <div class="summary-item">
+        <span>Delivery Charges</span>
+        <span><%= checkoutData.deliveryCharges ? `₹${checkoutData.deliveryCharges}` : 'Free' %></span>
+    </div>
+    <div class="summary-total">
+        <span>Total Amount</span>
+        <span>₹ <%= Math.round(checkoutData.totalPrice ) %></span>
+    </div>
+
+    <h3>Shipping Address</h3>
+    <div class="address">
+       
+       
+    </div>
+</div> 

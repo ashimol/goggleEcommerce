@@ -1,6 +1,7 @@
 const User = require("../../models/userSchema");
 const Category = require('../../models/categorySchema');
 const Product = require('../../models/productSchema');
+const Brand = require('../../models/brandSchema');
 const mongoose = require("mongoose");
 const env = require("dotenv").config();
 const nodemailer = require("nodemailer");
@@ -285,10 +286,12 @@ const loadShopping = async (req,res)=>{
             userId = req.session.user;
         }
 
-        const user = req.session.user;
+        //const user = req.session.user;
         //const userData = await User.findOne({_id:user});
         const categories = await Category.find({isListed:true});
         const categoryId = categories.map( (category) =>category._id.toString());
+
+
 
         const page= parseInt(req.query.page) || 1;
         const limit = 9;
@@ -297,7 +300,11 @@ const loadShopping = async (req,res)=>{
             isBlocked:false,
             category:{$in:categoryId},
             quantity:{$gt:0},
-        }).sort({createdOn : -1}).skip(skip).limit(limit);
+        })
+        .populate('brand')
+        .sort({createdOn : -1})
+        .skip(skip)
+        .limit(limit);
 
 
         const totalProducts = await Product.countDocuments({
@@ -307,15 +314,21 @@ const loadShopping = async (req,res)=>{
         });
 
         const totalPages = Math.ceil(totalProducts / limit);
+        const brands = await Brand.find({isBlocked:false});
 
         const categoriesWithIds = categories.map(category =>({_id:category.id,name :category.name}));
+        console.log('userid :',userId);
+        
 
         if(userId){
             const userData = await User.findById(userId);
+            console.log('user data :',userData);
+            
          res.render("shop",{
             user:userData,
             products:products,
             category:categoriesWithIds,
+            brand:brands,
             totalProducts:totalProducts,
             currentPage:page,
             totalPages:totalPages
@@ -325,6 +338,7 @@ const loadShopping = async (req,res)=>{
                 //user:userData,
                 products:products,
                 category:categoriesWithIds,
+                brand:brands,
                 totalProducts:totalProducts,
                 currentPage:page,
                 totalPages:totalPages
@@ -342,16 +356,24 @@ const filterProducts  = async (req,res) =>{
         
         const user = req.session.user;
         const category = req.query.category;
+        const brand = req.query.brand;
+
         const findCategory = category ? await Category.findOne({_id:category}) : null;
+        const findBrand = brand ? await Brand.findOne({_id:brand}):null;
+        const brands = await brand.find({}).lean();
+
         const query = {
             isBlocked:false,
             quantity:{$gt:0}
         }
 
-        if(findCategory){
+        if(findCategory ){
             //query.Category = findCategory._id;
             query.category = findCategory._id; 
 
+        }
+        if(findBrand){
+            query.brand = findBrand.name;
         }
 
         let findProducts = await Product.find(query).lean();
@@ -374,6 +396,7 @@ const filterProducts  = async (req,res) =>{
             if(userData){
                 const searchEntry = {
                     category:findCategory ? findCategory._id : null,
+                    brand : findBrand ? findBrand.name :null,
                     searchedOn : new Date(),
 
                 }
@@ -387,9 +410,11 @@ const filterProducts  = async (req,res) =>{
             user:userData,
             products:currentProduct,
             category:categories,
+            brand:brands,
             totalPages,
             currentPage,
             selectedCategory:category || null,
+            selectedBrand :brand || null,
 
         })
 
@@ -541,10 +566,15 @@ const productDetails = async (req, res) => {
           } else if (req.session.user) {
             userId = req.session.user;
           }
+
+          console.log('user id :',userId);
+          
         const products = await Product.findById(productId).populate('category').lean().exec();
 
         if (userId) {
             const userData = await User.findById(userId);
+            console.log('userdata :',userData);
+            
             return res.render("product-details", {
               user: userData,
               products,

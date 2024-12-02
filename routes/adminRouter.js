@@ -4,6 +4,7 @@ const router = express.Router();
 const adminController = require('../controllers/admin/adminController');
 const customerController = require('../controllers/admin/customerController');
 const categoryController = require('../controllers/admin/categoryController');
+const brandController = require("../controllers/admin/brandController");
 const productController = require('../controllers/admin/productController');
 
 
@@ -36,6 +37,17 @@ router.get('/editCategory',adminAuth,categoryController.getEditCategory);
 router.post('/editCategory/:id',adminAuth,categoryController.editCategory);
 
 
+router.get("/brand",adminAuth,brandController.brandInfo);
+router.post("/addBrand",adminAuth,brandController.addBrand);
+router.get("/getBrands", adminAuth, brandController.getBrands);
+router.get("/listBrand",adminAuth,brandController.getListBrand);
+router.get("/unlistBrand",adminAuth,brandController.getUnListBrand);
+router.get("/editBrand",adminAuth,brandController.getEditBrand);
+router.get("/editBrand/:id",adminAuth,brandController.getEditBrand);
+router.post("/editBrand/:id", adminAuth, brandController.editBrand);
+router.delete('/deleteBrand', adminAuth, brandController.deleteBrand);
+
+
 
 router.get('/addProducts',adminAuth,productController.getProductAddPage);
 router.post("/addProducts",adminAuth,uploads.array('images',3),productController.addProducts);
@@ -44,8 +56,8 @@ router.get('/blockProduct',adminAuth,productController.blockProduct);
 router.get('/unblockProduct',adminAuth,productController.unblockProduct);
 router.get('/editProduct',adminAuth,productController.getEditProduct);
 router.post('/editProduct/:id',adminAuth,uploads.array('images',3),productController.editProduct);
-router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
-
+//router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
+//router.delete('/deleteProduct', adminAuth, productController.deleteProduct);
 
 
 module.exports = router;

@@ -2,169 +2,203 @@
 <html lang="zxx">
 
 <head>
-	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Single :: w3layouts</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8">
-	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+    <title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-	<script>
-		addEventListener("load", function () {
-			setTimeout(hideURLbar, 0);
-		}, false);
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
 
-		function hideURLbar() {
-			window.scrollTo(0, 1);
-		}
-	</script>
-	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
-	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
-	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
-	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
-	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
-	<link rel="stylesheet" type="text/css" href="/css/jquery-ui1.css">
-	<link href="/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
-	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="screen"/>
-	<link href="/css/style.css" rel='stylesheet' type='text/css'/>
-	<link href="/css/fontawesome-all.css" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
-	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
-	    rel="stylesheet">
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="/css/login_overlay.css" rel='stylesheet' type='text/css' />
+    <link href="/css/style6.css" rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="/css/shop.css" type="text/css" />
+    <link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
+    <link href="/css/style.css" rel='stylesheet' type='text/css' />
+    <link href="/css/fontawesome-all.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+        rel="stylesheet">
+    <!-- Include SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    <!-- Include SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <style>
-            body {
-       font-family: Arial, sans-serif;
-       margin: 0;
-       padding: 0;
-       background-color: #f8f9fa;
-     }
-     
-     .cart-page {
-       width: 60%;
-       margin: 20px auto;
-       background: #fff;
-       padding: 20px;
-       border-radius: 10px;
-       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-     }
-     
-     header {
-       display: flex;
-       justify-content: space-between;
-       border-bottom: 1px solid #ddd;
-       padding-bottom: 10px;
-       margin-bottom: 20px;
-     }
-     
-     .delivery-section,
-     .cart-items,
-     .price-details,
-     footer {
-       margin-bottom: 20px;
-     }
-     
-     .delivery-section p {
-       margin: 5px 0;
-     }
-     
-     .cart-items .cart-item {
-       display: flex;
-       align-items: center;
-       margin-bottom: 15px;
-     }
-     
-     .cart-items img {
-       width: 80px;
-       height: 80px;
-       border-radius: 10px;
-       margin-right: 10px;
-     }
-     
-     .item-details p {
-       margin: 5px 0;
-     }
-     
-     .price-details h2 {
-       margin-bottom: 10px;
-     }
-     
-     .footer .place-order {
-       width: 100%;
-       background: orange;
-       color: white;
-       border: none;
-       padding: 10px;
-       font-size: 16px;
-       border-radius: 5px;
-       cursor: pointer;
-     }
-     
-     .footer .place-order:hover {
-       background: darkorange;
-     }
-     
-     </style>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .cart-page {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%; /* Adjust width as needed */
+        }
+
+        .cart-items {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .cart-summary {
+            width: 300px; /* Fixed width for summary */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .cart-summary h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-total {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .place-order {
+            width: 100%;
+            background: orange;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .place-order:hover {
+            background: darkorange;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height:  80px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item_price {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-display {
+            margin: 0 10px;
+            width: 40px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-	<div class="banner-top container-fluid" id="home">
-		<!-- header -->
-		<%-include("../../views/partials/user/header")%>
-		<!-- banner -->
-		<div class="banner_inner">
-			<div class="services-breadcrumb">
-				<div class="inner_breadcrumb">
-
-					<ul class="short">
-						<li>
-							<a href="/">Home</a>
-							<i>|</i>
-						</li>
-						<li>cart</li>
-					</ul>
-				</div>
-			</div>
-
-		</div>
-		
-	</div>
-    
-</head>
-
+    <div class="banner-top container-fluid" id="home">
+        <!-- header -->
+        <%-include("../../views/partials/user/header")%>
+        <!-- banner -->
+        <div class="banner_inner">
+            <div class="services-breadcrumb">
+                <div class="inner_breadcrumb">
+                    <ul class="short">
+                        <li>
+                            <a href="/">Home</a>
+                            <i>|</i>
+                        </li>
+                        <li>cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="cart-page">
-        <header>
-            <h1>Your Shopping Cart</h1>
-        </header>
-        
         <section class="cart-items">
+            <header>
+                <h1>Your Shopping Cart</h1>
+            </header>
             <% if (cart && cart.items.length > 0) { %>
                 <% cart.items.forEach(item => { %>
                     <div class="cart-item">
                         <img src="/uploads/re-images/<%= item.productId.productImage[0] %>" alt="<%= item.productId.productName %>">
                         <div class="item-details">
                             <p><strong><%= item.productId.productName %></strong></p>
-                            <p>₹<%= item.price.toFixed(2) %> <span class="discount">Discounted Price: ₹<%= item.totalPrice.toFixed(2) %></span></p>
+                            <p>
+                                <% if (item.productId.salePrice < item.productId.regularPrice) { %>
+                                    <span class="item_price">₹<%= item.productId.salePrice %></span>
+                                    <del>₹<%= item.productId.regularPrice %></del>
+                                <% } else { %>
+                                    <span class="item_price">₹<%= item.productId.regularPrice %></span>
+                                <% } %>
+                            </p>
                             <p>Quantity: <%= item.quantity %></p>
-
-                            <div class="product-details">
-                                <div class="button-container">
-                                    <form id="updateQuantityForm-<%= item.productId._id %>" onsubmit="return false;">
-                                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
-                                        <div class="quantity-buttons">
-                                            <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
-                                            <button type="button" class="btn btn-primary"><%= item.quantity %></button>
-                                            <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
-                                        </div>
-                                    </form>
-                                    <form id="removeItemForm-<%= item.productId._id %>" onsubmit="return false;">
-                                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
-                                        <button type="button" class="btn btn-danger" onclick="removeFromCart('<%= item.productId._id %>')">REMOVE</button>
-                                    </form>
-                                </div>
+                            <div class="button-container">
+                                <form id="updateQuantityForm-<%= item.productId._id %>" onsubmit="return false;">
+                                    <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                    <div class="quantity-buttons">
+                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
+                                        <button type="button" class="btn btn-primary quantity-display"><%= item.quantity %></button>
+                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
+                                    </div>
+                                </form>
+                                <form id="removeItemForm-<%= item.productId._id %>" onsubmit="return false;">
+                                    <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                    <button type="button" class="btn btn-danger" onclick="removeFromCart('<%= item.productId._id %>')">REMOVE</button>
+                                </form>
                             </div>
-
-                           
                         </div>
                     </div>
                 <% }); %>
@@ -173,15 +207,38 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <% } %>
         </section>
 
-        <section class="price-details">
-            <h2>Price Details</h2>
-            <p  class="footer">Total Amount: ₹<%= cart.items.reduce((total, item) => total + item.totalPrice, 0).toFixed(2) %></p>
-        </section>
+        <div class="cart-summary">
+            <h3>PRICE DETAILS</h3>
+            <div class="summary-item">
+                <span>Total price</span>
+                <span>₹<%= (totalPrice).toFixed(2) %></span>
+            </div>
+            <div class="summary-item">
+                <span>Discount</span>
+                <span>-₹<%= Math.round(totalDiscount) || 0 %></span>
+            </div>
+            <div class="summary-item">
+                <span>Delivery Charges</span>
+                <span><%= deliveryCharges ? `₹${deliveryCharges}` : 'Free' %></span>
+            </div>
+            <div class="summary-total">
+                <span>Total Amount</span>
+                <span>₹ <%= Math.round(totalAmount) %></span>
+            </div>
+            <!-- <a href="" id="checkout-link" class="place-order-btn">
+                <button class="place-order">Place Order</button>
+            </a> -->
 
-        <div class="footer">
-            <button class="place-order">Place Order</button>
+            <form action="/checkout" method="POST" id="checkout-form">
+                <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
+                <input type="hidden" name="totalDiscount" value="<%= totalDiscount %>">
+                <input type="hidden" name="deliveryCharges" value="<%= deliveryCharges %>">
+               
+                <button type="submit" class="place-order">Place Order</button>
+            </form>
         </div>
     </div>
+
     <%-include("../../views/partials/user/footer")%>
     <script>
         async function removeFromCart(productId) {
@@ -201,7 +258,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             },
                             body: JSON.stringify({ productId }) 
                         });
-
+                        console.log('Product ID to remove:', productId);
                         const data = await response.json();
 
                         if (response.ok && data.success) {
@@ -220,59 +277,92 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         }
 
-
         function updateQuantity(productId, change) {
-    fetch('/cart/update-quantity', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-        },
-        body: JSON.stringify({ 
-            productId, 
-            change,
-           
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.success) {
-            throw new Error(data.error);
+            fetch('/cart/update-quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                },
+                body: JSON.stringify({ 
+                    productId, 
+                    change,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+                
+                // Update quantity display
+                const form = document.querySelector(`#updateQuantityForm-${productId}`);
+                if (form) {
+                    const quantityDisplay = form.querySelector('.quantity-display');
+                    if (quantityDisplay) {
+                        quantityDisplay.textContent = data.updatedQuantity; // Update the displayed quantity
+                    }
+                }
+
+                // Update cart summary with new calculations
+                updateCartSummary(data.cartSummary);
+                
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Quantity updated',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: error.message,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            });
         }
-        
-        // Update quantity display
-        const form = document.querySelector(`#updateQuantityForm-${productId}`);
-        if (form) {
-            const quantityDisplay = form.querySelector('.quantity-display');
-            if (quantityDisplay) {
-                quantityDisplay.textContent = data.updatedQuantity;
+
+        function updateCartSummary(summary) {
+            if (!summary) return;
+            
+            // Update items count
+            const itemsCountElement = document.querySelector('.summary-item:first-child span:last-child');
+            if (itemsCountElement) {
+                itemsCountElement.textContent = `₹${Math.round(summary.totalPrice)}`;
+            }
+    
+            const discountElement = document.querySelector('.summary-item:nth-child(2) span:last-child');
+            if (discountElement) {
+                discountElement.textContent = `-₹${Math.round(summary.totalDiscount)}`;
+            }
+    
+            // Update delivery charges
+            const deliveryElement = document.querySelector('.summary-item:nth-child(3) span:last-child');
+            if (deliveryElement) {
+                deliveryElement.textContent = summary.deliveryCharges > 0 ? `₹${summary.deliveryCharges}` : 'Free';
+            }
+    
+            // Update total amount (final price after discount)
+            const totalAmountElement = document.querySelector('.summary-total span:last-child');
+            if (totalAmountElement) {
+                totalAmountElement.textContent = `₹${Math.round(summary.totalAmount)}`;
             }
         }
 
-        // Update cart summary with new calculations
-        updateCartSummary(data.cartSummary);
+        document.querySelector('#checkout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            const cartId = '<%= cart._id %>';
+            window.location.href = `/cart/checkout/${cartId}`;
+        });
+
+
         
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Quantity updated',
-            showConfirmButton: false,
-            timer: 1500
-        });
-    })
-    .catch(error => {
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: error.message,
-            showConfirmButton: false,
-            timer: 2000
-        });
-    });
-}
-
-
     </script>
-
+</body>
+</html>

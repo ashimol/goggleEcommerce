@@ -1,0 +1,135 @@
+<%- include("../../views/partials/admin/header") %>
+
+<style>
+    .main-content {
+        padding: 20px;
+        margin-top: 120px;
+    }
+    .content-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .content-header {
+        margin-bottom: 20px;
+    }
+    .form-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="main-content">
+    <div class="content-wrapper">
+        <div class="content-header">
+            <h2>Edit Brand</h2>
+        </div>
+        <div class="form-container">
+            <form id="editBrandForm" method="post" action="/admin/editBrand/<%= brand._id %>">
+               
+                <div class="mb-3">
+                    <label for="brandName" class="form-label">Name</label>
+                    <input type="text" name="brandName" value="<%= brand.name %>" class="form-control" id="brandName" />
+                  
+                    <div class="error text-danger" id="brandNameError"></div>
+                </div>
+
+              
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="description" class="form-control" id="description" rows="4"><%= brand.description %></textarea>
+                  
+                    <div class="error text-danger" id="descriptionError"></div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button class="btn btn-primary" type="submit">Update Brand</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+     const originalBrandName = document.getElementById('brandName').value.trim();
+    const originalDescription = document.getElementById('description').value.trim();
+
+    document.getElementById('editBrandForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        document.getElementById('brandNameError').textContent = '';
+        document.getElementById('descriptionError').textContent = '';
+
+        const brandName = document.getElementById('brandName').value.trim();
+        const description = document.getElementById('description').value.trim();
+        let isValid = true;
+
+        const nameRegex = /^[a-zA-Z\s]+$/;
+
+        if (!brandName) {
+            document.getElementById('brandNameError').textContent = 'Brand name is required.';
+            isValid = false;
+        } else if (!nameRegex.test(brandName)) {
+            document.getElementById('brandNameError').textContent = 'Brand name must only contain alphabetic characters.';
+            isValid = false;
+        }
+
+        if (!description) {
+            document.getElementById('descriptionError').textContent = 'Description is required.';
+            isValid = false;
+        }
+
+        if (brandName === originalBrandName && description === originalDescription) {
+            await Swal.fire({
+                icon: 'info',
+                title: 'No Changes',
+                text: 'No changes were made to the form.',
+            });
+            return;
+        }
+
+         if (isValid) {
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ brandName, description })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message || 'Brand updated successfully',
+                    });
+                    window.location.href = '/admin/brand';
+                } else {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.error || 'An error occurred',
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An unexpected error occurred',
+                });
+            }
+        }
+    });
+    
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

@@ -7,6 +7,7 @@ const session = require('express-session');
 const {userAuth,adminAuth}=require('../middlewares/auth');
 const profileController= require("../controllers/user/profileController");
 const cartController = require('../controllers/user/cartController');
+const checkouController= require('../controllers/user/checkoutController');
 
 
 
@@ -55,6 +56,10 @@ router.delete('/user/deleteAddress', userAuth, addressController.deleteAddress);
 router.post("/add-cart",userAuth,cartController.addToCart);
 router.get('/cart',userAuth,cartController.getCart);
 router.post("/cart/update-quantity",userAuth,cartController.updateQuantity)
+//router.post('/cart/remove',userAuth, cartController.removeFromCart);
+router.delete('/cart/remove',userAuth, cartController.removeFromCart);
+//router.delete('/cart/remove-deleted-item',userAuth,cartController.removeDeletedItem);
 
-
+router.get('/checkout-page',userAuth,checkouController.getCheckout);
+router.post('/checkout',userAuth,checkouController.addToCheckout);
 module.exports= router;

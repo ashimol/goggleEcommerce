@@ -5,7 +5,13 @@ const session = require("express-session");
 
 const userprofile = async (req,res) =>{
     try {
-        const userId = req.session.user;
+        let userId ;
+        
+        if (req.user) {
+            userId = req.user;
+        } else if (req.session.user) {
+            userId = req.session.user;
+        }
 
         const userData = await User.findById(userId);
 
@@ -24,7 +30,13 @@ const userprofile = async (req,res) =>{
 const userAccount = async (req,res,next) => {
 
     try {
-        const userId = req.session.user || req.user;
+        let userId ;
+        
+        if (req.user) {
+            userId = req.user;
+        } else if (req.session.user) {
+            userId = req.session.user;
+        }
         const user = await User.findById(userId);
         
         res.render("user-account-edit", {user});
