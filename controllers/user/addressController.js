@@ -23,7 +23,7 @@ const userAddress = async (req,res) =>{
         const user = await User.findById(userId).populate('address').exec();
 
         if (!user || user.address.length === 0) {
-            console.log('No addresses found');
+            //console.log('No addresses found');
             return res.render('address', { 
                 user:user,
                 address: [], 
