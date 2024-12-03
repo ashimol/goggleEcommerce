@@ -228,12 +228,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <!-- <a href="" id="checkout-link" class="place-order-btn">
                 <button class="place-order">Place Order</button>
             </a> -->
+            
 
-            <form action="/checkout" method="POST" id="checkout-form">
-                <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
-                <input type="hidden" name="totalDiscount" value="<%= totalDiscount %>">
-                <input type="hidden" name="deliveryCharges" value="<%= deliveryCharges %>">
-               
+            <a href="#" id="checkout-link"  class="place-order-btn">
+                             
                 <button type="submit" class="place-order">Place Order</button>
             </form>
         </div>
@@ -241,6 +239,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
     <%-include("../../views/partials/user/footer")%>
     <script>
+
+        document.querySelector('#checkout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            const cartId = '<%= cart._id %>';
+            window.location.href = `/cart/checkout/${cartId}`;
+        });
+
+
         async function removeFromCart(productId) {
             Swal.fire({
                 title: 'Are you sure?',

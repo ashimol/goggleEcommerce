@@ -360,7 +360,7 @@ const filterProducts  = async (req,res) =>{
 
         const findCategory = category ? await Category.findOne({_id:category}) : null;
         const findBrand = brand ? await Brand.findOne({_id:brand}):null;
-        const brands = await brand.find({}).lean();
+        const brands = await Brand.find({}).lean();
 
         const query = {
             isBlocked:false,
@@ -373,10 +373,11 @@ const filterProducts  = async (req,res) =>{
 
         }
         if(findBrand){
-            query.brand = findBrand.name;
+            query.brand = findBrand._id;
         }
 
         let findProducts = await Product.find(query).lean();
+
         findProducts.sort((a,b) =>new Date(b.createdOn)-new Date(a.createdOn));
 
         const categories = await Category.find({isListed:true});
@@ -406,6 +407,7 @@ const filterProducts  = async (req,res) =>{
         }
 
         req.session.filteredProducts = currentProduct;
+
         res.render('shop',{
             user:userData,
             products:currentProduct,
@@ -419,7 +421,7 @@ const filterProducts  = async (req,res) =>{
         })
 
     } catch (error) {
-
+        console.error('Error in filterProducts:', error); 
         res.redirect('/pageNotFound');
         
     }
@@ -431,6 +433,8 @@ const filterByPrice = async (req,res) =>{
         
         const user = req.session.user;
         const userData = await User.findOne({_id:user});
+        const brands = await Brand.find({}).lean();
+
         const categories= await Category.find({isListed:true}).lean();
 
         let findProducts = await Product .find({
@@ -449,10 +453,12 @@ const filterByPrice = async (req,res) =>{
         let currentProduct = findProducts.slice(startIndex,endIndex);
 
         req.session.filteredProducts = findProducts;
+
         res.render('shop',{
             user:userData,
             products:currentProduct,
             category:categories,
+            brand:brands,
             totalPages,
             currentPage,
             selectedCategory:categories || null,
@@ -476,6 +482,7 @@ const searchProducts = async (req,res) =>{
         const userData = await User.findOne({_id:user});
         const search = req.body.query;
 
+        const brands = await Brand.find({}).lean();
         const categories = await Category.find({isListed:true}).lean();
         const categoryIds = categories.map(category =>category._id.toString());
 
@@ -506,6 +513,7 @@ const searchProducts = async (req,res) =>{
             user:userData,
             products:currentProduct,
             category:categories,
+            brand:brands,
             totalPages,
             currentPage,
             count:searchResult.length,
