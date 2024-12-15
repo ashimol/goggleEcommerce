@@ -124,10 +124,10 @@ const getCart = async (req, res) => {
             return res.render('cart',{
                 userData : userData.name,
                 cart:{ items:[]},
-                totalPrice:0,
-                totalDiscount:0,
-                deliveryCharges:0,
-                totalAmount:0,
+                // totalPrice:0,
+                // totalDiscount:0,
+                // deliveryCharges:0,
+                // totalAmount:0,
             });
         }
 
@@ -137,6 +137,8 @@ const getCart = async (req, res) => {
         cart.items.forEach(item => {
             const currentPrice = item.productId.salePrice < item.productId.regularPrice ? item.productId.salePrice : item.productId.regularPrice;
             totalPrice += currentPrice * item.quantity;
+
+            
             totalDiscount += (item.productId.regularPrice - currentPrice) * item.quantity;
         });
 
@@ -213,9 +215,10 @@ const updateQuantity = async (req, res) => {
         cart.items[itemIndex].quantity = newQuantity;
         await cart.save();
 
+        
+
         // Calculate updated cart summary
         const cartSummary = calculateCartSummary(cart);
-     
 
         res.json({
             success: true,
@@ -251,7 +254,13 @@ const calculateCartSummary = (cart) => {
             //totalPrice += item.product.regularPrice * item.quantity;
             totalPrice += (currentPrice * item.quantity);
             
+
+            console.log("total last : ", totalPrice);
+            
+            
             totalDiscount += discountAmount * item.quantity;
+            console.log("total last disc: ", totalDiscount);
+            
         }
     });
 

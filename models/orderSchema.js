@@ -12,7 +12,7 @@ const orderSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User '
+        ref: 'User'
     },
     addressId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -49,6 +49,8 @@ const orderSchema = new Schema({
     },
     status: {
         type: String,
+        required: false,
+        enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled", "Return Requested","Return Approved","Return Rejected","Returned"],
         default: 'Pending'
     }
     

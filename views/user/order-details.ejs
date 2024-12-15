@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="/css/login_overlay.css" rel='stylesheet' type='text/css' />
+	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
+	<link href="/css/style.css" rel='stylesheet' type='text/css' />
+	<link href="/css/fontawesome-all.css" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+	    rel="stylesheet">
+		<style>
+			.dropdown{
+				position: relative;
+				display: inline-block;
+			}
+			.dropdown-content{
+				display: none;
+				position: absolute;
+				background-color: aqua;
+				min-width: 160px;
+				box-shadow: 0px 8px 16px 6px rgba(0, 0, 0,2);
+				z-index: 1000;
+				right: 0;
+
+			}
+			.dropdown-content a {
+				color: black;
+				padding: 12px 16px;
+				text-decoration: none;
+				display: block;
+				width: 100%;
+			}
+			.dropdown-content a:hover{
+				background-color:whitesmoke;
+			}
+			.dropdown:hover .dropdown-content{
+				display: block;
+			}
+			.header{
+				position: relative;
+				z-index: 500;
+			}
+		</style>
+</head>
+<body>
+	<div class="banner-top container-fluid" id="home"> 
+		<!-- header -->
+<%- include("../../views/partials/user/header") %>
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+      <div class="inner_breadcrumb">
+  
+        <ul class="short">
+          <li>
+            <a href="/">Home</a>
+            <i>|</i>
+          </li>
+          <li>
+            <a href="/userprofile">Profile</a>
+            <i>|</i>
+          </li>
+          <li>
+            <a href="/user/my-order">orders</a>
+            <i>|</i>
+          </li>
+          <li>order details</li>
+        </ul>
+      </div>
+    </div>
+  
+  </div>
+<div class="container mt-4">
+    <h1 class="mb-4">Order Details</h1>
+
+    <% if (order) { %>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Order ID: <%= order.orderId %></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Delivery Address</h6>
+                        <% if (order.addressId) { %>
+                            <p>
+                                <%= order.addressId.house %>,<br>
+                                <%= order.addressId.city %>,<br>
+                                <%= order.addressId.landMark %>,<br>
+                                <%= order.addressId.contactNo %>,<br>
+                                <%= order.addressId.state %> - <%= order.addressId.pin %>
+                            </p>
+                        <% } else { %>
+                            <p>Address not available</p>
+                        <% } %>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Order Details</h6>
+                        <p>Order Date: <%= order.orderDate.toLocaleDateString() %></p>
+                        <p>Payment Method: <%= order.paymentMethod %></p>
+                        <p>Total Amount: ₹<%= order.totalAmount.toFixed(2) %></p>
+                        <p>Order Status: 
+                            <span class="badge 
+                                <% if (order.status === 'Pending') { %>
+                                    badge-warning
+                                <% } else if (order.status === 'Completed') { %>
+                                    badge-success
+                                <% } else { %>
+                                    badge-secondary
+                                <% } %>
+                            ">
+                                <%= order.status %>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <h6>Ordered Items</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% order.items.forEach((item) => { %>
+                                <tr>
+                                    <td>
+                                        <% if (item.productId && item.productId.productImage && item.productId.productImage.length > 0) { %>
+                                            <img 
+                                                src="/uploads/re-images/<%= item.productId.productImage[0] %>" 
+                                                alt="Product Image" 
+                                                class="img-thumbnail" 
+                                                style="width: 100px; height: 100px; object-fit: cover;"
+                                            >
+                                        <% } else { %>
+                                            <img 
+                                                src="/uploads/re-images/placeholder.jpg" 
+                                                alt="No Image" 
+                                                class="img-thumbnail" 
+                                                style="width: 100px; height: 100px; object-fit: cover;"
+                                            >
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (item.productId) { %>
+                                            <%= item.productId.productName %>
+                                        <% } else { %>
+                                            Product Unavailable
+                                        <% } %>
+                                    </td>
+                                    <td><%= item.quantity %></td>
+                                    <td>₹<%= item.productId.salePrice.toFixed(2) %></td>
+                                    <td>₹<%= (item.productId.salePrice * item.quantity).toFixed(2) %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="alert alert-info" role="alert">
+            Order details not available.
+        </div>
+    <% } %>
+</div>
+
+<%- include("../../views/partials/user/footer") %>

@@ -51,5 +51,85 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const originalCategoryName = document.getElementById('categoryName').value.trim();
+   const originalDescription = document.getElementById('description').value.trim();
+
+   document.getElementById('editCategoryForm').addEventListener('submit', async function(event) {
+       event.preventDefault();
+       
+       document.getElementById('categoryNameError').textContent = '';
+       document.getElementById('descriptionError').textContent = '';
+
+       const categoryName = document.getElementById('categoryName').value.trim();
+       const description = document.getElementById('description').value.trim();
+       let isValid = true;
+
+       const nameRegex = /^[a-zA-Z\s]+$/;
+
+       if (!categoryName) {
+           document.getElementById('categoryNameError').textContent = 'Category name is required.';
+           isValid = false;
+       } else if (!nameRegex.test(categoryName)) {
+           document.getElementById('categoryNameError').textContent = 'Category name must only contain alphabetic characters.';
+           isValid = false;
+       }
+
+       if (!description) {
+           document.getElementById('descriptionError').textContent = 'Description is required.';
+           isValid = false;
+       }
+
+       if (categoryName === originalCategoryName && description === originalDescription) {
+           await Swal.fire({
+               icon: 'info',
+               title: 'No Changes',
+               text: 'No changes were made to the form.',
+           });
+           return;
+       }
+
+        if (isValid) {
+           try {
+               const response = await fetch(this.action, {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'Accept': 'application/json'
+                   },
+                   body: JSON.stringify({ categoryName, description })
+               });
+
+               const data = await response.json();
+
+               if (response.ok) {
+                   await Swal.fire({
+                       icon: 'success',
+                       title: 'Success',
+                       text: data.message || 'Category updated successfully',
+                   });
+                   window.location.href = '/admin/category';
+               } else {
+                   await Swal.fire({
+                       icon: 'error',
+                       title: 'Oops...',
+                       text: data.error || 'An error occurred',
+                   });
+               }
+           } catch (error) {
+               console.error('Error:', error);
+               await Swal.fire({
+                   icon: 'error',
+                   title: 'Oops...',
+                   text: 'An unexpected error occurred',
+               });
+           }
+       }
+   });
+   
+</script>
+
   
 <%- include("../../views/partials/admin/footer") %>

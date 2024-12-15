@@ -317,7 +317,9 @@ const editProduct = async (req, res) => {
 
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
+
                 images.push(req.files[i].filename);
+                
             }
         }
         

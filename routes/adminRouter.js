@@ -6,7 +6,7 @@ const customerController = require('../controllers/admin/customerController');
 const categoryController = require('../controllers/admin/categoryController');
 const brandController = require("../controllers/admin/brandController");
 const productController = require('../controllers/admin/productController');
-
+const orderController = require('../controllers/admin/orderController');
 
 const {userAuth,adminAuth}=require('../middlewares/auth');
 const multer = require("multer");
@@ -59,5 +59,9 @@ router.post('/editProduct/:id',adminAuth,uploads.array('images',3),productContro
 //router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
 //router.delete('/deleteProduct', adminAuth, productController.deleteProduct);
 
+
+router.get('/orders',adminAuth,orderController.getAdminOrders);
+router.get('/orderDetails/:orderId', adminAuth, orderController.getOrderDetails);
+router.post('/updateItemStatus',adminAuth, orderController.updateItemStatus);
 
 module.exports = router;

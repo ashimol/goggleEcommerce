@@ -184,14 +184,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     <span class="item_price">₹<%= item.productId.regularPrice %></span>
                                 <% } %>
                             </p>
-                            <p>Quantity: <%= item.quantity %></p>
+                            <!-- <p>Quantity: <%= item.quantity %></p> -->
                             <div class="button-container">
                                 <form id="updateQuantityForm-<%= item.productId._id %>" onsubmit="return false;">
                                     <input type="hidden" name="productId" value="<%= item.productId._id %>">
                                     <div class="quantity-buttons">
-                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
+                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', -1)"> - </button>
                                         <button type="button" class="btn btn-primary quantity-display"><%= item.quantity %></button>
-                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
+                                        <button type="button" class="btn btn-primary" onclick="updateQuantity('<%= item.productId._id %>', 1)"> + </button>
                                     </div>
                                 </form>
                                 <form id="removeItemForm-<%= item.productId._id %>" onsubmit="return false;">
@@ -238,6 +238,88 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
 
     <%-include("../../views/partials/user/footer")%>
+
+    <script>
+        document.querySelectorAll(".increment-btn, .decrement-btn").forEach(button => {
+    button.addEventListener("click", async (event) => {
+        const productId = event.target.getAttribute("data-id");
+        const size = event.target.getAttribute("data-size");
+        const isIncrement = event.target.classList.contains("increment-btn");
+
+        const quantityInput = event.target.parentNode.querySelector("input");
+        let quantity = parseInt(quantityInput.value);
+
+        if (isIncrement) {
+            quantity++;
+        } else if (quantity > 1) {
+            quantity--;
+        } else {
+            
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid Quantity',
+                text: 'Quantity must be at least 1',
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch("/update-cart-quantity", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ productId, selectedSize: size, quantity }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                quantityInput.value = quantity;
+                
+                // document.querySelector(".cart__price").innerText = `Rs.${result.cart.items.find(
+                //     item => item.productId === productId && item.size === size
+                // ).totalPrice}`;
+               
+                const item = result.cart.items.find(
+                    item => item.productId === productId && item.size === size
+                );
+
+                // Update the subtotal and total prices
+                document.querySelector([data-id="${productId}"][data-size="${size}"])
+                    .closest("tr")
+                    .querySelector(".cart__price").innerText = Rs.${item.totalPrice};
+
+                
+                document.querySelector("#cart-subtotal").innerText = Rs.${result.cart.subtotal};
+                document.querySelector("#cart-total").innerText = Rs.${result.cart.total};
+
+
+            } else {
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message,
+                });
+            }
+        } catch (error) {
+            console.error("Error updating cart:", error);
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while updating the cart.',
+            });
+        }
+    });
+});
+
+
+    </script>
+
+
+
     <script>
 
         document.querySelector('#checkout-link').addEventListener('click', function(e) {
@@ -283,6 +365,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         }
 
+
         function updateQuantity(productId, change) {
             fetch('/cart/update-quantity', {
                 method: 'POST',
@@ -313,6 +396,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 // Update cart summary with new calculations
                 updateCartSummary(data.cartSummary);
                 
+                // Update quantity text
+                const quantityText = document.querySelector(`#updateQuantityForm-${productId}`).parentNode.parentNode.querySelector('p:nth-child(3)');
+                if (quantityText) {
+                    quantityText.textContent = `Quantity: ${data.updatedQuantity}`;
+                }
+                
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -331,41 +420,72 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     showConfirmButton: false,
                     timer: 2000
                 });
+            }).then(() => {
+                location.reload(); 
             });
         }
 
-        function updateCartSummary(summary) {
-            if (!summary) return;
-            
-            // Update items count
-            const itemsCountElement = document.querySelector('.summary-item:first-child span:last-child');
-            if (itemsCountElement) {
-                itemsCountElement.textContent = `₹${Math.round(summary.totalPrice)}`;
-            }
-    
-            const discountElement = document.querySelector('.summary-item:nth-child(2) span:last-child');
-            if (discountElement) {
-                discountElement.textContent = `-₹${Math.round(summary.totalDiscount)}`;
-            }
-    
-            // Update delivery charges
-            const deliveryElement = document.querySelector('.summary-item:nth-child(3) span:last-child');
-            if (deliveryElement) {
-                deliveryElement.textContent = summary.deliveryCharges > 0 ? `₹${summary.deliveryCharges}` : 'Free';
-            }
-    
-            // Update total amount (final price after discount)
-            const totalAmountElement = document.querySelector('.summary-total span:last-child');
-            if (totalAmountElement) {
-                totalAmountElement.textContent = `₹${Math.round(summary.totalAmount)}`;
-            }
-        }
 
-        document.querySelector('#checkout-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            const cartId = '<%= cart._id %>';
-            window.location.href = `/cart/checkout/${cartId}`;
-        });
+        function updateCartSummary(summary) {
+    if (!summary) return;
+
+    // Update total price
+    const totalPriceElement = document.querySelector('.summary-item:first-child span:last-child');
+    if (totalPriceElement) {
+        totalPriceElement.textContent = `₹${summary.totalPrice.toFixed(2)}`;
+    }
+
+    // Update total discount
+    const totalDiscountElement = document.querySelector('.summary-item:nth-child(2) span:last-child');
+    if (totalDiscountElement) {
+        totalDiscountElement.textContent = `-₹${summary.totalDiscount.toFixed(2)}`;
+    }
+
+    // Update delivery charges
+    const deliveryChargesElement = document.querySelector('.summary-item:nth-child(3) span:last-child');
+    if (deliveryChargesElement) {
+        deliveryChargesElement.textContent = summary.deliveryCharges > 0 ? `₹${summary.deliveryCharges}` : 'Free';
+    }
+
+    // Update total amount (final price after discount)
+    const totalAmountElement = document.querySelector('.summary-total span:last-child');
+    if (totalAmountElement) {
+        totalAmountElement.textContent = `₹${summary.totalAmount.toFixed(2)}`;
+    }
+
+    // Update the cart summary in the EJS template
+    const cartSummaryElement = document.querySelector('.cart-summary');
+    if (cartSummaryElement) {
+        cartSummaryElement.innerHTML = `
+            <h3>PRICE DETAILS</h3>
+            <div class="summary-item">
+                <span>Total price</span>
+                <span>₹${summary.totalPrice.toFixed(2)}</span>
+            </div>
+            <div class="summary-item">
+                <span>Discount</span>
+                <span>-₹${summary.totalDiscount.toFixed(2)}</span>
+            </div>
+            <div class="summary-item">
+                <span>Delivery Charges</span>
+                <span>${summary.deliveryCharges > 0 ? `₹${summary.deliveryCharges}` : 'Free'}</span>
+            </div>
+            <div class="summary-total">
+                <span>Total Amount</span>
+                <span>₹${summary.totalAmount.toFixed(2)}</span>
+            </div>
+        `;
+    }
+}
+
+       
+
+
+    document.querySelector('#checkout-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        const cartId = '<%= cart._id %>';
+        window.location.href = `/cart/checkout/${cartId}`;
+    });
 
 
         

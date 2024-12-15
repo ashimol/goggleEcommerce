@@ -7,8 +7,7 @@ const session = require('express-session');
 const {userAuth,adminAuth}=require('../middlewares/auth');
 const profileController= require("../controllers/user/profileController");
 const cartController = require('../controllers/user/cartController');
-//const orderController = require('../controllers/user/orderController');
-const orderController = require('../controllers/user/OrderController');
+const orderController = require('../controllers/user/orderController');
 
 
 
@@ -31,6 +30,7 @@ router.post("/resend-otp",userController.resendOtp);
 
 
 router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}));
+    
 router.get('/auth/google/callback',passport.authenticate('google',{failureRedirect:'/signup'}),(req,res)=>{
     res.redirect('/')
 });
@@ -41,6 +41,12 @@ router.get('/logout',userAuth,userController.logout);
 
 router.get('/product-details/:id',userAuth,userController.productDetails);
 
+router.get("/forgot-password",profileController.getForgotPassPage);
+ router.post("/forgot-email-valid", profileController.forgotEmailValid);
+ router.post("/verify-passForgot-otp",profileController.verifyForgotPassOtp);
+ router.get("/reset-password",profileController.getResetPassPage);
+ router.post("/resend-forgot-otp",profileController.resendOtp);
+ router.post("/reset-password",profileController.postNewPassword);
 
 router.get('/userprofile',userAuth,profileController.userprofile);
 router.get('/user/account',userAuth,profileController.userAccount);
@@ -63,9 +69,12 @@ router.delete('/cart/remove',userAuth, cartController.removeFromCart);
 
 router.get("/cart/checkout/:id", userAuth, orderController.getCheckout);
 router.post('/cart/place-order',userAuth,orderController. placeOrder);
+router.get('/orderConfirmation/:orderId',userAuth,orderController.orderConfirmation);
+router.get('/user/my-order',userAuth,orderController.getMyOrders);
+router.get('/my-order/order-details/:orderId/:itemId',userAuth, orderController.getOrderDetails);
+router.post('/my-order/cancel/:orderId',userAuth,orderController.cancelOrder);
+
 //router.post('/cart/checkout/:cartId',userAuth,orderController.addToCheckout);
-
-
 //router.get("/cart/place-order",userAuth,cartCount,orderController.placeOrder);
 
 module.exports= router;

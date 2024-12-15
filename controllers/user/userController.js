@@ -28,7 +28,7 @@ const loadHomepage = async (req, res) => {
       const products = await Product.find({
         isBlocked: false,
         category: { $in: categories.map((category) => category._id) },
-        quantity: { $gt: 0 },
+        // quantity: { $gt: 0 },
       });
   
        
@@ -241,7 +241,7 @@ const login=async(req,res)=>{
         const products = await Product.find({
             isBlocked: false,
             category: { $in: categories.map((category) => category._id) },
-            quantity: { $gt: 0 },
+            // quantity: { $gt: 0 },
           });
       
 
@@ -294,12 +294,12 @@ const loadShopping = async (req,res)=>{
 
 
         const page= parseInt(req.query.page) || 1;
-        const limit = 9;
+        const limit = 2;
         const skip = (page-1)*limit;
         const products = await Product.find({
             isBlocked:false,
             category:{$in:categoryId},
-            quantity:{$gt:0},
+            // quantity:{$gt:0},
         })
         .populate('brand')
         .sort({createdOn : -1})
@@ -310,13 +310,14 @@ const loadShopping = async (req,res)=>{
         const totalProducts = await Product.countDocuments({
             isBlocked:false,
             category:{$in:categoryId},
-            quantity:{$gt:0},
+            // quantity:{$gt:0},
         });
 
         const totalPages = Math.ceil(totalProducts / limit);
         const brands = await Brand.find({isBlocked:false});
 
         const categoriesWithIds = categories.map(category =>({_id:category.id,name :category.name}));
+
         console.log('userid :',userId);
         
 

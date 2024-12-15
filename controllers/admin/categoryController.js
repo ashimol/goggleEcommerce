@@ -88,33 +88,75 @@ const getEditCategory = async (req,res) =>{
 
 };
 
-const editCategory = async (req,res) =>{
+// const editCategory = async (req,res) =>{
+//     try {
+//         const id = req.params.id;
+//         const {categoryName,description} = req.body;
+//         const existingCategory = await Category.findOne({name:categoryName ,description:description});
+
+//         if(existingCategory){
+//             return res.status(400).json({error:"Category exists ,Please choose anotheer name"});
+//         }
+
+//         const updateCategory = await Category.findByIdAndUpdate(id,{
+//             name:categoryName,
+//             description:description,
+//         },{new:true});
+
+//         if(updateCategory){
+//             res.redirect('/admin/category');
+
+//         }else{
+//             res.status(404).json({erro:"Category not found"});
+//         }
+
+//     } catch (error) {
+//         res.status(500).json({error:"Internal Server Error"})
+        
+//     }
+// }
+
+
+
+const editCategory = async (req, res) => {
     try {
         const id = req.params.id;
-        const {categoryName,description} = req.body;
-        const existingCategory = await Category.findOne({name:categoryName ,description:description});
+        const { categoryName, description } = req.body;
+    
+        console.log(`Editing category ${id}. New name: ${categoryName}, New description: ${description}`);
 
-        if(existingCategory){
-            return res.status(400).json({error:"Category exists ,Please choose anotheer name"});
+        const currentCategory = await Category.findById(id);
+        if (!currentCategory) {
+            console.log(`Category with id ${id} not found`);
+            return res.status(404).json({ error: "Category not found" });
         }
-
-        const updateCategory = await Category.findByIdAndUpdate(id,{
-            name:categoryName,
-            description:description,
-        },{new:true});
-
-        if(updateCategory){
-            res.redirect('/admin/category');
-
-        }else{
-            res.status(404).json({erro:"Category not found"});
+    
+        if (currentCategory.name !== categoryName) {
+            console.log(`Category name changed from ${currentCategory.name} to ${categoryName}. Checking for duplicates.`);
+            const existingCategory = await Category.findOne({ name: categoryName });
+            if (existingCategory && existingCategory._id.toString() !== id) {
+                console.log(`Duplicate category name found: ${categoryName}`);
+                return res.status(400).json({ error: "Category exists, please choose another name" });
+            }
         }
-
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
         
+        const updatedCategory = await Category.findByIdAndUpdate(id, {
+            name: categoryName,
+            description: description,
+        }, { new: true });
+
+        if (updatedCategory) {
+            console.log(`Category updated successfully: ${JSON.stringify(updatedCategory)}`);
+            res.status(200).json({ message: "Category updated successfully" });
+        } else {
+            console.log(`Failed to update category ${id}`);
+            res.status(404).json({ error: "Category not found" });
+        }
+    } catch (error) {
+        console.error('Error in editCategory:', error);
+        res.status(500).json({ error: "Internal server error" });
     }
-}
+};
 
 
 module.exports ={
