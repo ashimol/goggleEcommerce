@@ -175,7 +175,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    /* width: calc(100% - 270px); */
 }
 
 .product-card {
@@ -226,11 +225,7 @@ body {
 .add-to-cart-btn:hover {
     background-color: #365a7a;
 }
-.category-brand-container ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
+
 /* Pagination */
 .pagination {
     display: flex;
@@ -250,8 +245,8 @@ body {
 }
 
 .pagination a:hover {
-    background-color: #1e918b color: #fff;
-    transform: scale(1.05);
+    background-color: #1e918b;
+    color: #fff transform: scale(1.05);
 }
 
 .pagination .active {
@@ -294,7 +289,11 @@ body {
 .price-button:active {
     transform: scale(0.95);
 }
-
+.category-brand-container ul {
+    list-style-type: none; /* Removes bullet points */
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .product-card {

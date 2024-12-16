@@ -149,18 +149,18 @@ const placeOrder = async (req, res) => {
         const { userId, addressId, items, totalAmount, paymentMethod } = req.body;
         console.log(req.body);
 
-        // Validate the data
+        
         if (!userId || !addressId || !items || items.length === 0 || !paymentMethod) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
-        // Check if the address exists
+        
         const address = await Address.findById(addressId);
         if (!address) {
             return res.status(404).json({ message: 'Address not found.' });
         }
 
-        // Check if each product exists and calculate total price
+       
         let orderItems = [];
         for (const item of items) {
             const product = await Product.findById(item.productId);
@@ -174,7 +174,7 @@ const placeOrder = async (req, res) => {
             });
         }
 
-        // Create a new order
+        
         const newOrder = new Order({
             userId,
             addressId,
@@ -183,20 +183,20 @@ const placeOrder = async (req, res) => {
             paymentMethod
         });
 
-        // Save the order
+      
         await newOrder.save();
 
-        // Remove items from the cart
-        const cart = await Cart.findOne({ userId }); // Assuming you have a Cart model
+        
+        const cart = await Cart.findOne({ userId }); 
         if (cart) {
-            // Remove the ordered items from the cart
+            
             cart.items = cart.items.filter(cartItem => 
                 !items.some(orderItem => orderItem.productId.toString() === cartItem.productId.toString())
             );
             await cart.save();
         }
 
-        // Render order confirmation page
+       
         return res.render('order-confirmation', { order: newOrder });
 
     } catch (error) {
@@ -220,11 +220,10 @@ const getMyOrders = async (req, res) => {
         
         let userId;
         if (req.user) {
-            userId = req.user._id;
-        } else if (req.session.user) {
-            userId = req.session.user._id;
-        }
-
+            userId = req.user;
+          } else if (req.session.user) {
+            userId = req.session.user;
+          }
        
         if (!userId) {
             return res.status(401).render('my-orders', { 
@@ -271,15 +270,14 @@ const getMyOrders = async (req, res) => {
 
 const getOrderDetails = async (req,res) =>{
     try {
-        // Determine the user ID
+       
         let userId;
         if (req.user) {
-            userId = req.user._id;
-        } else if (req.session.user) {
-            userId = req.session.user._id;
-        }
-
-        // Check if user is authenticated
+            userId = req.user;
+          } else if (req.session.user) {
+            userId = req.session.user;
+          }
+        
         if (!userId) {
             return res.status(401).render('order-details', { 
                 order: null,
@@ -287,12 +285,11 @@ const getOrderDetails = async (req,res) =>{
             });
         }
 
-        // Get the order ID from the request parameters
         const orderId = req.params.orderId;
         console.log('orderid : ',orderId);
         
 
-        // Find the order for the user
+        
         const order = await Order.findOne({ orderId: orderId, userId })
             .populate('addressId')
             .populate('items.productId');
@@ -304,7 +301,7 @@ const getOrderDetails = async (req,res) =>{
             });
         }
 
-        // Render the order details page
+        
         res.render('order-details', { order });
 
     } catch (error) {
@@ -366,7 +363,7 @@ const cancelOrder = async (req,res) => {
       } catch (error) {
         console.error("Error cancelling order:", error);
         res.status(500).json({ message: "Internal Server Error" });
-      }
+    }
   
 }
 
