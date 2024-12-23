@@ -349,6 +349,8 @@ function validateForm() {
               const category = document.getElementsByName('category')[0].value;
               const images = document.getElementById('input1')
               const quantity=document.getElementsByName('quantity')
+
+              console.log("Validating:", { name, description, brand, price, color, category, quantity });
             let isValid = true;
 
     if (name.trim() === "") {

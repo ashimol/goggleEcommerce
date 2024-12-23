@@ -234,27 +234,38 @@
                     <th class="text-center"></th>
                     <th>Name</th>
                     <th>Description</th>
-                                       
+                    <th>Offer Price</th>
+                    <th>Offer</th>               
                     <th>Status</th>
                     <th>List/Unlist</th>
                     <th class="text-start">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <%cat.reverse().forEach((category,index)=>{%>
+                  <% cat.reverse().forEach((category, index) => { %>
                   <tr>
                     <td></td>
                     <td class="text-start"><%= category.name%></td>
                     <td class="text-start"><%= category.description%></td>
-                   
-                    <!-- <td class="text-start">
+                    <td>
+                      <% if (category.categoryOffer) { %>
+                        <%=category.categoryOffer%>
+                      <%} else{%>
+                        0%
+                      <%}%>
+                    </td>
+                    <td class="text-start">
+                      <%if(category.categoryOffer === 0){%>
                       <button class="btn btn-info" style="width: 100px">
-                        <a href="#" class="text-white">Add Offer</a>
+                        <a href="#" class="text-white"  onclick=" addOffer('<%=category._id%>')">Add Offer</a>
+
                       </button>
+                      <%}else{%>
                       <button class="btn btn-info"style="width: 100px">
-                        <a href="#" class="text-white">Remove</a>
+                        <a href="#" class="text-white" onclick="removeOffer('<%=category._id%>')">Remove</a>
                       </button>
-                    </td> -->
+                      <% } %>
+                    </td>
                     <td class="text-start">
                       <% if (category.isListed) { %>
                         <span class="badge rounded-pill alert-success" style="width: 60px">Listed</span>
@@ -381,6 +392,96 @@ function handleFormSubmit(event){
     });
  }
 
+
+ async function addOffer(categoryId) {
+  const {value:amount}  = await Swal.fire({
+    title:"Offer in percentage",
+    input:"number",
+    inputLabel:"Percentage",
+    inputPlaceholder:"%",
+  });
+  
+  if(amount){
+    try {
+      
+      const response = await fetch('/admin/addCategoryOffer',{
+        method : "POST",
+        headers:{
+          'content-type':'application/json',
+        },
+        body:JSON.stringify({
+            percentage:amount,
+            categoryId: categoryId,
+          }),
+
+        });
+        const data = await response.json();
+        
+        if(response.ok && data.status === true){
+          Swal.fire(
+            "Offer Added",
+            "The offer has been added",
+            "success"
+          ).then(() => {
+            location.reload();
+          })
+        }else{
+          Swal.fire("Failed",data.message||"Adding offer failed","error");
+        }
+      
+    } catch (error) {
+      Swal.fire(
+        "Error",
+        "An error occured while adding the offer",
+        "error"
+      );
+      console.log("Error adding offer",error);
+    }
+  }
+
+ }
+
+ async function removeOffer(categoryId) {
+
+ console.log("Removing offer for categoryId:", categoryId)
+  try {
+    
+    const response = await fetch("/admin/removeCategoryOffer",{
+      method:"POST",
+      headers:{
+        "content-type" : "application/json",
+      },
+      body:JSON.stringify({
+        categoryId:categoryId,
+
+      })
+    })
+
+    const data = await response.json();
+
+    if(response.ok && data.status === true){
+      Swal.fire(
+        "Offer removed",
+        "The offer has been removed",
+        "Success"
+      ).then(()=>{
+        location.reload();
+      });
+    }else{
+      Swal.fire("Failed",data.message || "Removing offer failed","error");
+
+    }
+  } catch (error) {
+    
+    Swal.fire(
+      "Error",
+      "An error occures while removing the offer",
+      "error"
+    );
+    console.error("Error removing offer",error);
+  }
+  
+ }
 
 </script>
 

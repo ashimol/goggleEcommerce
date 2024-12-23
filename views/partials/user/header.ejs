@@ -86,30 +86,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<ul class="cart-inner-info">
 						
 						<% if (locals.user) { %>
-							<div class="dropdown">
-								<a href="#" class="sign-in-link"> <%= locals.user.name %></a>
-								<div class="dropdown-content">
-									<a href="/userprofile">Profile</a>
-									<a href="/logout">Logout</a>
+							<li class="button-log">
+								<div class="dropdown">
+									<a href="#" class="sign-in-link"><%= locals.user.name %></a>
+									<div class="dropdown-content">
+										<a href="/userProfile">Profile</a>
+										<a href="/wishlist">Wishlist</a>
+										<a href="/logout">Logout</a>
+									</div>
 								</div>
-							</div>
+							</li>
 						<% } else { %>
-							<a href="/signup" class="sign-in-link">Sign Up</a>
-							<a href="/login" class="sign-in-link">Log In</a>
+							<li class="button-log">
+								<a href="/signup" class="sign-in-link">Sign Up</a>
+								<a href="/login" class="sign-in-link">Log In</a>
+							</li>
 						<% } %>
-						
-						
-						<!-- <li class="galssescart galssescart2 cart cart box_1">
-							<form action="#" method="post" class="last">
-								<input type="hidden" name="cmd" value="_cart">
-								<input type="hidden" name="display" value="1">
-								<button class="top_googles_cart" type="submit" name="submit" value="">
-									My Cart
-									<i class="fas fa-cart-arrow-down"></i>
-								</button>
-							</form>
-						</li> -->
-
+						 
 						<li class="galssescart galssescart2 cart cart box_1"> 
 							<% if (locals.user) { %>
 								<a href="/cart" class="top_googles_cart">
@@ -126,6 +119,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								</a>
 							<% } %>
 						</li>
+						
+						
 					</ul>
 					
 				</div>

@@ -99,10 +99,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								  <del>₹<%= products.regularPrice %></del>
 								<% } else { %>
 								  
-								  <span class="item_price">₹<%= product.regularPrice %></span>
+								  <span class="item_price">₹<%= products.regularPrice %></span>
 								<% } %>
 							  </p>
-							  
+							  <span class="text-muted">
+								<strike>₹<%= products.regularPrice.toLocaleString('en-IN') %></strike>
+							  </span>
 							<br>
 							<div class="color-quality">
 								<div style="display: flex; align-items: center;">
@@ -145,7 +147,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											<option value="3">3 Qty</option>
 											<option value="4">4 Qty</option>
 										</select>
-										<button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%= products._id %>')">
+										<button type="button" class="googles-cart pgoogles-cart" data-product-id="<%= products._id %>" onclick="addToCart('<%= products._id %>')">
 											Add to Cart
 										</button>
 									</form>
@@ -458,17 +460,30 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
         if (response.ok) {
             const result = await response.json();
-            Swal.fire({
-                title: 'Added to Cart!',
-                text: result.message || 'The product was added to your cart.',
-                icon: 'success',
-                confirmButtonText: 'Continue Shopping',
-                timer: 3000,
-                timerProgressBar: true
-            })
-            .then(() => {
-                window.location.reload();
-            });
+            const addToCartButton = document.querySelector(`.googles-cart.pgoogles-cart[data-product-id="${productId}"]`);
+
+            if (result.alreadyInCart) {
+                // If the product is already in the cart, redirect to the cart page
+                window.location.href = '/cart'; // Change this to your cart URL
+            } else {
+                // Change button text to "Go to Cart"
+                addToCartButton.textContent = 'Go to Cart';
+                addToCartButton.onclick = () => {
+                    window.location.href = '/cart'; // Redirect to cart when clicked
+                };
+
+                Swal.fire({
+                    title: 'Added to Cart!',
+                    text: result.message || 'The product was added to your cart.',
+                    icon: 'success',
+                    confirmButtonText: 'Continue Shopping',
+                    timer: 3000,
+                    timerProgressBar: true
+                })
+                .then(() => {
+                    window.location.reload();
+                });
+            }
         } else {
             const errorData = await response.json();
             Swal.fire({

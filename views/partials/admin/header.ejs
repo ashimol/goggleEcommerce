@@ -218,6 +218,12 @@
     background-color: #dc3545;
   color:#fff;
 }
+
+.sidebar .nav-item a.active {
+    background-color: #85878a; /* Change to your desired color */
+    color: #fff; /* Change text color */
+}
+
 </style>
 <body>
     <div class="container">
@@ -227,7 +233,7 @@
             </div>
             <ul class="nav-list">
                 <li class="nav-item">
-                    <a href="/admin/dashboard">
+                    <a href="/admin/dashboard" > <!-- Add 'active' class here -->
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -259,20 +265,20 @@
                         <span>Orders</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="/admin/coupons">
                         <i class="fas fa-tags"></i>
                         <span>Coupon</span>
                     </a>
-                </li> -->
+                </li>
 
                 <!-- <li class="nav-item">
                     <a href="/admin/adminOffer">
                         <i class="fas fa-gift"></i>
                         <span>Offer</span>
                     </a>
-                </li> -->
-                
+                </li>
+                 -->
                 <li class="nav-item">
                     <a href="/admin/users">
                         <i class="fas fa-users"></i>
@@ -299,3 +305,14 @@
                 </li>
             </ul>
     </div>
+
+    <script>
+        $(document).ready(function() {
+    const currentUrl = window.location.pathname;
+    $('.nav-list .nav-item a').each(function() {
+        if ($(this).attr('href') === currentUrl) {
+            $(this).addClass('active');
+        }
+    });
+});
+    </script>

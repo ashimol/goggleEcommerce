@@ -8,7 +8,7 @@ const {userAuth,adminAuth}=require('../middlewares/auth');
 const profileController= require("../controllers/user/profileController");
 const cartController = require('../controllers/user/cartController');
 const orderController = require('../controllers/user/orderController');
-
+const wishlistController = require("../controllers/user/wishlistController");
 
 
 router.get("/pageNotFound",userController.pageNotFound);
@@ -63,18 +63,25 @@ router.delete('/user/deleteAddress', userAuth, addressController.deleteAddress);
 router.post("/add-cart",userAuth,cartController.addToCart);
 router.get('/cart',userAuth,cartController.getCart);
 router.post("/cart/update-quantity",userAuth,cartController.updateQuantity)
-//router.post('/cart/remove',userAuth, cartController.removeFromCart);
 router.delete('/cart/remove',userAuth, cartController.removeFromCart);
-//router.delete('/cart/remove-deleted-item',userAuth,cartController.removeDeletedItem);
 
 router.get("/cart/checkout/:id", userAuth, orderController.getCheckout);
-router.post('/cart/place-order',userAuth,orderController. placeOrder);
+router.post('/cart/place-order',userAuth,orderController.placeOrder);
+router.post('/verify-payment',userAuth,orderController.verifyPayment);
+router.post('/cart/apply-coupon',userAuth, orderController.applyCoupon);
+router.post("/cart/remove-coupon", userAuth, orderController.removeCoupon);
+
+
 router.get('/orderConfirmation/:orderId',userAuth,orderController.orderConfirmation);
 router.get('/user/my-order',userAuth,orderController.getMyOrders);
 router.get('/my-order/order-details/:orderId/:itemId',userAuth, orderController.getOrderDetails);
 router.post('/my-order/cancel/:orderId',userAuth,orderController.cancelOrder);
+router.post('/myorder/return-order',userAuth, orderController.returnOrder);
 
-//router.post('/cart/checkout/:cartId',userAuth,orderController.addToCheckout);
-//router.get("/cart/place-order",userAuth,cartCount,orderController.placeOrder);
+router.get("/wishlist",userAuth,wishlistController.loadWishlist);
+router.post("/add-wishlist",userAuth,wishlistController.addToWishlist);
+router.delete('/wishlist/deleteItems/:wishlistId', userAuth, wishlistController.deleteWishlistItem);
+
+
 
 module.exports= router;

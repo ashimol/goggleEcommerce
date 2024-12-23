@@ -34,6 +34,10 @@ const addProducts = async (req, res) => {
 
     try {
 
+        console.log("Request Body:", req.body);
+        console.log("Files:", req.files);
+
+
         const products = req.body;
         const productExists = await Product.findOne({ productName: products.productName });
         
@@ -83,7 +87,7 @@ const addProducts = async (req, res) => {
                 brand: brandId._id,
                 category: categoryId._id,
                 regularPrice: products.regularPrice,
-                salePrice: products.salePrice,
+                salePrice:products.salePrice,
                 createdOn: new Date(),
                 quantity: products.quantity,
                 color: products.color,
@@ -334,7 +338,7 @@ const editProduct = async (req, res) => {
             category: category._id, 
             brand: brand._id,
             regularPrice: data.regularPrice,
-            salePrice: data.salePrice,
+            salePrice:data.regularPrice,
             color: data.color,
             quantity:data.quantity,
         };
@@ -372,27 +376,49 @@ const editProduct = async (req, res) => {
     }
 };
 
-// const deleteSingleImage = async (req,res)=>{
-//     try {
-        
-//       const {imageNameToServer,productIdToServer} = req.body;
-//       const product = await Product.findByIdAndUpdate(productIdToServer,{$pull:{productImage:imageNameToServer}});
-     
-//       const imagePath = path.join("public","uploads","re-images",imageNameToServer);
-//       if(fs.existsSync(imagePath)){
-//         await fs.unlinkSync(imagePath);
-//         console.log(`Image ${imageNameToServer} deleted succesfully`);
-//       }else{
-//         console.log(`Image ${imageNameToServer} not found`);
-//       }
-//       res.send({status:true});
 
-//     } catch (error) {
-        
-//     res.redirect("/pageerror")
+const addProductOffer = async (req, res) => {
+    try {
+        const { productId, percentage } = req.body;
+        const product = await Product.findOne({ _id: productId });
 
-//     }
-// }
+        if (!product) {
+            return res.json({ status: false, message: 'Product not found' });
+        }
+
+        product.productOffer = percentage;
+        product.salePrice = product.salePrice - Math.floor(product.regularPrice * (percentage / 100));
+        await product.save();
+
+        res.json({ status: true });
+    } catch (error) {
+        console.error(error);
+        res.json({ status: false, message: 'An error occurred' });
+    }
+};
+
+
+
+const removeProductOffer=async(req,res)=>{
+    try {
+        const {productId}=req.body;
+
+        const findProduct=await Product.findOne({_id:productId});
+
+        const percentage=findProduct.productOffer;
+
+        findProduct.salePrice=findProduct.salePrice+Math.floor(findProduct.regularPrice*(percentage/100));
+
+         findProduct.productOffer=0;
+
+         await findProduct.save();
+         res.json({status:true});
+  
+    } catch (error) {
+        res.redirect("/pageerror");
+    }
+  }
+
 
 
 module.exports ={
@@ -403,6 +429,7 @@ module.exports ={
     unblockProduct,
     getEditProduct,
     editProduct,
-    
+    addProductOffer,
+    removeProductOffer
     
 }

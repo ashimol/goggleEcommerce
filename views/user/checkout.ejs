@@ -250,6 +250,38 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <% } %>    
       
         </div>
+        <div class="coupon-section">
+            <div class="row">               
+                <div class="col-md-11">
+                    <div class="coupon-details">
+                        <form id="couponForm">
+                            <div class="form-group">
+                                <label for="availableCoupons">Select a Coupon:</label>
+                                <select id="availableCoupons" name="coupon" class="form-control">
+                                    <option value="">Select a coupon</option>
+                                    <% if (coupons && coupons.length > 0) { %>
+                                        <% coupons.forEach(coupon => { %>
+                                            <option value="<%= coupon._id %>">
+                                                <%= coupon.code %> - <%= coupon.description %> (Valid until: <%= new Date(coupon.endDate).toLocaleDateString() %>)
+                                            </option>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <option value="">No coupons available</option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <button type="button" id="applyCouponBtn" class="btn btn-primary">Apply Coupon</button>
+                            <button type="button" id="removeCouponBtn" class="btn btn-danger" style="display:none;">Remove Coupon</button>
+                            
+                        </form>
+                        <div id="couponMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+
 
         <div class="new-address-form" id="newAddressForm" style="display:none;">
             <h2>Add New Address</h2>
@@ -300,11 +332,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                
                 <li>
                     <span>Order Total</span>
-                    <span id="orderTotal">₹<%=subtotal  %></span>
+                    <span id="orderTotal">₹<%=subtotal%></span>
                 </li>
             </ul>
         </div>
-        <form id="checkoutForm" onsubmit=" " method="post" action="/cart/place-order">
+        <form id="checkoutForm" onsubmit="handleFormSubmit(event)">
             <input type="hidden" name="cartId" value="<%= cartData._id %>">
             <input type="hidden" name="addressId" id="addressIdForOrder">
             <input type="hidden" name="userId" value="<%= userId %>"> 
@@ -313,14 +345,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantity %>">
                 <input type="hidden" name="items[<%= index %>][salePrice]" value="<%= item.productId.salePrice < item.productId.regularPrice ? item.productId.salePrice : item.productId.regularPrice %>">
             <% }) %>
-            <input type="hidden" name="totalAmount" value="<%=subtotal  %>">
+            <input type="hidden" name="totalAmount" value="<%=subtotal%>">
             <!-- Payment Methods -->
             <div class="payment-methods">
                 <h2>Payment Method</h2>
                 <label><input type="radio" name="paymentMethod" value="Online Payment" required> Online Payment (Razorpay)</label>
                 <label><input type="radio" name="paymentMethod" value="Cash On Delivery" required> Cash on Delivery</label>
             </div>
-            <button type="submit" class="place-order-btn">Place Order</button>
+            <button type="submit" class="place-order-btn">Confirm Order</button>
         </form>
     </div>
 </div>
@@ -444,42 +476,346 @@ function cancelAddressForm() {
     document.getElementById('newAddressForm').style.display = 'none';
     document.getElementById('addressForm').reset();
 }
+// Handle form submission for checkout
+function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+    if (!selectedAddress) {
+        alert('Please select an address for delivery.');
+        return;
+    }
+    
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!paymentMethod) {
+        alert('Please select a payment method.');
+        return;
+    }
 
 
-async function submitOrder(event) {
-    event.preventDefault(); // Prevent the default form submission
 
-    const form = document.getElementById('checkoutForm');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
 
-    try {
-        const response = await fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+    fetch('/cart/place-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data),
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.razorpayOrder) {
+                // Handle Razorpay payment
+                const options = {
+                    key: data.razorpayOrder.key,
+                    amount: data.razorpayOrder.amount * 100,
+                    currency: data.razorpayOrder.currency,
+                    order_id: data.razorpayOrder.id,
+                    name: "Goggles",
+                    description: "Order Payment",
+                    handler: function(response) {
+                        verifyPayment(response);
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            handlePaymentDismissal();
+                        }
+                    },
+                    prefill: {
+                        name: "<%= userId.name %>",
+                        email: "<%= userId.email %>",
+                        contact: "<%= userId.phone %>"
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } else {
+                // Handle COD or Wallet payment success
+                window.location.href = `/orderConfirmation/${data.orderId}`;
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error || 'Error placing order'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while placing the order.'
         });
+    });
+}
 
-        const result = await response.json();
+function handlePaymentDismissal() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Payment Cancelled',
+        text: 'You have cancelled the payment. Do you want to try again or view your order?',
+        showCancelButton: true,
+        // confirmButtonText: 'Retry Payment',
+        cancelButtonText: 'View Order'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.reload();
+        } else {
+            window.location.href = `/user/my-order`;
+        }
+    });
+}
 
-        if (response.ok) {
-            // Show success message
-            swal("Success!", result.message, "success").then(() => {
-                // Optionally redirect or reload the page
-                window.location.href = "/order-success"; // Redirect to a success page
+function verifyPayment(response) {
+    fetch('/verify-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Payment Successful',
+                text: 'Your payment has been processed successfully.',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/orderConfirmation/${data.orderId}`;
+                }
             });
         } else {
-            // Show error message
-            swal("Error!", result.message, "error");
+            throw new Error(data.message || 'Payment verification failed');
         }
-    } catch (error) {
+    })
+    .catch(error => {
         console.error('Error:', error);
-        swal("Error!", "An unexpected error occurred. Please try again.", "error");
-    }
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: 'Your payment was unsuccessful. Please try again.',
+            // confirmButtonText: 'Retry Payment',
+            showCancelButton: true,
+            cancelButtonText: 'View Orders'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.reload();
+            } else {
+                window.location.href = `/user/my-order`;
+            }
+           
+        });
+    });
 }
+
+
+// async function submitOrder(event) {
+//     event.preventDefault(); // Prevent the default form submission
+
+//     const form = document.getElementById('checkoutForm');
+//     const formData = new FormData(form);
+//     const data = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
+
+//     try {
+//         const response = await fetch(form.action, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(data),
+//         });
+
+//         const result = await response.json();
+
+//         if (response.ok) {
+//             // Show success message
+//             swal("Success!", result.message, "success").then(() => {
+//                 // Optionally redirect or reload the page
+//                 window.location.href = "/order-success"; // Redirect to a success page
+//             });
+//         } else {
+//             // Show error message
+//             swal("Error!", result.message, "error");
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//         swal("Error!", "An unexpected error occurred. Please try again.", "error");
+//     }
+// }
 </script>
+<script>
+    // Update the existing script section in your EJS file
+
+$(document).ready(function() {
+    $('#applyCouponBtn').click(function() {
+        const couponId = $('#availableCoupons').val();
+        if (!couponId) {
+            $('#couponMessage').text('Please select a coupon').removeClass('text-success').addClass('text-danger');
+            return;
+        }
+
+        $.ajax({
+            url: '/cart/apply-coupon',
+            method: 'POST',
+            data: { couponId: couponId },
+            success: function(response) {
+                // Update all relevant total displays
+                updateOrderTotals(response);
+
+                 // Update the order total display
+                $('#orderTotal').text(`₹${response.subtotal}`);
+                
+                // Update form hidden input for order total
+                $('input[name="totalAmount"]').val(response.subtotal);
+                
+                // Show success message and handle UI states
+                $('#couponMessage').text('Coupon applied successfully!').removeClass('text-danger').addClass('text-success');
+                $('#availableCoupons').prop('disabled', true);
+                $('#applyCouponBtn').hide();
+                $('#removeCouponBtn').show();
+            },
+            error: function(xhr) {
+                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while applying the coupon.';
+                $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
+            }
+        });
+    });
+
+    $('#removeCouponBtn').click(function() {
+        $.ajax({
+            url: '/cart/remove-coupon',
+            method: 'POST',
+            success: function(response) {
+                // Reset all totals to original values
+                updateOrderTotals(response);
+                
+                 // Update the order total display
+                 $('#orderTotal').text(`₹${response.subtotal}`);
+
+                // Reset form hidden input
+                $('input[name="totalAmount"]').val(response.subtotal);
+                
+                // Reset UI states
+                $('#couponMessage').text('Coupon removed successfully!').removeClass('text-danger').addClass('text-success');
+                $('#availableCoupons').prop('disabled', false);
+                $('#applyCouponBtn').show();
+                $('#removeCouponBtn').hide();
+            },
+            error: function(xhr) {
+                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while removing the coupon.';
+                $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
+            }
+        });
+    });
+
+    // Helper function to update all total displays
+    function updateOrderTotals(response) {
+        // Update the cart detail section
+        $('#orderTotal').text(`₹${response.orderTotal}`);
+        
+        // If you have other total displays, update them here
+        if ($('#subtotal').length) {
+            $('#subtotal').text(`₹${response.totalPrice}`);
+        }
+        if ($('#discount').length) {
+            $('#discount').text(`-₹${response.discount}`);
+        }
+        if ($('#couponDiscount').length) {
+            $('#couponDiscount').text(`₹${response.discountAmount}`);
+        }
+        if ($('#shippingCost').length) {
+            $('#shippingCost').text(`₹${response.shippingCost}`);
+        }
+    }
+});
+</script>
+
+<!-- <script>
+    //apply coupon
+     $(document).ready(function() {
+            
+            $('#applyCouponBtn').click(function() {
+                const couponId = $('#availableCoupons').val();
+                if (!couponId) {
+                    $('#couponMessage').text('Please select a coupon').removeClass('text-success').addClass('text-danger');
+                    return;
+                }
+    
+                $.ajax({
+                    url: '/cart/apply-coupon',
+                    method: 'POST',
+                    data: { couponId: couponId },
+                    success: function(response) {
+                        $('#subtotal').text('₹' + response.subtotal);
+                        $('#discount').text('- ₹' + response.discount);
+                        $('#couponDiscount').text('₹' + response.discountAmount); 
+                        $('#shippingCost').text('₹' + response.shippingCost);
+                        $('#totalAmount').text('₹' + response.total);
+                        $('#orderTotal').text('₹' + response.orderTotal);
+                        $('#hiddenorderTotal').val(response.orderTotal);
+                        $('#savingsMessage').text('You will save ₹' + response.discount + ' on this order');
+                        $('#appliedCouponId').val(response.couponId);
+                        $('#couponMessage').text('Coupon applied successfully!').removeClass('text-danger').addClass('text-success');                      
+                        $('#availableCoupons').prop('disabled', true);
+                        $('#applyCouponBtn').hide();
+                        $('#removeCouponBtn').show(); 
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while applying the coupon.';
+                        $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
+                    }
+                });
+            });
+    
+    
+            $('#removeCouponBtn').click(function() {
+                $.ajax({
+                    url: '/cart/remove-coupon', 
+                    method: 'POST', 
+                    success: function(response) {
+                        $('#subtotal').text('₹' + response.totalPrice);
+                        $('#discount').text('₹' + response.discount); 
+                       
+                        $('#deliveryCharges').text('₹' + response.deliveryCharges);
+                        $('#totalAmount').text('₹' + response.total);
+                        $('#finalTotal').text('₹' + response.finalTotal);
+                        $('#hiddenFinalTotal').val(response.finalTotal);
+                        $('#savingsMessage').text('Coupon removed.');
+                        $('#appliedCouponId').val(''); 
+                        $('#couponMessage').text('Coupon removed successfully!').removeClass('text-danger').addClass('text-success');
+    
+                        
+                        $('#availableCoupons').prop('disabled', false);
+                        $('#applyCouponBtn').show();
+                        $('#removeCouponBtn').hide(); 
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while removing the coupon.';
+                        $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
+                    }
+                });
+            });
+    
+            $('#paymentForm').submit(function() {
+                const finalTotal = $('#finalTotal').text().replace('₹', '');
+                $('#hiddenFinalTotal').val(finalTotal);
+            });
+        });
+    </script> -->
 
 
 <%-include("../../views/partials/user/footer")%>

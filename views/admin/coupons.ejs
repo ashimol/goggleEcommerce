@@ -1,0 +1,229 @@
+<%- include("../../views/partials/admin/header") %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupons</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <style>
+    .content { width: 80%; margin: auto; }
+    .header-actions { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+    .form-container { background-color: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none; width: 100%; }
+    .form-container input, .form-container select { width: calc(100% - 10px); padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; }
+    button[type="submit"] { margin-top: 15px; padding: 10px 15px; background-color: #6661ed; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    .message { margin-top: 10px; padding: 10px; border-radius: 5px; }
+    .success { background-color: #d4edda; color: #155724; }
+    .error { background-color: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h3>Coupons</h3>
+    <div class="header-actions">
+      <button style="background-color: chocolate; padding: 10px 15px; border: none; color: #ddd;" onclick="toggleForm()">Create Coupon</button>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-container" style="margin-bottom: 20px; width: 100%;">
+      <input type="text" id="searchInput" placeholder="Search coupons..." style="width: calc(100% - 100px); padding: 8px;">
+      <button onclick="searchCoupons()" style="padding: 10px 25px; background-color: #6661ed; color: white; border: none; cursor: pointer;">Search</button>
+    </div>
+
+    <!-- Form for Creating/Editing Coupons -->
+    <div class="form-container">
+      <h2 id="form-title">Create Coupon</h2>
+      <form id="coupon-form">
+        <input type="text" name="code" placeholder="Coupon Code" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <select name="discountType" required>
+          <option value="percentage">Percentage</option>
+          <option value="flat">Flat Amount</option>
+        </select>
+        <input type="number" name="discountValue" placeholder="Discount Value" required>
+        <input type="number" name="minPurchaseAmount" placeholder="Min Purchase Amount" required>
+        <input type="number" name="maxPurchaseAmount" placeholder="Max Purchase Amount" required>
+        <input type="date" name="startDate" required>
+        <input type="date" name="endDate" required>
+        <input type="number" name="usageLimit" placeholder="Usage Limit" required>
+        <select name="status" required>
+          <option value="Active">Active</option>
+          <option value="Expired">Expired</option>
+          <option value="Used">Used</option>
+          <option value="Not available">Not available</option>
+        </select>
+        <input type="hidden" name="id">
+        <button type="button" onclick="saveCoupon()">Save Coupon</button>
+      </form>
+    </div>
+
+    <!-- Coupon Table -->
+    <table id="coupon-table">
+      <thead>
+        <tr>
+          <th>Coupon Code</th>
+          <th>Description</th>
+          <th>Discount Type</th>
+          <th>Discount Value</th>
+          <th>Min Purchase</th>
+          <th>Max Purchase</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Usage Limit</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (coupons.length > 0) { %>   
+        <% coupons.forEach(coupon => { %>
+          <tr>
+            <td><%= coupon.code %></td>
+            <td><%= coupon.description %></td>
+            <td><%= coupon.discountType.charAt(0).toUpperCase() + coupon.discountType.slice(1) %></td>
+            <td>
+              <%= coupon.discountType === 'fixed' 
+                  ? `${coupon.discountValue} rs` 
+                  : `${coupon.discountValue} %` 
+              %>
+            </td>
+            <td><%= coupon.minPurchaseAmount %></td>
+            <td><%= coupon.maxPurchaseAmount %></td>
+            <td><%= coupon.startDate.toDateString() %></td>
+            <td><%= coupon.endDate.toDateString() %></td>
+            <td>
+              <span class="badge bg-<%= coupon.status === 'Active' ? 'success' : 'danger' %>">
+                <%= coupon.status === 'Active' ? 'Active' : coupon.status %>
+              </span>
+            </td>
+            <td><%= coupon.usageLimit %></td>
+            <td><%= coupon.createdAt.toDateString() %></td>
+            <td>
+              <button onclick="deleteCoupon('<%= coupon._id %>')" class="btn btn-sm btn-outline-danger"  >Delete</button>
+              <button onclick="editCoupon('<%= coupon._id %>')"  class="btn btn-sm btn-outline-primary" style="width: 62px;">Edit</button>
+              
+            </td>
+          </tr>
+        <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="12" class="text-center"><h4>No coupons found</h4></td>
+          </tr>
+        <% } %>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function toggleForm() {
+      const form = document.querySelector(".form-container");
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+
+    function searchCoupons() {
+      const searchTerm = document.getElementById('searchInput').value;
+      window.location.href = `/admin/coupons?search=${encodeURIComponent(searchTerm)}`;
+    }
+
+    async function saveCoupon() {
+      const form = document.getElementById("coupon-form");
+      const formData = new FormData(form);
+      
+      const couponData = {};
+      formData.forEach((value, key) => {
+
+      // Skip the 'id' field if it is not present or is empty
+    if (key === "id" && !value) {
+      return;
+    }
+   
+    // Check for required fields and show an error if missing
+    if (value.trim() === "" && key !== "id") {
+     
+      Swal.fire("Error", `Please fill the ${key} field.`, "error");
+      throw new Error("Validation failed");
+    }
+    couponData[key] = key.includes("Amount") || key === "discountValue" || key === "usageLimit"
+      ? parseInt(value, 10) || 0
+      : value;
+  });
+  console.log("Coupon Data:", couponData); 
+      const couponId = couponData.id || null;
+      const url = couponId ? `/admin/coupons/${couponId}` : "/admin/coupons/create";
+      const method = couponId ? "PUT" : "POST";
+
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(couponData),
+        });
+        
+        const result = await response.json();
+        Swal.fire(result.message, "", result.success ? "success" : "error").then(() => {
+        if (result.success) window.location.reload();
+        });
+      } catch (error) {
+        console.error("Error:", error); 
+        Swal.fire("Error", "An unexpected error occurred", "error");
+      }
+    }
+
+    async function editCoupon(couponId) {
+      try {
+        const response = await fetch(`/admin/coupons/${couponId}`);
+        if (!response.ok) throw new Error("Coupon not found"); 
+        
+        const coupon = await response.json();
+        const form = document.getElementById("coupon-form");
+
+        const formatDate = (date) => new Date(date).toISOString().split("T")[0];
+
+        // Populate the form with coupon data
+     Object.keys(coupon).forEach(key => {
+      if (form[key]) {
+        if (key === "startDate" || key === "endDate") {
+          form[key].value = formatDate(coupon[key]);  
+        } else {
+          form[key].value = coupon[key];  
+        }
+      }
+    })
+
+        form.id.value = coupon._id;
+
+        document.getElementById("form-title").textContent = "Edit Coupon";
+        toggleForm();
+      } catch (error) {
+        console.error("Edit error:", error);
+        Swal.fire("Error", "Failed to load coupon details", "error");
+      }
+    }
+
+    function deleteCoupon(couponId) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+      }).then(result => {
+        if (result.isConfirmed) {
+          fetch(`/admin/coupons/${couponId}`, { method: "DELETE" })
+            .then(response => response.json())
+            .then(data => {
+              Swal.fire(data.message, "", data.success ? "success" : "error").then(() => window.location.reload());
+            });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

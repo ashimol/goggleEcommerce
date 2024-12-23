@@ -179,7 +179,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <p>
                                 <% if (item.productId.salePrice < item.productId.regularPrice) { %>
                                     <span class="item_price">₹<%= item.productId.salePrice %></span>
-                                    <del>₹<%= item.productId.regularPrice %></del>
+                                   <strike>₹<%= item.productId.regularPrice %></strike>
                                 <% } else { %>
                                     <span class="item_price">₹<%= item.productId.regularPrice %></span>
                                 <% } %>
@@ -233,7 +233,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <a href="#" id="checkout-link"  class="place-order-btn">
                              
                 <button type="submit" class="place-order">Place Order</button>
-            </form>
+            <!-- </form> -->
         </div>
     </div>
 
@@ -243,7 +243,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         document.querySelectorAll(".increment-btn, .decrement-btn").forEach(button => {
     button.addEventListener("click", async (event) => {
         const productId = event.target.getAttribute("data-id");
-        const size = event.target.getAttribute("data-size");
+       
         const isIncrement = event.target.classList.contains("increment-btn");
 
         const quantityInput = event.target.parentNode.querySelector("input");
@@ -269,7 +269,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ productId, selectedSize: size, quantity }),
+                body: JSON.stringify({ productId, quantity }),
             });
 
             const result = await response.json();
@@ -286,13 +286,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 );
 
                 // Update the subtotal and total prices
-                document.querySelector([data-id="${productId}"][data-size="${size}"])
+                document.querySelector(`[data-id="${productId}"]`)
                     .closest("tr")
-                    .querySelector(".cart__price").innerText = Rs.${item.totalPrice};
+                    .querySelector(".cart__price").innerText =` Rs.${item.totalPrice}`;
 
                 
-                document.querySelector("#cart-subtotal").innerText = Rs.${result.cart.subtotal};
-                document.querySelector("#cart-total").innerText = Rs.${result.cart.total};
+                document.querySelector("#cart-subtotal").innerText = `Rs.${result.cart.subtotal}`;
+                document.querySelector("#cart-total").innerText =` Rs.${result.cart.total}`;
 
 
             } else {

@@ -19,6 +19,11 @@ const orderSchema = new Schema({
         required: true,
         ref: 'Address'
     },
+    coupon: {
+        type: Schema.Types.ObjectId,
+        ref:'Coupon',
+        required:false
+      },  
     items: [{
         productId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -38,11 +43,27 @@ const orderSchema = new Schema({
         type: Number,
         required: true
     },
-    paymentMethod: {
-        type: String,
-        enum: ['Online Payment', 'Cash On Delivery'],
-        required: true
-    },
+    // paymentMethod: {
+    //     type: String,
+    //     enum: ['Online Payment', 'Cash On Delivery'],
+    //     required: true
+    // },
+    payment: [{
+        method: {
+          type: String,
+          required: true,
+          enum: ["Cash On Delivery", "Online Payment", "Wallet Payment"]
+        },
+        status: {
+          type: String,
+          required: true,
+          enum: ["pending", "completed",'Failed','Refunded']
+        },
+        razorpayOrderId: {
+          type: String,
+          required: false  
+        }
+      }],
     orderDate: {
         type: Date,
         default: Date.now

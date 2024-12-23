@@ -286,15 +286,14 @@ const loadShopping = async (req,res)=>{
             userId = req.session.user;
         }
 
-        //const user = req.session.user;
-        //const userData = await User.findOne({_id:user});
+        
         const categories = await Category.find({isListed:true});
         const categoryId = categories.map( (category) =>category._id.toString());
 
 
 
         const page= parseInt(req.query.page) || 1;
-        const limit = 2;
+        const limit =6;
         const skip = (page-1)*limit;
         const products = await Product.find({
             isBlocked:false,
@@ -365,7 +364,7 @@ const filterProducts  = async (req,res) =>{
 
         const query = {
             isBlocked:false,
-            quantity:{$gt:0}
+           // quantity:{$gt:0}
         }
 
         if(findCategory ){
@@ -441,7 +440,7 @@ const filterByPrice = async (req,res) =>{
         let findProducts = await Product .find({
             salePrice:{$gt:req.query.gt,$lt:req.query.lt},
             isBlocked:false,
-            quantity:{$gt :0},
+           // quantity:{$gt :0},
         }).lean();
 
         findProducts.sort((a,b) => new Date(b.createdOn) - new Date(a.createdOn));
@@ -497,7 +496,7 @@ const searchProducts = async (req,res) =>{
             searchResult = await Product.find({
                 productName:{$regex:'.*'+search+'.*',$options:'i'},
                 isBlocked:false,
-                quantity:{$gt:0},
+               // quantity:{$gt:0},
                 category:{$in:categoryIds}
             })
         }
