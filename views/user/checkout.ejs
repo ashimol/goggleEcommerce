@@ -351,6 +351,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <h2>Payment Method</h2>
                 <label><input type="radio" name="paymentMethod" value="Online Payment" required> Online Payment (Razorpay)</label>
                 <label><input type="radio" name="paymentMethod" value="Cash On Delivery" required> Cash on Delivery</label>
+                <label><input type="radio" name="paymentMethod" value="WalletPayment" required> Pay from Wallet</label>
             </div>
             <button type="submit" class="place-order-btn">Confirm Order</button>
         </form>
@@ -439,7 +440,7 @@ function selectAddress(addressId) {
     document.getElementById('addressIdForOrder').value = addressId;
 }
 
-// Handle form submission for checkout
+
 
 // Handle edit button click to load form with address details
 function editAddress(addressId) {
@@ -538,6 +539,30 @@ function handleFormSubmit(event) {
                 
                 const rzp = new Razorpay(options);
                 rzp.open();
+            }else if (paymentMethod === 'Wallet Payment') {
+                fetch('/user/check-wallet-balance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: subtotal }),
+                    // body: JSON.stringify(Object.fromEntries(formData))
+                })
+                .then(response => response.json())
+                .then(walletData => {
+                    if (walletData.success) {
+                        window.location.href = `/orderConfirmation/${walletData.orderId}`;
+                    } else {
+                        throw new Error(walletData.message);
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.message,
+                        icon: 'error'
+                    });
+                });
             } else {
                 // Handle COD or Wallet payment success
                 window.location.href = `/orderConfirmation/${data.orderId}`;

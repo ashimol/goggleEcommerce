@@ -9,6 +9,22 @@ const profileController= require("../controllers/user/profileController");
 const cartController = require('../controllers/user/cartController');
 const orderController = require('../controllers/user/orderController');
 const wishlistController = require("../controllers/user/wishlistController");
+const userWalletController = require('../controllers/user/userWalletController');
+const orderCancelController = require('../controllers/user/orderCancelController');
+const Order = require('../models/orderSchema');
+const Wallet = require('../models/walletSchema');
+const Product =require('../models/productSchema')
+
+// router.use((req, res, next) => {
+//     console.log('Incoming request:', {
+//         method: req.method,
+//         url: req.url,
+//         params: req.params,
+//         body: req.body,
+//         path: req.path
+//     });
+//     next();
+// });
 
 
 router.get("/pageNotFound",userController.pageNotFound);
@@ -75,12 +91,37 @@ router.post("/cart/remove-coupon", userAuth, orderController.removeCoupon);
 router.get('/orderConfirmation/:orderId',userAuth,orderController.orderConfirmation);
 router.get('/user/my-order',userAuth,orderController.getMyOrders);
 router.get('/my-order/order-details/:orderId/:itemId',userAuth, orderController.getOrderDetails);
-router.post('/my-order/cancel/:orderId',userAuth,orderController.cancelOrder);
-router.post('/myorder/return-order',userAuth, orderController.returnOrder);
+
+router.post("/test-route", (req, res) => {
+    console.log("Test route hit");
+    res.json({ message: "Test route working" });
+});
+
+
+router.post("/user/my-order/cancel/:itemOrderId/:cancelReason", userAuth,orderCancelController.cancelOrder);
+router.post('/my-order/return/:orderId',userAuth, orderController.returnOrder);
+
 
 router.get("/wishlist",userAuth,wishlistController.loadWishlist);
 router.post("/add-wishlist",userAuth,wishlistController.addToWishlist);
 router.delete('/wishlist/deleteItems/:wishlistId', userAuth, wishlistController.deleteWishlistItem);
+
+//router.get("/wallet",userAuth,userWalletController.wallet);
+router.get("/user/my-wallet",userAuth,userWalletController.wallet);
+router.post('/user/check-wallet-balance', userAuth,userWalletController.checkWalletBalance);
+
+
+
+// Add error handling middleware at the end of your routes
+router.use((error, req, res, next) => {
+    console.error("Global error handler caught:", error);
+    res.status(500).json({
+        success: false,
+        message: 'Server error occurred',
+        error: error.message
+    });
+});
+
 
 
 

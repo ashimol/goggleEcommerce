@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="/css/login_overlay.css" rel='stylesheet' type='text/css' />
+	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
+	<link href="/css/style.css" rel='stylesheet' type='text/css' />
+	<link href="/css/fontawesome-all.css" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+	    rel="stylesheet">
+		<style>
+			.dropdown{
+				position: relative;
+				display: inline-block;
+			}
+			.dropdown-content{
+				display: none;
+				position: absolute;
+				background-color: aqua;
+				min-width: 160px;
+				box-shadow: 0px 8px 16px 6px rgba(0, 0, 0,2);
+				z-index: 1000;
+				right: 0;
+
+			}
+			.dropdown-content a {
+				color: black;
+				padding: 12px 16px;
+				text-decoration: none;
+				display: block;
+				width: 100%;
+			}
+			.dropdown-content a:hover{
+				background-color:whitesmoke;
+			}
+			.dropdown:hover .dropdown-content{
+				display: block;
+			}
+			.header{
+				position: relative;
+				z-index: 500;
+			}
+		</style>
+</head>
+<body>
+	<div class="banner-top container-fluid" id="home"> 
+		<!-- header -->
+<%- include("../../views/partials/user/header") %>
+
+
+<style>
+    .dashboard-content {
+      padding: 20px;
+    }
+  
+    .wallet-balance {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+    }
+  
+    .table th {
+      font-weight: 600;
+    }
+  
+    .badge {
+      font-size: 0.85em;
+      padding: 0.35em 0.65em;
+    }
+  
+    .card {
+      border: none;
+      border-radius: 10px;
+    }
+  
+    .card-title {
+      color: #333;
+      font-weight: 600;
+    }
+  
+    .alert {
+      border-radius: 8px;
+    }
+  
+  
+    @media (max-width: 576px) {
+  
+      .dashboard-container {
+        flex-direction: column;
+      }
+      .dashboard-content {
+        padding: 10px;
+      }
+  
+      .wallet-balance {
+        padding: 10px;
+      }
+  
+      .table th, .table td {
+        font-size: 0.8rem;
+      }
+  
+      .badge {
+        font-size: 0.7em;
+        padding: 0.3em 0.5em;
+      }
+  
+      .d-flex {
+        flex-direction: column;
+      }
+  
+      .card-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+      <!-- <body> -->
+        <div class="banner_inner">
+          <div class="services-breadcrumb">
+            <div class="inner_breadcrumb">
+        
+              <ul class="short">
+                <li>
+                  <a href="/">Home</a>
+                  <i>|</i>
+                </li>
+                <li>
+                  <a href="/userprofile">Profile</a>
+                  <i>|</i>
+                </li>
+                <li>
+                  <a href="/user/my-wallet">My Wallet</a>
+                  <i>|</i>
+                </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+          <div class="col-md-9">
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h2 class="card-title mb-4">Wallet</h2>
+                
+                <div class="wallet-balance mb-4">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Your Balance</h4>
+                    <h3 class="text-success mb-0">₹<%= balance.toFixed(2) %></h3>
+                  </div>
+                </div>
+                
+                <h4 class="mb-3">Transactions</h4>
+                <% if (transactions && transactions.length === 0) { %>
+                  <div class="alert alert-info" role="alert">
+                    No transactions yet.
+                  </div>
+                <% } else { %>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>Type</th>
+                          <th>Amount</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% transactions.forEach(transaction => { %>
+                          <tr>
+                            <td><%= new Date(transaction.date).toLocaleString('en-US', { 
+                              year: 'numeric', 
+                              month: '2-digit', 
+                              day: '2-digit', 
+                              hour: '2-digit', 
+                              minute: '2-digit', 
+                              second: '2-digit', 
+                              hour12: true // or false for 24-hour format
+                          }) %></td>
+                          
+                            <td>
+                              <span class="badge <%= transaction.type === 'credit' ? 'bg-success' : 'bg-danger' %>">
+                                <%= transaction.type === 'credit' ? 'Credit' : 'Debit' %>
+                              </span>
+                            </td>
+                            <td class="<%= transaction.type === 'credit' ? 'text-success' : 'text-danger' %>">
+                              ₹<%= transaction.amount.toFixed(2) %>
+                            </td>
+                            <td><%= transaction.description || 'N/A' %></td>
+                          </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                <% } %>
+                
+              </div>
+              
+            </div>
+
+            <div class="pagination-container">
+                <% if (totalPages > 1) { %>
+                  <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+                  <% } %>
+              
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                      <span class="current-page"><%= i %></span>
+                    <% } else { %>
+                      <a href="?page=<%= i %>"><%= i %></a>
+                    <% } %>
+                  <% } %>
+              
+                  <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+                  <% } %>
+                <% } %>
+              </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+</body>
+
+<%- include("../../views/partials/user/footer") %>
+  

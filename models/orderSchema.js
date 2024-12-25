@@ -25,6 +25,12 @@ const orderSchema = new Schema({
         required:false
       },  
     items: [{
+
+        itemOrderId: {
+          type: String,
+          default: () => uuidv4().split('-')[0],
+          unique: true
+        },
         productId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
@@ -37,7 +43,13 @@ const orderSchema = new Schema({
         price: {
             type: Number,
             required: true
-        }
+        },
+        itemOrderStatus: {
+          type: String,
+          required: false,
+          enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled", "Return Requested","Return Approved","Return Rejected","Returned"],
+           default: "Pending"
+        },
     }],
     totalAmount: {
         type: Number,
@@ -52,7 +64,7 @@ const orderSchema = new Schema({
         method: {
           type: String,
           required: true,
-          enum: ["Cash On Delivery", "Online Payment", "Wallet Payment"]
+          enum: ["Cash On Delivery", "Online Payment", "WalletPayment"]
         },
         status: {
           type: String,
@@ -64,6 +76,9 @@ const orderSchema = new Schema({
           required: false  
         }
       }],
+      returnRequestedReason: {
+        type: String
+      },
     orderDate: {
         type: Date,
         default: Date.now

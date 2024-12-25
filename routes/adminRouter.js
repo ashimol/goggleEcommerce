@@ -9,6 +9,7 @@ const productController = require('../controllers/admin/productController');
 const orderController = require('../controllers/admin/orderController');
 const adminOfferController = require('../controllers/admin/adminOfferController');
 const couponController =require('../controllers/admin/couponController');
+const salesReportController = require('../controllers/admin/salesReportController');
 
 const {userAuth,adminAuth}=require('../middlewares/auth');
 const multer = require("multer");
@@ -79,5 +80,12 @@ router.post('/coupons/create',adminAuth, couponController.createCoupon);
 router.delete("/coupons/:id", adminAuth, couponController.deleteCoupon);
 router.get("/coupons/:id", adminAuth, couponController.editCoupon);
 router.put("/coupons/:id", adminAuth, couponController.updateCoupon);
+
+
+router.get('/sales-report',adminAuth, salesReportController.getSalesReport)
+router.post('/filter-sales',adminAuth, salesReportController.filterSalesReport);
+router.post('/download-report',adminAuth, salesReportController.downloadReport);
+
+
 
 module.exports = router;
