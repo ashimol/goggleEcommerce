@@ -56,6 +56,8 @@ const productSChema = new Schema({
     },
 
 },{timestamps : true});
+
+
 const Product  = mongoose.model("Product", productSChema);
 
 module.exports = Product;

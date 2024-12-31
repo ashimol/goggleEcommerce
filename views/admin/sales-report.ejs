@@ -36,7 +36,8 @@
                 </form>
             </div>
 
-            <!-- Sales Summary Section -->
+
+           
             <!-- Sales Summary Section -->
                 <div class="row mb-4">
                     <div class="col-md-4">
@@ -65,6 +66,46 @@
                     </div>
                 </div>
 
+                <div>
+                    <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>OrderId</th>
+                            <th>User Name</th>
+                            <th>Ordered Items</th>
+                            <th>Total Price</th>
+                            <th>Final Amount</th>
+                            <th>Discount</th>
+                            <th>Status</th>
+                            <th>Payment Method</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orderDetails.forEach(order => { %>
+                            <tr>
+                                <td><%= order.orderId %></td>
+                                <td><%= order.userId?.name || "N/A" %></td>
+                                <td>
+                                    <ul>
+                                        <% order.items.forEach(item => { %>
+                                            <li><%= item.productId.productName %> (x<%= item.quantity %>)</li>
+                                        <% }) %>
+                                    </ul>
+                                </td>
+                                <td>₹<%= order.totalAmount %></td>
+                                <td>₹<%= order.totalAmount - (order.coupon?.discount || 0) %></td>
+                                <td>₹<%= order.coupon?.discount || 0 %></td>
+                                <td><%= order.status %></td>
+                                <td><%= order.payment.map(p => `${p.method} (${p.status})`).join(", ") %></td>
+                                <td><%= order.orderDate.toLocaleDateString() %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                </div>
+
             <!-- Download Buttons -->
             <div class="row">
                 <div class="col text-center">
@@ -89,6 +130,7 @@
                     </form>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>

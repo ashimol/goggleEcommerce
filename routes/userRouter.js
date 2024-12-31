@@ -36,9 +36,9 @@ router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);
 
 router.get('/shop',userAuth,userController.loadShopping);
-router.get('/filter',userAuth,userController.filterProducts);
-router.get('/filterPrice',userAuth,userController.filterByPrice);
-router.post('/search',userAuth,userController.searchProducts);
+// router.get('/filter',userAuth,userController.filterProducts);
+// router.get('/filterPrice',userAuth,userController.filterByPrice);
+// router.post('/search',userAuth,userController.searchProducts);
 
 
 router.post("/verify-otp",userController.verifyOtp);
@@ -99,8 +99,7 @@ router.post("/test-route", (req, res) => {
 
 
 router.post("/user/my-order/cancel/:itemOrderId/:cancelReason", userAuth,orderCancelController.cancelOrder);
-router.post('/my-order/return/:orderId',userAuth, orderController.returnOrder);
-
+router.post("/my-order/return/:itemOrderId", userAuth, orderController.returnOrder);
 
 router.get("/wishlist",userAuth,wishlistController.loadWishlist);
 router.post("/add-wishlist",userAuth,wishlistController.addToWishlist);

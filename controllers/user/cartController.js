@@ -193,8 +193,10 @@ const getCart = async (req, res) => {
             }
         }  
         const totalAmount = totalPrice - totalDiscount + deliveryCharges;
-  
+        
+                
         return res.render("cart", { 
+             
               cart, 
               totalItems, 
               totalPrice, 
@@ -204,7 +206,7 @@ const getCart = async (req, res) => {
               distinctProductCount,
           });
 
-    } catch (error) {
+    }catch (error) {
         console.error('Error fetching cart:', error);
         res.status(500).send('Internal Server Error');
     }

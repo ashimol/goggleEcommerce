@@ -1,8 +1,15 @@
+<!--
+	Author: W3layouts
+	Author URL: http://w3layouts.com
+	License: Creative Commons Attribution 3.0 Unported
+	License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+
 <!DOCTYPE html>
 <html lang="zxx">
 
 <head>
-	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
+	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Shop :: w3layouts</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
 	<meta name="keywords" content="Goggles a Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
@@ -16,530 +23,580 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			window.scrollTo(0, 1);
 		}
 	</script>
-	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
-	<link href="/css/login_overlay.css" rel='stylesheet' type='text/css' />
-	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
-	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
-	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
-	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
-	<link href="/css/style.css" rel='stylesheet' type='text/css' />
-	<link href="/css/fontawesome-all.css" rel="stylesheet">
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/css/loginIcon.css">
+	<link href="css/style6.css" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="css/shop.css" type="text/css" />
+	<link rel="stylesheet" href="css/owl.carousel.css" type="text/css" media="all">
+	<link rel="stylesheet" href="css/owl.theme.css" type="text/css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui1.css">
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<link href="css/fontawesome-all.css" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
 	    rel="stylesheet">
-		<style>
-			.dropdown{
-				position: relative;
-				display: inline-block;
-			}
-			.dropdown-content{
-				display: none;
-				position: absolute;
-				background-color: aqua;
-				min-width: 160px;
-				box-shadow: 0px 8px 16px 6px rgba(0, 0, 0,2);
-				z-index: 1000;
-				right: 0;
 
-			}
-			.dropdown-content a {
-				color: black;
-				padding: 12px 16px;
-				text-decoration: none;
-				display: block;
-				width: 100%;
-			}
-			.dropdown-content a:hover{
-				background-color:whitesmoke;
-			}
-			.dropdown:hover .dropdown-content{
-				display: block;
-			}
-			.header{
-				position: relative;
-				z-index: 500;
-			}
+
+		<style>
+			.product-name {
+    display: inline-block;
+    max-width: 150px; /* Adjust as per your layout */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+.product-name:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Tooltip styling */
+.product-name[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    z-index: 10;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
 		</style>
 </head>
+
 <body>
-	<div class="banner-top container-fluid" id="home"> 
-		<!-- header -->
-<%- include("../../views/partials/user/header") %>
-<style>
- /* Modern E-commerce Shop Styles */
-:root {
-  --primary-color: #2563eb;
-  --secondary-color: #1e40af;
-  --background-color: #f8fafc;
-  --card-background: #ffffff;
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --border-color: #e5e7eb;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --border-radius: 0.75rem;
-}
+	<div class="banner-top container-fluid" id="home">
 
-/* Reset & Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+        <%-include("../../views/partials/user/header")%>
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-primary);
-  line-height: 1.5;
-}
-
-/* Main Container */
-.main-container {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-/* Search Bar */
-.search-form {
-  position: relative;
-  max-width: 600px;
-  margin: 0 auto 2rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  background-color: var(--card-background);
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.search-button {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: calc(var(--border-radius) - 4px);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-  background-color: var(--secondary-color);
-}
-
-/* Product Grid Layout */
-.product-list-container {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2rem;
-}
-
-/* Sidebar Styles */
-.sidebar {
-  background-color: var(--card-background);
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-  height: fit-content;
-}
-
-.filter-section {
-  margin-bottom: 2rem;
-}
-
-.filter-title {
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-color);
-}
-
-.filter-item {
-  margin: 0.75rem 0;
-  list-style: none;
-}
-
-.filter-item a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  display: block;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-}
-
-.filter-item a:hover {
-  color: var(--primary-color);
-  background-color: rgba(37, 99, 235, 0.1);
-}
-
-/* Product Grid */
-/* Previous styles remain the same until product grid... */
-
-/* Product Grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
-}
-
-.product-card {
-  background-color: var(--card-background);
-  border-radius: var(--border-radius);
-  padding: 0.75rem;
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid var(--border-color);
-  height: 360px; /* Fixed height for consistency */
-  display: flex;
-  flex-direction: column;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.product-card a {
-  text-decoration: none;
-  color: inherit;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.product-card img {
-  width: 100%;
-  height: 160px; /* Reduced height */
-  object-fit: cover;
-  border-radius: calc(var(--border-radius) - 4px);
-  margin-bottom: 0.75rem;
-}
-
-.product-card h4 {
-  font-size: 0.95rem;
-  margin: 0.25rem 0;
-  color: var(--text-primary);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.3;
-}
-
-.product-card p {
-  color: var(--text-secondary);
-  margin: 0.2rem 0;
-  font-size: 0.9rem;
-}
-
-.product-card .price-info {
-  margin-top: auto;
-  padding: 0.5rem 0;
-}
-
-.product-card .price-info strike {
-  color: #6b7280;
-  font-size: 0.85rem;
-  margin-left: 0.5rem;
-}
-
-.wishlist-btn {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background-color: rgba(218, 41, 41, 0.9);
-  padding: 0.4rem;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease;
-  z-index: 2;
-}
-
-.wishlist-btn:hover {
-  transform: scale(1.1);
-}
-
-.add-to-cart-btn {
-  width: 100%;
-  padding: 0.6rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: calc(var(--border-radius) - 4px);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 0.9rem;
-  margin-top: auto;
-}
-
-.add-to-cart-btn:hover {
-  background-color: var(--secondary-color);
-}
-
-/* Rest of the styles remain the same... */
-
-/* Price Filter */
-.price-button {
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  background-color: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: calc(var(--border-radius) - 4px);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--text-secondary);
-}
-
-.price-button:hover {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-}
-
-.pagination .btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.pagination .btn:hover {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-.pagination .btn.active {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .product-list-container {
-    grid-template-columns: 220px 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .product-list-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .sidebar {
-    position: sticky;
-    top: 1rem;
-    z-index: 10;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .main-container {
-    padding: 1rem;
-  }
-  
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
-<div class="banner_inner">
-  <div class="services-breadcrumb">
-    <div class="inner_breadcrumb">
-
-      <ul class="short">
-        <li>
-          <a href="/">Home</a>
-          <i>|</i>
-        </li>
-        <li>shop</li>
-      </ul>
     </div>
-  </div>
+		<!-- banner -->
+		<div class="banner_inner" >
+			<div class="services-breadcrumb">
+				<div class="inner_breadcrumb">
 
-</div>
+					<ul class="short">
+						<li>
+							<a href="/home">Home</a>
+							<i>|</i>
+						</li>
+						<li>Shop</li>
+					</ul>
+				</div>
+			</div>
 
-<div class="main-container">
- <section class="shop-page container">
-   <div class="shop-topbar">
-     <div class="search-bar">
-       <form action="/search" method="POST" class="search-form">
-         <input type="text" name="query" placeholder="Search items..." class="search-input" />
-         <button type="submit" class="search-button">Search</button>
-       </form>
-     </div>
-   </div>
-  
-   <div class="product-list-container">
-     <aside class="sidebar">
-       <div class="filter-section">
-         <div class="filter-title">Categories</div>
-         <div class="category-brand-container">
-           <ul>
-            <%for(let i =0;i<category.length;i++){%>
-               <li class="filter-item">
-                 <a href="/filter?category=<%=category[i]._id%>"><%=category[i].name%></a>
-               </li>
-               <%}%>
-           </ul>
-          </div>
-          <div class="filter-title">Brands</div>
-          <div class="category-brand-container">
-           <ul>
-            <%for(let i =0;i<brand.length;i++){%>
-               <li class="filter-item">
-                 <a href="/filter?brand=<%=brand[i]._id%>"><%=brand[i].name%></a>
-               </li>
-               <%}%>
-           </ul>
-           </div>
-       </div>
-
-       
-      
-       <div class="price-filter">
-         <div class="filter-title">Filter by Price</div>
-         <form id="price-filter-form">
-           <div class="price-options">
-             <a href="/filterPrice?gt=0&lt=500"><button type="button" class="price-button">Under ₹500</button></a>
-             <a href="/filterPrice?gt=500&lt=1000"><button type="button" class="price-button">₹500 - ₹1000</button></a>
-             <a href="/filterPrice?gt=1000&lt=1500"><button type="button" class="price-button">₹1000- ₹1500</button></a>
-             <a href="/filterPrice?gt=1500&lt=100000"><button type="button" class="price-button">Above ₹1500</button></a>
-           </div>
-         </form>
-       </div>
-     </aside>
-
-
-     <main class="product-grid">
-      <% for (let i = 0; i < products.length; i++) { %>
-          <div class="product-card">
-            <span class="wishlist-btn" onclick="addToWishlist('<%= products[i]._id %>')">❤️</span>
-
-              <a href="/product-details/<%= products[i]._id %>">
-                  <img src="/uploads/re-images/<%= products[i].productImage[0] %>" alt="<%= products[i].productName %>" />
-                  <h4><%= products[i].productName %></h4>
-                  <p>Brand: <%= products[i].brand.name %></p>
-                  <p>
-                      Price: ₹<%= products[i].salePrice.toLocaleString('en-IN') %>
-                      <span class="text-muted">
-                          <strike>₹<%= products[i].regularPrice.toLocaleString('en-IN') %></strike>
-                      </span>
-                  </p>
-              </a>
-              <button class="add-to-cart-btn" onclick="">Add to Cart</button>
-          </div>
-      <% } %>
-  </main>
-   </div>
-
-
-<!-- Pagination -->
-<div class="pagination">
-    <% if (currentPage > 1) { %>
-      <a class="btn" href="/shop?page=<%= currentPage - 1 %>">Prev</a>
-    <% } %>
-
-
-    <% for (let i = 1; i <= totalPages; i++) { %>
-      <a class="btn <%= currentPage === i ? 'active' : '' %>" href="/shop?page=<%= i %>"><%= i %></a>
-    <% } %>
-
-
-    <% if (currentPage < totalPages) { %>
-      <a class="btn" href="/shop?page=<%= currentPage + 1 %>">Next</a>
-    <% } %>
-  </div>
+		</div>
+		<!--//banner -->
+		<!--/shop-->
+		<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+			<div class="container-fluid">
+				<div class="inner-sec-shop px-lg-4 px-3">
+					<h3 class="tittle-w3layouts my-lg-4 mt-3">New Arrivals for you </h3>
+					<div class="row">
+						<!-- product left -->
+						<div class="side-bar col-lg-3">
+							<div class="search-hotel">
+								<h3 class="agileits-sear-head">Search Here..</h3>
+								<form id="searchForm" action="/shop" method="get" class="d-flex">
+									<input id="searchInput" class="form-control" type="search" name="searchQuery" 
+										   placeholder="Search here..." value="<%= searchQuery %>" >
+									<button class="btn1">
+										<i class="fas fa-search"></i>
+									</button>
+									<div class="clearfix"></div>
+								</form>
+							</div>
+							<!-- price range -->
+							<form action="/shop" method="GET">
+								<input type="hidden" name="searchQuery" value="<%= searchQuery %>">
+								<!-- <div class="col-md-6 mb-3" id="categoryField">
+									<label for="category" class="form-label">Select Category</label>
+									<select class="form-control" id="category" name="category" onchange="this.form.submit()">
+										<option value="">--Select Category--</option>
+										<% categories.forEach(function(category) { %>
+											<option value="<%= category._id %>" 
+													<%= category._id == selectedCategory ? 'selected' : '' %>>
+												<%= category.name %>
+											</option>
+										<% }); %>
+									</select>
+								</div> -->
+							
+								<div class="col-md-6 mb-3">
+                  <label for="sortBy" class="form-label">Sort By</label>
+                  <select class="form-control" name="sortBy" onchange="this.form.submit()">
+                      <option value="">Default Sorting</option>
+                      <option value="priceLowToHigh" <%= sortBy === 'priceLowToHigh' ? 'selected' : '' %>>
+                          Price: Low to High
+                      </option>
+                      <option value="priceHighToLow" <%= sortBy === 'priceHighToLow' ? 'selected' : '' %>>
+                          Price: High to Low
+                      </option>
+                      <option value="aToZ" <%= sortBy === 'aToZ' ? 'selected' : '' %>>
+                          Name: A to Z
+                      </option>
+                      <option value="zToA" <%= sortBy === 'zToA' ? 'selected' : '' %>>
+                          Name: Z to A
+                      </option>
+                  </select>
+              </div>
+                
+							</form>
+						
+							
+							
+						</div>
+					
+						
+						<div class="left-ads-display col-lg-9">
+							<div class="wrapper_top_shop">
+								<div class="category-list my-3">
+									<h5>Featured categories</h5>
+									<div class="d-flex flex-wrap">
+										<a href="/shop" class="btn btn-outline-primary m-1 <%= !selectedCategory ? 'active' : '' %>">
+											All
+										</a>
+										<% categories.forEach(function(category) { %>
+											<a href="/shop?category=<%= category._id %>&searchQuery=<%= searchQuery %>&sortBy=<%= sortBy %>"
+											   class="btn btn-outline-primary m-1 <%= category._id == selectedCategory ? 'active' : '' %>">
+												<%= category.name %>
+											</a>
+										<% }); %>
+									</div>
+								</div>
 
 
-  
- </section>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-<!-- Include SweetAlert CSS and JS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+								
+								<% if (message) { %>
+									<h5><%= message %></h5> 
+								<% } else { %>
+								<div class="row">
+									<% products.forEach(product => { %>
+										<div class="col-md-3 product-men women_two shop-gd">
+											<div class="product-googles-info googles">
+												<div class="men-pro-item">
+													<div class="men-thumb-item">
+                           							 <img src="/uploads/re-images/<%= product.productImage[0] %>" alt="<%= product.productName %>" />
+														
+														<div class="men-cart-pro">
+															
+															<div class="inner-men-cart-pro">
+																<a href="/product-details/<%= product._id %>" class="link-product-add-cart">Quick View</a>
+															</div>
+															
+														</div>
+														
+														<!-- <span class="product-new-top">New</span> -->
+													</div>
+													<div class="item-info-product">
+														<div class="info-product-price">
+															<div class="grid_meta">
+																<div class="product_price">
+																	
+																	<h4>
+																		<a href="/product/<%= product._id %>" class="product-name" title="<%= product.productName %>">
+																			<%= product.productName %>
+																		</a>
+																	</h4>
+																		<p> <%= product.brand.name %></p>
+																		<p>
+																			Price: ₹<%= product.salePrice.toLocaleString('en-IN') %>
+																			<span class="text-muted">
+																				<strike>₹<%= product.regularPrice.toLocaleString('en-IN') %></strike>
+																			</span>
+																		</p>
+																		</a>
+																		
+																	
+																	
+																	  
+																</div>
+									
+																  
+																								  
+															</div>
+															<div class="googles single-item hvr-outline-out">
+															
+																<form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
+																	<input type="hidden" name="productId" value="<%= product._id %>">
+																	<input type="hidden" name="quantity" value="1">
+																	<button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%= product._id %>')">
+																	  <i class="fas fa-cart-plus"></i>
+																	</button>
+																  </form>
+																  <form id="addToWishlistForm-<%= product._id %>" onsubmit="return false;">
+																	<input type="hidden" name="productId" value="<%= product._id %>">
+																	<button type="button" class="googles-cart pgoogles-cart" onclick="addToWishlist('<%= product._id %>')">
+																		<i class="fas fa-heart"></i>
+																	</button>
+																</form>
+																
+															</div>
+														</div>
+														<div class="clearfix"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									<% }) %>
+								</div>
+								<% } %>
+
+								
+							    <div class="pagination-container">
+									<% if (currentPage > 1) { %>
+										<a href="?page=<%= currentPage - 1 %>&searchQuery=<%= searchQuery %>&sortBy=<%= sortBy %>&category=<%= selectedCategory %>">&laquo; Previous</a>
+									<% } %>
+									<% for (let i = 1; i <= totalPages; i++) { %>
+										<% if (i === currentPage) { %>
+											<span class="current-page"><%= i %></span>
+										<% } else { %>
+											<a href="?page=<%= i %>&searchQuery=<%= searchQuery %>&sortBy=<%= sortBy %>&category=<%= selectedCategory %>"><%= i %></a>
+										<% } %>
+									<% } %>
+									<% if (currentPage < totalPages) { %>
+										<a href="?page=<%= currentPage + 1 %>&searchQuery=<%= searchQuery %>&sortBy=<%= sortBy %>&category=<%= selectedCategory %>">Next &raquo;</a>
+									<% } %>
+								</div>
+
+						<!--//product right-->
+					</div>
+					
+				<!-- </div>
+			</div> -->
+		</section>
+		<!--footer -->
+		<%-include("../../views/partials/user/footer")%>
+		
+		<!-- //footer -->
+
+		<!--jQuery-->
+		<script src="js/jquery-2.2.3.min.js"></script>
+		<!-- newsletter modal -->
+		<!--search jQuery-->
+		<script src="js/modernizr-2.6.2.min.js"></script>
+		<script src="js/classie-search.js"></script>
+		<script src="js/demo1-search.js"></script>
+		<!--//search jQuery-->
+		<!-- cart-js -->
+		<script src="js/minicart.js"></script>
+		<script>
+			googles.render();
+
+			googles.cart.on('googles_checkout', function (evt) {
+				var items, len, i;
+
+				if (this.subtotal() > 0) {
+					items = this.items();
+
+					for (i = 0, len = items.length; i < len; i++) {}
+				}
+			});
+		</script>
+		<!-- //cart-js -->
+		<script>
+			$(document).ready(function () {
+				$(".button-log a").click(function () {
+					$(".overlay-login").fadeToggle(200);
+					$(this).toggleClass('btn-open').toggleClass('btn-close');
+				});
+			});
+			$('.overlay-close1').on('click', function () {
+				$(".overlay-login").fadeToggle(200);
+				$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
+				open = false;
+			});
+		</script>
+		<!-- carousel -->
+		<!-- price range (top products) -->
+		<script src="js/jquery-ui.js"></script>
+		<script>
+			//<![CDATA[ 
+			$(window).load(function () {
+				$("#slider-range").slider({
+					range: true,
+					min: 0,
+					max: 9000,
+					values: [50, 6000],
+					slide: function (event, ui) {
+						$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+					}
+				});
+				$("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+
+			}); //]]>
+		</script>
+		<!-- //price range (top products) -->
+
+		<script src="js/owl.carousel.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('.owl-carousel').owlCarousel({
+					loop: true,
+					margin: 10,
+					responsiveClass: true,
+					responsive: {
+						0: {
+							items: 1,
+							nav: true
+						},
+						600: {
+							items: 2,
+							nav: false
+						},
+						900: {
+							items: 3,
+							nav: false
+						},
+						1000: {
+							items: 4,
+							nav: true,
+							loop: false,
+							margin: 20
+						}
+					}
+				})
+			})
+		</script>
+
+		<!-- //end-smooth-scrolling -->
+
+
+		<!-- dropdown nav -->
+		<script>
+			$(document).ready(function () {
+				$(".dropdown").hover(
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+						$(this).toggleClass('open');
+					},
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+						$(this).toggleClass('open');
+					}
+				);
+			});
+		</script>
+		<!-- //dropdown nav -->
+		<script src="js/move-top.js"></script>
+    <script src="js/easing.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 900);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            /*
+            						var defaults = {
+            							  containerID: 'toTop', // fading element id
+            							containerHoverID: 'toTopHover', // fading element hover id
+            							scrollSpeed: 1200,
+            							easingType: 'linear' 
+            						 };
+            						*/
+
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+
+        });
+    </script>
+    <!--// end-smoth-scrolling -->
+
+		<script src="js/bootstrap.js"></script>
+		<!-- js file -->
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
+
+<script>
+	function addToCart(productId) {
+  const form = document.getElementById(`addToCartForm-${productId}`);
+  const formData = new FormData(form);
+
+  fetch("/add-cart", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+    credentials: 'include' 
+  })
+  .then(response => {
+    return response.json().then(data => {
+      if (!response.ok) {
+        throw data;
+      }
+      return data;
+    });
+  })
+  .then(data => {
+    if (data.message === 'Item already in cart') {
+      Swal.fire({
+        icon: 'info',
+        title: 'Already in Cart',
+        text: 'This item is already in your cart.'
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: data.message
+      });
+    }
+    if (data.cartItemsCount !== undefined) {
+      updateCartItemCount(data.cartItemsCount);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    if (error.error === 'Please login to add items to cart') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Required',
+        text: 'Please login to add items to cart',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/login';
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.error || 'An error occurred, please login and try again'
+      });
+    }
+  });
+}
+
+function updateCartItemCount(count) {
+  const cartCountElement = document.querySelector('.cart-count');
+  if (cartCountElement) {
+    if (count > 0) {
+      cartCountElement.textContent = count;
+      cartCountElement.style.display = 'inline';
+    } else {
+      cartCountElement.textContent = '';
+      cartCountElement.style.display = 'none';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const cartCountElement = document.querySelector('.cart-count');
+  if (cartCountElement) {
+    const initialCount = parseInt(cartCountElement.textContent, 10);
+    updateCartItemCount(initialCount || 0);
+  }
+});
+		</script>
+
+<script>
+
+	function updateProductList(products) {
+		const productContainer = document.getElementById('productContainer'); 
+		productContainer.innerHTML = ''; 
+	
+		products.forEach(product => {
+			const productElement = document.createElement('div');
+			productElement.classList.add('product');
+			productElement.innerHTML = `
+				<h3>${product.productName}</h3>
+				<p>${product.description}</p>
+				<p>Price: ₹${product.salePrice}</p>
+			`;
+			productContainer.appendChild(productElement);
+		});
+	}
+	
+	</script>
 
 
 <script>
-  async function addToWishlist(productId) {
-    try {
-        const response = await fetch('/add-wishlist', {
-            method: 'POST',
+    function addToWishlist(productId) {
+        const form = document.getElementById(`addToWishlistForm-${productId}`);
+        const formData = new FormData(form);
+    
+        fetch("/add-wishlist", {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ productId  }),
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            // Use SweetAlert for success message
-            swal({
-                title: "Success!",
-                text: result.message,
-                icon: "success",
-                button: "OK",
+            body: JSON.stringify(Object.fromEntries(formData)),
+            credentials: 'include'
+        })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    throw data;
+                }
+                return data;
             });
-        } else {
-            const errorResult = await response.json();
-            // Use SweetAlert for error message
-            swal({
-                title: "Error!",
-                text: errorResult.message,
-                icon: "error",
-                button: "Try Again",
-            });
-        }
-    } catch (error) {
-        console.error('Error adding to wishlist:', error);
-        // Use SweetAlert for catch error message
-        swal({
-            title: "Oops!",
-            text: "An error occurred. Please try again later.",
-            icon: "error",
-            button: "OK",
+        })
+        .then(data => {
+            if (data.message === 'Item already in wishlist') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already in Wishlist',
+                    text: 'This item is already in your Wishlist.'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message
+                });
+            }
+            if (data.wishlistItemsCount) {
+                updateWishlistItemCount(data.wishlistItemsCount);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.error === 'Please login to add items to Wishlist') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Authentication Required',
+                    text: 'Please login to add items to Wishlist',
+                    showCancelButton: true,
+                    confirmButtonText: 'Login',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/login';
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.error || 'An error occurred, please login and try again'
+                });
+            }
         });
     }
-}
+
+    function updateWishlistItemCount(count) {
+        const wishlistCountElement = document.getElementById('wishlistItemCount');
+        if (wishlistCountElement) {
+            wishlistCountElement.textContent = count;
+        }
+    }
 </script>
-<%- include("../../views/partials/user/footer") %>
-
-
-

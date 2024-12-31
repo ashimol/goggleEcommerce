@@ -27,7 +27,8 @@ const getSalesReport = async (req, res) => {
             ...stats,
             dateRange: 'daily',
             startDate: startOfDay,
-            endDate: endOfDay
+            endDate: endOfDay,
+            orderDetails: stats.orderDetails,
         });
     } catch (error) {
         console.error("Error in getSalesReport:", error);
@@ -99,7 +100,9 @@ const calculateStats = async (startDate, endDate) => {
             $gte: startDate, 
             $lte: endDate 
         }
-    }).populate('items.productId');
+    })
+    .populate('userId') 
+    .populate('items.productId');
 
     
      const totalOrders = orders.reduce((total, order) => {
@@ -150,7 +153,8 @@ const calculateStats = async (startDate, endDate) => {
       cancelledOrders,
       returnedOrders,
       ordersWithCoupon,
-      totalSales 
+      totalSales,
+      orderDetails: orders, 
     };
 };
 

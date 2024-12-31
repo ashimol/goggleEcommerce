@@ -303,66 +303,74 @@
           
     
     
-    
-           function viewImage(event, index) {
-               let input = event.target;
+           let croppers = {}; // Store cropper instances
 
-               let file = input.files[0];
-              let validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+function viewImage(event, index) {
+    let input = event.target;
+    let file = input.files[0];
+    let validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-              // Check if file is an image
-             if (!validImageTypes.includes(file.type)) {
-                 displayErrorMessage('images-error', 'Please upload a valid image file (JPEG, PNG).');
-                 input.value = ''; // Clear the input
-                 return; // Stop further processing
-            } else {
-                 clearErrorMessages('images-error'); // Clear error message if valid image
+    if (!validImageTypes.includes(file.type)) {
+        displayErrorMessage('images-error', 'Please upload a valid image file (JPEG, PNG).');
+        input.value = '';
+        return;
+    } else {
+        clearErrorMessages('images-error');
+    }
+
+    let reader = new FileReader();
+    reader.onload = function() {
+        let dataURL = reader.result;
+        let image = document.getElementById('imgView' + index);
+        image.src = dataURL;
+
+        // Destroy existing cropper if it exists
+        if (croppers[index]) {
+            croppers[index].destroy();
+        }
+
+        // Create new cropper instance
+        croppers[index] = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 1,
+            guides: true,
+            background: false,
+            autoCropArea: 1,
+            zoomable: true,
+            zoom: function(event) {
+                console.log(event.detail.ratio); // For debugging zoom
             }
+        });
 
-               let reader = new FileReader();
-               reader.onload = function () {
-                   let dataURL = reader.result;
-                   let image = document.getElementById('imgView' + index);
-                   image.src = dataURL;
+        let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+        cropperContainer.style.display = 'block';
 
-                   let cropper = new Cropper(image, {
-                       aspectRatio: 1,
-                       viewMode: 1,
-                       guides: true,
-                       background: false,
-                       autoCropArea: 1,
-                       zoomable: true
-                   });
-                   let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
-                   cropperContainer.style.display = 'block';
-
-                   let saveButton = document.querySelector('#saveButton' + index);
-
-                   saveButton.addEventListener('click', async function () {
-
-                       let croppedCanvas = cropper.getCroppedCanvas();
-                       let croppedImage = document.getElementById("croppedImg" + index);
-                       croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
-                       
-                       let timestamp = new Date().getTime();
-                       let fileName = `cropped-img-${timestamp}-${index}.png`;
-                      
-                       await croppedCanvas.toBlob(blob => {
-                           let input = document.getElementById('input' + index);
-                           let imgFile = new File([blob], fileName, blob)
-                           
-                           const fileList = new DataTransfer();
-                           fileList.items.add(imgFile);
-                           input.files = fileList.files
-                       });
-                       cropperContainer.style.display = 'none';
-                       cropper.destroy();
-                    });
-                   };
-               
-               reader.readAsDataURL(files);
-           }
+        let saveButton = document.querySelector('#saveButton' + index);
+        saveButton.addEventListener('click', async function() {
+            let croppedCanvas = croppers[index].getCroppedCanvas();
+            let croppedImage = document.getElementById("croppedImg" + index);
+            croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+            
+            let timestamp = new Date().getTime();
+            let fileName = `cropped-img-${timestamp}-${index}.png`;
+            
+            await croppedCanvas.toBlob(blob => {
+                let input = document.getElementById('input' + index);
+                let imgFile = new File([blob], fileName, blob)
+                
+                const fileList = new DataTransfer();
+                fileList.items.add(imgFile);
+                input.files = fileList.files;
+            });
+            
+            cropperContainer.style.display = 'none';
+            croppers[index].destroy();
+            delete croppers[index];
+        });
+    };
     
+    reader.readAsDataURL(file);
+}
     
            const selectedImages = [];
 document.getElementById("input1").addEventListener("change", handleFileSelect);
@@ -418,7 +426,7 @@ function handleFileSelect(event) {
         //    }
 
         function deleteSingleImage(imageId, productId) {
-    $.ajax({
+     $.ajax({
         url: "/admin/deleteImage", // Endpoint to delete the image
         method: 'post',
         data: {

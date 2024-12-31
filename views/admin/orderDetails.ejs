@@ -44,7 +44,7 @@
                 </div>
 
                 <div>
-                    <p><strong>Payment Method:</strong> <%= order.paymentMethod%></p>
+                    <p><strong>Payment Method:</strong> <%= order.payment[0].method%></p>
                     <p><strong>Payment Status:</strong> <%= order.status %></p>
                     <p><strong>Total Amount:</strong> ₹<%= order.totalAmount.toFixed(2) %></p>
                 </div>
@@ -69,24 +69,29 @@
                         <p><strong>Quantity:</strong> <%= item.quantity %></p>
                         <p><strong>Regular Price:</strong> ₹<%= item.productId.regularPrice.toFixed(2) %></p>
                         <p><strong>Sale Price:</strong> ₹<%= item.productId.salePrice.toFixed(2) %></p>
-                        <p><strong>Item Status:</strong> <%= item.status %></p>
+                        <p><strong>Current Order Status:</strong> <%= currentStatus %></p>
+
                         
                         <div class="status-update">
-                            <form action="/admin/updateItemStatus" method="POST">
+                            <form action="/admin/updateItemStatus" method="POST"  <%= currentStatus=== 'Cancelled' ? 'style="display:none;"' : '' %>>
                                 <input type="hidden" name="orderId" value="<%= order.orderId %>">
                                 <input type="hidden" name="itemId" value="<%= item._id %>">
                                 <select name="itemStatus">
-                                    <option value="Pending" <%= item.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-                                    <option value="Processing" <%= item.status === 'Processing' ? 'selected' : '' %>>Processing</option>
-                                    <option value="Shipped" <%= item.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                    <option value="Delivered" <%= item.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
-                                    <option value="Cancelled" <%= item.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
-                                    <option value="Return Requested" <%= item.status === 'Return Requested' ? 'selected' : '' %>>Return Requested</option>
-                                    <option value="Return Approved" <%= item.status === 'Return Approved' ? 'selected' : '' %>>Return Approved</option>
-                                    <option value="Return Rejected" <%= item.status === 'Return Rejected' ? 'selected' : '' %>>Return Rejected</option>
-                                    <option value="Returned" <%= item.status === 'Returned' ? 'selected' : '' %>>Returned</option>
+                                    <option value="Pending" <%= currentStatus=== 'Pending' ? 'selected' : '' %>>Pending</option>
+                                    <option value="Processing" <%= currentStatus=== 'Processing' ? 'selected' : '' %>>Processing</option>
+                                    <option value="Shipped" <%= currentStatus=== 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                    <option value="Delivered" <%= currentStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                    <option value="Cancelled" <%= currentStatus=== 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                    <option value="Return Requested" <%= currentStatus === 'Return Requested' ? 'selected' : '' %>>Return Requested</option>
+                                    <option value="Return Approved" <%= currentStatus === 'Return Approved' ? 'selected' : '' %>>Return Approved</option>
+                                    <option value="Return Rejected" <%= currentStatus === 'Return Rejected' ? 'selected' : '' %>>Return Rejected</option>
+                                    <option value="Returned" <%= currentStatus === 'Returned' ? 'selected' : '' %>>Returned</option>
                                 </select>
-                                <button style="background-color: chocolate;border-color: transparent;color: white;" type="submit">Update Item Status</button>
+                                <% if (currentStatus !== 'Cancelled') { %>
+                                    <button style="background-color: chocolate; border-color: transparent; color: white;" type="submit">Update Item Status</button>
+                                <% } %>
+                                
+                                <!-- <button style="background-color: chocolate;border-color: transparent;color: white;" type="submit">Update Item Status</button> -->
                             </form>
                         </div>
                     </div>

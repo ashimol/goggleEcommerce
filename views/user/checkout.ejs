@@ -67,150 +67,150 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <%- include("../../views/partials/user/header") %>
 
 <style>
-   body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fa; /* Light background for contrast */
+    color: #333; /* Dark text for readability */
+    margin: 0;
+    padding: 0;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.container1 {
+    max-width: 1200px; /* Maximum width for the container */
+    margin: 30px auto; /* Center the container */
+    padding: 20px; /* Padding for inner spacing */
+    background: white; /* White background for the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
+.header {
+    text-align: center; /* Center align header text */
+    margin-bottom: 20px; /* Space below header */
+}
 
-        .header p {
-            font-size: 1.2rem;
-            color: #777;
-        }
+.header h1 {
+    font-size: 2.5rem; /* Large font size for the title */
+    margin-bottom: 10px; /* Space below title */
+}
 
-        .addresses, .cart-summary {
-            margin-bottom: 30px;
-        }
+.header p {
+    font-size: 1.2rem; /* Slightly larger font for subtitle */
+    color: #777; /* Muted color for subtitle */
+}
 
-        .addresses h2, .cart-summary h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #28a745;
-            padding-bottom: 10px;
-        }
+.addresses, .cart-detail {
+    margin-bottom: 30px; /* Space below sections */
+}
 
-        .card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
-        }
+.addresses h2, .cart-detail h2 {
+    font-size: 1.8rem; /* Font size for section titles */
+    margin-bottom: 15px; /* Space below section titles */
+    border-bottom: 2px solid #28a745; /* Green underline for section titles */
+    padding-bottom: 10px; /* Padding below section titles */
+}
 
-        .card h5 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
+.card {
+    border: 1px solid #ddd; /* Light border for cards */
+    border-radius: 5px; /* Rounded corners for cards */
+    padding: 15px; /* Padding inside cards */
+    margin-bottom: 15px; /* Space below cards */
+    background-color: #f9f9f9; /* Light background for cards */
+}
 
-        .card p {
-            margin: 5px 0;
-        }
+.card h5 {
+    margin: 0; /* Remove default margin */
+    font-size: 1.5rem; /* Font size for card titles */
+}
 
-        .new-address-btn, .edit-btn, .place-order-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.card p {
+    margin: 5px 0; /* Space between paragraphs */
+}
 
-        .new-address-btn:hover, .edit-btn:hover, .place-order-btn:hover {
-            background-color: #218838;
-        }
+.new-address-btn, .edit-btn, .place-order-btn {
+    background-color: #28a745; /* Green background for buttons */
+    color: white; /* White text for buttons */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Padding for buttons */
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
 
-        .cart-detail {
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 5px;
-        }
+.new-address-btn:hover, .edit-btn:hover, .place-order-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
 
-        .cart-detail ul {
-            list-style: none;
-            padding: 0;
-        }
+.cart-detail {
+    background-color: #f1f1f1; /* Light background for cart details */
+    padding: 20px; /* Padding inside cart details */
+    border-radius: 5px; /* Rounded corners for cart details */
+}
 
-        .cart-detail li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
+.cart-detail ul {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove padding */
+}
 
-        .cart-detail li:last-child {
-            border-bottom: none;
-        }
+.cart-detail li {
+    display: flex; /* Flexbox for layout */
+    justify-content: space-between; /* Space between items */
+    padding: 10px 0; /* Padding for list items */
+    border-bottom: 1px solid #ddd; /* Light border below items */
+}
 
-        .payment-methods label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
+.cart-detail li:last-child {
+    border-bottom: none; /* Remove border for last item */
+}
 
-        .payment-methods input[type="radio"] {
-            margin-right: 10px;
-        }
+.payment-methods label {
+    display: block; /* Block display for labels */
+    margin-bottom: 10px; /* Space below labels */
+    font-size: 1rem; /* Font size for labels */
+}
 
-        .coupon-section {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
+.payment-methods input[type="radio"] {
+    margin-right: 10px; /* Space between radio and label */
+}
 
-        .coupon-section input {
-            flex: 1;
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+.coupon-section {
+    margin-top: 20px; /* Space above coupon section */
+    display: flex; /* Flexbox for layout */
+    justify-content: space-between; /* Space between items */
+}
 
-        .coupon-section button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.coupon-section input {
+    flex: 1; /* Allow input to grow */
+    padding: 10px; /* Padding for input */
+    margin-right: 10px; /* Space to the right */
+    border:  1px solid #ccc; /* Light border for input */
+    border-radius: 5px; /* Rounded corners for input */
+}
 
-        .coupon-section button:hover {
-            background-color: #218838;
-        }
+.coupon-section button {
+    padding: 10px 20px; /* Padding for buttons */
+    background-color: #28a745; /* Green background for buttons */
+    color: white; /* White text for buttons */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
 
-        @media (max-width: 768px) {
-            .coupon-section {
-                flex-direction: column;
-            }
+.coupon-section button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
 
-            .coupon-section input {
-                margin-right: 0;
-                margin-bottom: 10px;
- }
-        }
+@media (max-width: 768px) {
+    .coupon-section {
+        flex-direction: column; /* Stack items on smaller screens */
+    }
+
+    .coupon-section input {
+        margin-right: 0; /* Remove right margin */
+        margin-bottom: 10px; /* Space below input */
+    }
+}
 </style>
 </head>
 <body>
@@ -229,7 +229,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
 
 <div class="container1">
+    <div class="header">
+        <h1>Checkout</h1>
+        <p>Please review your order and provide your address.</p>
+    </div>
     <div class="addresses">
+        <h2>Addresses</h2>
         <button class="new-address-btn" onclick="toggleNewAddressForm()">NEW ADDRESS</button>
 
         <div id="addressList">
@@ -250,6 +255,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <% } %>    
       
         </div>
+    </div>
         <div class="coupon-section">
             <div class="row">               
                 <div class="col-md-11">
@@ -280,7 +286,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
             </div>
         </div>       
-    </div>
+    
 
 
         <div class="new-address-form" id="newAddressForm" style="display:none;">
@@ -321,7 +327,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     <% } else { %>
                                         ₹<%= (item.productId.regularPrice * item.quantity).toFixed(2) %>
                                     <% } %>
-                                </p>
+                                 </span>
                                 
                             </li>
                         <% }) %>

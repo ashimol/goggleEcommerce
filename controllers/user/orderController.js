@@ -207,7 +207,7 @@ const applyCoupon = async (req, res) => {
           });
       }
 
-      // Calculate cart total without any coupon discount
+      
       const cartTotal = cart.items.reduce((total, item) => {
           return total + (item.productId.salePrice * item.quantity);
       }, 0);
@@ -215,7 +215,7 @@ const applyCoupon = async (req, res) => {
 
       console.log("cart total :",cartTotal);
       
-      // Calculate base discount (regular price - sale price)
+      
       const baseDiscount = cart.items.reduce((total, item) => {
           return total + ((item.productId.regularPrice - item.productId.salePrice) * item.quantity);
       }, 0);
@@ -223,18 +223,15 @@ const applyCoupon = async (req, res) => {
       console.log("base discount : ", baseDiscount);
       
 
-      // We don't need to find the coupon or calculate coupon discount 
-      // since we're removing it
-
-      // Remove coupon from session
+     
       req.session.couponId = null;
 
       // Return updated cart totals with original prices
       return res.json({
           success: true,
-          subtotal: cartTotal, // Original cart total without coupon discount
+          subtotal: cartTotal, 
           baseDiscount: baseDiscount,
-          couponDiscount: 0, // Reset coupon discount to 0
+          couponDiscount: 0, 
           originalTotal: cartTotal,
           couponApplied: false
       });
@@ -502,11 +499,11 @@ const applyCoupon = async (req, res) => {
 // };
 const placeOrder = async (req, res) => {
   try {
-      // First restructure the items data from form submission
+     
       const formData = req.body;
       const items = [];
       
-      // Convert form data structure to array format
+     
       Object.keys(formData).forEach(key => {
           if (key.startsWith('items[')) {
               const matches = key.match(/items\[(\d+)\]\[(\w+)\]/);
@@ -520,14 +517,14 @@ const placeOrder = async (req, res) => {
           }
       });
 
-      // Get other form data
+      
       const { userId, addressId, totalAmount, paymentMethod } = formData;
 
       console.log("totalamount :",totalAmount);
       
       console.log("Restructured items array:", items);
 
-      // Validate required fields
+      
       if (!userId || !addressId || !items || items.length === 0 || !paymentMethod) {
           return res.status(400).json({ 
               success: false,
@@ -933,62 +930,73 @@ const getOrderDetails = async (req,res) =>{
 
 
 const returnOrder = async (req, res) => {
-      try {
-      const { orderId, returnReason } = req.body;
-
+    try {
+      const { itemOrderId } = req.params;
+      const { returnReason } = req.body;
+  
       if (!returnReason?.trim()) {
         return res.status(400).json({
           success: false,
-          message: 'Return reason is required'
+          message: "Return reason is required",
         });
       }
-
-      const order = await Order.findOne({ orderId });
-      
+  
+      // Find the order containing the specific itemOrderId
+      const order = await Order.findOne({ "items.itemOrderId": itemOrderId });
+  
       if (!order) {
         return res.status(404).json({
           success: false,
-          message: 'Order not found'
+          message: "Order not found",
         });
       }
-
-      if (order.status !== 'Delivered') {
+  
+      // Locate the specific item within the items array
+      const item = order.items.find((i) => i.itemOrderId === itemOrderId);
+  
+      if (!item) {
+        return res.status(404).json({
+          success: false,
+          message: "Item not found in order",
+        });
+      }
+  
+      if (item.itemOrderStatus !== "Delivered") {
         return res.status(400).json({
           success: false,
-          message: 'Only delivered orders can be returned'
+          message: "Only delivered items can be returned",
         });
       }
-
+  
       // Check 7-day return window
-      const orderDate = new Date(order.orderDate);
-      const returnDeadline = new Date(orderDate.setDate(orderDate.getDate() + 7));
-
+      const returnDeadline = new Date(order.orderDate);
+      returnDeadline.setDate(returnDeadline.getDate() + 7);
+  
       if (new Date() > returnDeadline) {
         return res.status(400).json({
           success: false,
-          message: 'Return window has expired (7 days from delivery)'
+          message: "Return window has expired (7 days from delivery)",
         });
       }
-
-      order.status = 'Return Requested';
-      order.returnRequestedReason = returnReason;
-
+  
+      // Update item status
+      item.itemOrderStatus = "Return Requested";
+      item.returnRequestedReason = returnReason;
+  
       await order.save();
-
+  
       return res.status(200).json({
         success: true,
-        message: 'Return request submitted successfully'
+        message: "Return request submitted successfully",
       });
-
     } catch (error) {
-      console.error('Return request error:', error);
+      console.error("Return request error:", error);
       return res.status(500).json({
         success: false,
-        message: 'Internal server error'
+        message: "Internal server error",
       });
     }
-  }
-
+};
 
 
 

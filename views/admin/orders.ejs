@@ -47,19 +47,20 @@
                             <td><%= order.orderId %></td>
                             <td><%= order.userId.name %></td>
                             <td><%= order.totalAmount.toFixed(2) %></td>
-                            <td><%= order.paymentMethod %></td>
+                            <td><%= order.payment[0].method%></td>
                             <td><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></td>
                             <td>
                                 <span class="badge 
                                     <%= order.status === 'Delivered' ? 'bg-success' : 
                                         order.status === 'Pending' ? 'bg-warning' : 
-                                        order.status === 'Cancelled' ? 'bg-danger' : 'bg-secondary' %>">
+                                        order.status === 'Cancelled' ? 'bg-danger' :
+                                        order.status === 'Return Requested'?'bg-warning' :'bg-secondary' %>">
                                     <%= order.status %>
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="/admin/orderDetails/<%= order._id %>" class="btn btn-sm btn-info">View</a>
+                                    <a href="/admin/orderDetails/<%= order._id %>?status=<%= order.status %>" class="btn btn-sm btn-info">View</a>
                                   
                                 </div>
                             </td>

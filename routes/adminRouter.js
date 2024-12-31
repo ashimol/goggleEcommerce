@@ -63,7 +63,7 @@ router.get('/editProduct',adminAuth,productController.getEditProduct);
 router.post('/editProduct/:id',adminAuth,uploads.array('images',3),productController.editProduct);
 router.post('/addProductOffer',adminAuth,productController.addProductOffer);
 router.post('/removeProductOffer',adminAuth,productController.removeProductOffer);
-//router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
+router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
 //router.delete('/deleteProduct', adminAuth, productController.deleteProduct);
 
 

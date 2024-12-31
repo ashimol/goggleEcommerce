@@ -6,7 +6,7 @@ const Product =require('../../models/productSchema');
 
 const cancelOrder = async (req, res) => {
     try {
-        console.log("Route hit - before cancelOrder");
+      
         console.log("Parameters received:", {
             itemOrderId: req.params.itemOrderId,
             cancelReason: req.params.cancelReason
@@ -58,6 +58,8 @@ const cancelOrder = async (req, res) => {
         const paymentStatus = order.payment[0].status;
 
         // Update item status
+
+        console.log("status :", order.items[itemIndex].itemOrderStatus );
         order.items[itemIndex].itemOrderStatus = 'Cancelled';
         order.items[itemIndex].cancelReason = cancelReason || "No reason provided";
 
@@ -138,7 +140,7 @@ const cancelOrder = async (req, res) => {
             success: false, 
             message: 'Error cancelling order',
             error: error.message,
-            stack: error.stack // Remove this in production
+            stack: error.stack 
         });
     }
   };

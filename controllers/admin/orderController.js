@@ -62,6 +62,7 @@ const getAdminOrders = async (req, res) => {
 const getOrderDetails = async (req, res) => {
     try {
         const orderId = req.params.orderId;  
+        const currentStatus = req.query.status;
         const order = await Order.findById(orderId) 
             .populate('userId')
             .populate('addressId')
@@ -78,7 +79,7 @@ const getOrderDetails = async (req, res) => {
             return res.status(404).render('error', { message: 'Order not found' });
         }
 
-        res.render('orderDetails', { order });
+        res.render('orderDetails', { order, currentStatus });
     } catch (error) {
         console.error('Error fetching order details:', error);
         res.status(500).render('error', { message: 'Server error' });
@@ -89,6 +90,7 @@ const getOrderDetails = async (req, res) => {
 
 const updateItemStatus = async (req, res) => {
   try {
+    console.log("req.body :" ,req.body);
     const { orderId, itemId, itemStatus } = req.body;
 
     if (!orderId || !itemId || !itemStatus) {
@@ -102,12 +104,15 @@ const updateItemStatus = async (req, res) => {
     }
 
     const item = order.items.find(item => item._id.toString() === itemId);
+    console.log('item : ',item);
 
     if (!item) {
         return res.status(404).send({ message: 'Item not found in order.' });
     }
 
-    order.status = itemStatus;
+    //order.status = itemStatus;
+    console.log('item.iemstatus :',item.itemOrderStatus)
+    item.itemOrderStatus = itemStatus;
 
     await order.save();
     // res.redirect(`/orderDetails/${orderId}`);

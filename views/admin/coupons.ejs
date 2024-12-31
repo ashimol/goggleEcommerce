@@ -38,18 +38,28 @@
     <div class="form-container">
       <h2 id="form-title">Create Coupon</h2>
       <form id="coupon-form">
+        <label for="code">Coupon Code</label>
         <input type="text" name="code" placeholder="Coupon Code" required>
+        <label for="description">Description</label>
         <input type="text" name="description" placeholder="Description" required>
+        <label for="discountType">Discount Type</label>
         <select name="discountType" required>
           <option value="percentage">Percentage</option>
           <option value="flat">Flat Amount</option>
         </select>
+        <label for="discountValue">Discount Value</label>
         <input type="number" name="discountValue" placeholder="Discount Value" required>
+        <label for="minPurchaseAmount">Min Purchase Amount</label>
         <input type="number" name="minPurchaseAmount" placeholder="Min Purchase Amount" required>
+        <label for="maxPurchaseAmount">Max Purchase Amount</label>
         <input type="number" name="maxPurchaseAmount" placeholder="Max Purchase Amount" required>
+        <label for="startDate">Start Date</label>
         <input type="date" name="startDate" required>
+        <label for="endDate">End Date</label>
         <input type="date" name="endDate" required>
+        <label for="usageLimit">Usage Limit</label>
         <input type="number" name="usageLimit" placeholder="Usage Limit" required>
+        <label for="status">Status</label>
         <select name="status" required>
           <option value="Active">Active</option>
           <option value="Expired">Expired</option>
@@ -73,7 +83,7 @@
           <th>Max Purchase</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>Status</th>
+          
           <th>Usage Limit</th>
           <th>Created Date</th>
           <th>Actions</th>
@@ -96,11 +106,7 @@
             <td><%= coupon.maxPurchaseAmount %></td>
             <td><%= coupon.startDate.toDateString() %></td>
             <td><%= coupon.endDate.toDateString() %></td>
-            <td>
-              <span class="badge bg-<%= coupon.status === 'Active' ? 'success' : 'danger' %>">
-                <%= coupon.status === 'Active' ? 'Active' : coupon.status %>
-              </span>
-            </td>
+            
             <td><%= coupon.usageLimit %></td>
             <td><%= coupon.createdAt.toDateString() %></td>
             <td>

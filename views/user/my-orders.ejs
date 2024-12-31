@@ -307,17 +307,17 @@ body {
                                         <td><%= item.quantity %></td>
                                         <td>
                                             <span class="badge 
-                                                <% if (item.itemOrderStatus === 'Pending') { %>
+                                                <% if (item.itemOrderStatus  === 'Pending') { %>
                                                     badge-warning
-                                                <% } else if (item.itemOrderStatus === 'Completed') { %>
+                                                <% } else if (item.itemOrderStatus  === 'Completed') { %>
                                                     badge-success
-                                                <% } else if (item.itemOrderStatus === 'Cancelled') { %>
+                                                <% } else if (item.itemOrderStatus  === 'Cancelled') { %>
                                                     badge-danger
                                                 <% } else { %>
                                                     badge-secondary
                                                 <% } %>
                                             ">
-                                                <%= item.itemOrderStatus %>
+                                                <%=item.itemOrderStatus%>
                                             </span>
                                         </td>
                                         <td><%= order.orderDate.toLocaleDateString() %></td>
@@ -328,11 +328,11 @@ body {
                                                 </a>
                                                 
                                                 <% if (item.itemOrderStatus !== 'Cancelled' && 
-                                                   item.itemOrderStatus !== 'Delivered' && 
-                                                   item.itemOrderStatus !== 'Return Requested' && 
-                                                   item.itemOrderStatus !== 'Return Approved' && 
-                                                   item.itemOrderStatus !== 'Return Rejected' && 
-                                                   item.itemOrderStatus !== 'Returned') { %>
+                                                   item.itemOrderStatus  !== 'Delivered' && 
+                                                   item.itemOrderStatus  !== 'Return Requested' && 
+                                                   item.itemOrderStatus  !== 'Return Approved' && 
+                                                   item.itemOrderStatus  !== 'Return Rejected' && 
+                                                   item.itemOrderStatus  !== 'Returned') { %>
                                                     <button class="btn btn-danger btn-sm cancel-order" 
                                                             data-itemorderid="<%= item.itemOrderId %>">
                                                           
@@ -340,14 +340,13 @@ body {
                                                     </button>
                                                 <% } %>
                                                 
-                                                <% if (item.itemOrderStatus === 'Delivered') { %>
-                                                    <button class="btn btn-primary btn-sm return-order" 
-                                                            data-itemorderid="<%= item.itemOrderId %>"
-                                                            data-orderid="<%= order.orderId %>">
-                                                        Return Order
-                                                    </button>
-                                                <% } %>
-                                            </div>
+                                                        <% if (item.itemOrderStatus === 'Delivered') { %>
+                                                        <button class="btn btn-primary btn-sm return-order" 
+                                                                data-itemorderid="<%= item.itemOrderId %>">
+                                                            Return Order
+                                                        </button>
+                                                    <% } %>
+                                                </div>
                                         </td>
                                     </tr>
                                 <% }) %>
@@ -477,67 +476,61 @@ body {
 
 
 <script>
+  document.querySelectorAll(".return-order").forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
 
-    document.querySelectorAll('.return-order').forEach(button => {
+      const itemOrderId = this.getAttribute("data-itemorderid");
 
-    button.addEventListener('click', function(event) {
-
-        event.preventDefault();
-
-        const orderId = this.getAttribute('data-id');
-
-        Swal.fire({
-
-            title: 'Return Order',
-            input: 'textarea',
-            inputLabel: 'Return Reason',
-            inputPlaceholder: 'Please provide a reason for returning...',
-            inputValidator: (value) => {
-                if (!value?.trim()) {
-                    return 'You must enter a reason for return';
-                }
+      Swal.fire({
+        title: "Return Order",
+        input: "textarea",
+        inputLabel: "Return Reason",
+        inputPlaceholder: "Please provide a reason for returning...",
+        inputValidator: (value) => {
+          if (!value?.trim()) {
+            return "You must enter a reason for return";
+          }
+        },
+        showCancelButton: true,
+        confirmButtonText: "Submit Return",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/my-order/return/${itemOrderId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-            showCancelButton: true,
-            confirmButtonText: 'Submit Return',
-            cancelButtonText: 'Cancel',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('/my-order/return/' + itemOrderId, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        orderId: orderId,
-                        returnReason: result.value
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: data.message,
-                            icon: 'success'
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        throw new Error(data.message);
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.message || 'Failed to submit return request',
-                        icon: 'error'
-                    });
+            body: JSON.stringify({
+              returnReason: result.value,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                Swal.fire({
+                  title: "Success",
+                  text: data.message,
+                  icon: "success",
+                }).then(() => {
+                  location.reload();
                 });
-            }
-        });
+              } else {
+                throw new Error(data.message);
+              }
+            })
+            .catch((error) => {
+              Swal.fire({
+                title: "Error",
+                text: error.message || "Failed to submit return request",
+                icon: "error",
+              });
+            });
+        }
+      });
     });
-});
-
-</script> 
+  });
+</script>
 
 <%- include("../../views/partials/user/footer") %>
