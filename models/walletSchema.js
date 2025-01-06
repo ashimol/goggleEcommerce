@@ -4,6 +4,7 @@ const {Schema} = mongoose;
 const {v4:uuidv4} = require("uuid");
 
 const walletSchema = new mongoose.Schema({
+    
    
         balance: {
             type:Number,

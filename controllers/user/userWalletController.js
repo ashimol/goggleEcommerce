@@ -48,13 +48,17 @@ const wallet = async (req, res) => {
         const totalTransactions = sortedTransactions.length;
         const totalPages = Math.ceil(totalTransactions / limit);
         const paginatedTransactions = sortedTransactions.slice((page - 1) * limit, page * limit);
+        if(userId){
+          const userData = await User.findById(userId);
   
         return res.render('wallet', {
+          user:userData,
             balance: balance,
             transactions: paginatedTransactions, 
             currentPage: page,
             totalPages: totalPages
         });
+      }
   
     } catch (error) {
       res.redirect("/pageNotfound");
@@ -77,6 +81,7 @@ const wallet = async (req, res) => {
       }
 
       const user = await User.findById(userId).populate('wallet');
+
       if (!user || !user.wallet) {
         return res.json({ success: false, message: 'User or wallet not found' });
       }
@@ -86,6 +91,7 @@ const wallet = async (req, res) => {
       }
   
       return res.json({ success: true, message: 'Sufficient balance available' });
+      
     } catch (error) {
       console.error('Error checking wallet balance:', error);
       return res.status(500).json({ success: false, message: 'An error occurred while checking the wallet balance' });

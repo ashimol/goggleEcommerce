@@ -114,15 +114,19 @@ const calculateStats = async (startDate, endDate) => {
     }, 0);
 
 
-    const totalSales = orders.reduce((sum, order) => {
-      const validItemsTotal = order.items.reduce((itemSum, item) => {
-          if (item.itemOrderStatus !== "Cancelled" && item.itemOrderStatus !== "Returned") {
-              return itemSum + (item.price * item.quantity);
-          }
-          return itemSum;
-      }, 0);
-      return sum + validItemsTotal;
-  }, 0);
+//     const totalSales = orders.reduce((sum, order) => {
+//       const validItemsTotal = order.items.reduce((itemSum, item) => {
+//           if (item.itemOrderStatus !== "Cancelled" && item.itemOrderStatus !== "Returned") {
+//               return itemSum + (item.price * item.quantity);
+//           }
+//           return itemSum;
+//       }, 0);
+//       return sum + validItemsTotal;
+//   }, 0);
+
+        const totalSales = orders.reduce((sum,order) =>{
+            return sum + order.totalAmount;
+        },0);
 
 
     const cancelledOrders = orders.filter(order =>
@@ -416,7 +420,8 @@ const generatePDF = async (res, orders, dateFilter, startDate, endDate) => {
           const regularPrice = item.regularPrice * item.quantity;
           const salePrice = item.actualPrice * item.quantity;
           const discount = (item.regularPrice - item.actualPrice) * item.quantity;
-          const netPrice = salePrice;
+          //const discount = salePrice -order.totalAmount ;
+          const netPrice = order.totalAmount;
 
           // Add row data
           doc.fontSize(8)

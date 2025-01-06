@@ -671,20 +671,34 @@ const loadShopping = async (req, res) => {
 // };
 
 const logout = async (req, res) => {
+    // try {
+    //     if (req.session.user || req.user) {
+    //         req.session.user = null; 
+    //     }
+    
+    //     // Optionally clear the session cookie for the user
+    //     res.clearCookie('connect.sid');
+    
+    //     // Redirect or send a response
+    //     res.redirect('/login'); // Redirect to login page or another page
+    // } catch (error) {
+    //     console.log("Logout error:", error.message);
+    //     res.redirect("pageNotFound");
+    // }
+
     try {
-        if (req.session.user) {
-            req.session.user = null; // Or use req.session.destroy() if needed
-        }
-    
-        // Optionally clear the session cookie for the user
-        res.clearCookie('connect.sid');
-    
-        // Redirect or send a response
-        res.redirect('/login'); // Redirect to login page or another page
-    } catch (error) {
-        console.log("Logout error:", error.message);
-        res.redirect("pageNotFound");
-    }
+        req.session.destroy((err) => {
+          if (err) {
+            console.log("Session destruction error", err.message);
+            return res.redirect("/pageNotFound");
+          }
+          
+          return res.redirect("/login");
+        });
+      } catch (error) {
+        console.log("logout error", error);
+        // next(error);
+      }
 };
 
 
@@ -704,7 +718,7 @@ const productDetails = async (req, res) => {
 
           console.log('user id :',userId);
           
-        const products = await Product.findById(productId).populate('category').lean().exec();
+        const products = await Product.findById(productId).populate('category').populate('brand').lean().exec();
 
         if (userId) {
             const userData = await User.findById(userId);

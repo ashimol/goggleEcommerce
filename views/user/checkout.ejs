@@ -74,14 +74,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     margin: 0;
     padding: 0;
 }
-
+.main{
+    display: flex; /* Use flexbox */
+    /* justify-content: space-between; Space between children */
+    align-items: flex-start; 
+    
+}
 .container1 {
     max-width: 1200px; /* Maximum width for the container */
-    margin: 30px auto; /* Center the container */
+    margin: 20px auto; /* Center the container */
     padding: 20px; /* Padding for inner spacing */
     background: white; /* White background for the container */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    
+    
 }
 
 .header {
@@ -100,7 +107,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 }
 
 .addresses, .cart-detail {
-    margin-bottom: 30px; /* Space below sections */
+    margin-bottom: 30px; 
+    max-width: 500px;
+    
 }
 
 .addresses h2, .cart-detail h2 {
@@ -212,8 +221,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     }
 }
 </style>
-</head>
-<body>
+
     <div class="banner_inner">
         <div class="services-breadcrumb">
             <div class="inner_breadcrumb">
@@ -227,12 +235,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             </div>
         </div>
     </div>
-
-<div class="container1">
     <div class="header">
         <h1>Checkout</h1>
         <p>Please review your order and provide your address.</p>
     </div>
+
+<div class="main ">
+<div class="container1">
+    
     <div class="addresses">
         <h2>Addresses</h2>
         <button class="new-address-btn" onclick="toggleNewAddressForm()">NEW ADDRESS</button>
@@ -270,7 +280,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <option value="<%= coupon._id %>">
                                                 <%= coupon.code %> - <%= coupon.description %> (Valid until: <%= new Date(coupon.endDate).toLocaleDateString() %>)
                                             </option>
+
                                         <% }) %>
+                                       
                                     <% } else { %>
                                         <option value="">No coupons available</option>
                                     <% } %>
@@ -318,8 +330,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <ul>
                         <% cartData.items.forEach(item => { %>
                             <li>
-                                <span><%= item.quantity %>   x  (<%= item.productId.productName%>)</span> 
-                                 <span><%= item.discount %></span>
+                                <span> <%= item.productId.productName   %>   x    <%= item.quantity %>    </span> 
+                                 <span><%= item.discount %>    </span>
                                  <span class="product-price">
                                             
                                     <% if (item.productId.salePrice < item.productId.regularPrice) { %>
@@ -339,6 +351,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <li>
                     <span>Order Total</span>
                     <span id="orderTotal">₹<%=subtotal%></span>
+                </li>
+                <li>
+                    <span>Discount </span>
+                    <span id="discount">₹<%=totalDiscount%></span>
                 </li>
             </ul>
         </div>
@@ -362,6 +378,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <button type="submit" class="place-order-btn">Confirm Order</button>
         </form>
     </div>
+</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -694,6 +711,7 @@ function verifyPayment(response) {
 $(document).ready(function() {
     $('#applyCouponBtn').click(function() {
         const couponId = $('#availableCoupons').val();
+        const totalDiscount = $('#discount').text().replace('₹', '').trim();
         if (!couponId) {
             $('#couponMessage').text('Please select a coupon').removeClass('text-success').addClass('text-danger');
             return;
@@ -702,13 +720,22 @@ $(document).ready(function() {
         $.ajax({
             url: '/cart/apply-coupon',
             method: 'POST',
-            data: { couponId: couponId },
+            data: { 
+                couponId: couponId,
+                totalDiscount: totalDiscount 
+            },
             success: function(response) {
+                
                 // Update all relevant total displays
                 updateOrderTotals(response);
 
                  // Update the order total display
                 $('#orderTotal').text(`₹${response.subtotal}`);
+
+
+               
+                const newDiscount =parseInt( response.totalDiscount) + parseInt( response.couponDiscount);
+                $('#discount').text(`₹${newDiscount}`);
                 
                 // Update form hidden input for order total
                 $('input[name="totalAmount"]').val(response.subtotal);
@@ -736,6 +763,8 @@ $(document).ready(function() {
                 
                  // Update the order total display
                  $('#orderTotal').text(`₹${response.subtotal}`);
+
+                 $('#discount').text(`₹${response.totalDiscount || 0}`);
 
                 // Reset form hidden input
                 $('input[name="totalAmount"]').val(response.subtotal);

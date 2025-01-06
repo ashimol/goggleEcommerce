@@ -59,8 +59,37 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-body">
+                                <h5 class="card-title">Cancel Orders</h5>
+                                <p class="card-text h3"><%= cancelledOrders %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
                                 <h5 class="card-title">Total Sales</h5>
                                 <p class="card-text h3">₹<%= totalSales.toFixed(2) %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Discount</h5>
+                                <p class="card-text h3">
+                                    <% 
+                                    const totalDiscount = orderDetails.reduce((sum, order) => {
+                                        const total = order.items.reduce((orderSum, item) => {
+                                            return orderSum + (item.productId.regularPrice * item.quantity);
+                                        }, 0); 
+                                        const discount = total - order.totalAmount;
+                                        return sum + discount; // Accumulate the discount
+                                    }, 0); 
+                                    %>
+                                    Total Discount : <%= totalDiscount %>
+                                </p>
+                                
                             </div>
                         </div>
                     </div>
@@ -93,9 +122,20 @@
                                         <% }) %>
                                     </ul>
                                 </td>
-                                <td>₹<%= order.totalAmount %></td>
+                                <td><% order.items.forEach(item => { %>
+                                    <li><%= item.productId.regularPrice * item.quantity %></li>
+                                <% }) %>
+                                </td>
+
                                 <td>₹<%= order.totalAmount - (order.coupon?.discount || 0) %></td>
-                                <td>₹<%= order.coupon?.discount || 0 %></td>
+                                <td>
+                                    <% 
+                                        const total = order.items.reduce((sum, item) => {
+                                            return sum + (item.productId.regularPrice * item.quantity);
+                                        }, 0); 
+                                    %>
+                                    <%= total -  order.totalAmount%>
+                                </td>
                                 <td><%= order.status %></td>
                                 <td><%= order.payment.map(p => `${p.method} (${p.status})`).join(", ") %></td>
                                 <td><%= order.orderDate.toLocaleDateString() %></td>

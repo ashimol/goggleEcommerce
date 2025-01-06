@@ -18,7 +18,14 @@ const { console } = require('inspector');
 
 const getCheckout = async (req, res) => {
     try {
+      let user ;
+      if (req.user) {
+          user = req.user;
+        } else if (req.session.user) {
+          user = req.session.user;
+        }
         
+        console.log('userid :',user);
         
         const cartId = req.params.id;
 
@@ -75,17 +82,23 @@ const getCheckout = async (req, res) => {
             await cartData.save();
           }
 
+          if(user){
+            const userData = await User.findById(user);
 
         res.render('checkout', {
+          user:userData,
             userId, 
             addresses: userAddresses,            
             firstName: cartData.userId.firstName,
             cartData,
             subtotal,
-            coupons
+            coupons,
+            totalDiscount,
+
            // orderTotal,
             
         });
+      }
     } catch (error) {
         console.error("Error during checkout page load:", error);
         //res.redirect("/pageNotfound");
@@ -96,7 +109,7 @@ const getCheckout = async (req, res) => {
 const applyCoupon = async (req, res) => {
     
     try {
-        const { couponId } = req.body; 
+        const { couponId,totalDiscount } = req.body; 
         const userId = req.session.user || req.user;
         const cart = await Cart.findOne({ userId: userId }).populate('items.productId').exec();
     
@@ -131,12 +144,7 @@ const applyCoupon = async (req, res) => {
         
 
           
-        // cart.items.forEach(item => {
-        //   totalPrice += item.productId.regularPrice * item.quantity;
-        //   totalDiscount += item.discountAmount * item.quantity; 
-        // });
-          
-        //const netAmount = totalPrice - totalDiscount;
+       
        
         if (cartTotal < coupon.minPurchaseAmount) {
             return res.status(400).json({ message: `Minimum purchase amount is ${coupon.minPurchaseAmount} for this coupon.` });
@@ -157,7 +165,7 @@ const applyCoupon = async (req, res) => {
           }
           console.log( "Discount :",couponDiscount);
           
-         // Calculate base discount (regular price - sale price)
+        
          const baseDiscount = cart.items.reduce((total, item) => {
             return total + ((item.productId.regularPrice - item.productId.salePrice) * item.quantity);
         }, 0);
@@ -168,9 +176,9 @@ const applyCoupon = async (req, res) => {
         console.log('subtotal :',subtotal);
         
 
-       // Clear any existing coupon before setting new one
+       
         req.session.couponId = null;
-        //Set new coupon
+        
        req.session.couponId = couponId;
         
         return res.json({ 
@@ -178,6 +186,7 @@ const applyCoupon = async (req, res) => {
             subtotal,
             baseDiscount,
             couponDiscount,
+            totalDiscount,
             originalTotal: cartTotal,
             couponApplied: true
         });
@@ -193,10 +202,10 @@ const applyCoupon = async (req, res) => {
 
  const removeCoupon = async (req, res) => {
   try {
-      // Get user ID from session
+    
       const userId = req.session.user || req.user;
 
-      // Find the user's cart and populate product information
+      
       const cart = await Cart.findOne({ userId: userId })
           .populate('items.productId')
           .exec();
@@ -226,7 +235,7 @@ const applyCoupon = async (req, res) => {
      
       req.session.couponId = null;
 
-      // Return updated cart totals with original prices
+      
       return res.json({
           success: true,
           subtotal: cartTotal, 
@@ -586,7 +595,7 @@ const placeOrder = async (req, res) => {
           await cart.save();
       }
 
-      // Handle payment methods
+      
       if (paymentMethod === "Online Payment") {
           const razorpayOptions = {
               amount: Math.round(parseFloat(totalAmount) * 100),
@@ -610,24 +619,35 @@ const placeOrder = async (req, res) => {
               }
           });
       }else if (paymentMethod === "WalletPayment") {
-        const wallet = await Wallet.findOne({ user: userId });
-        
-        if (!wallet || wallet.balance < totalAmount) {
-            return res.status(400).json({ error: "Insufficient wallet balance" });
+
+
+        try {
+          const user = await User.findById(userId).populate('wallet');
+          if (!user || !user.wallet) {
+            throw new Error('User or wallet not found');
+          }
+      
+          console.log(totalAmount);
+          
+          if (user.wallet.balance < totalAmount) {
+            throw new Error('Insufficient balance in wallet');
+          }
+      
+          
+          user.wallet.balance -= totalAmount;
+          user.wallet.transactions.push({
+            type: 'debit',
+            amount: totalAmount,
+            description: `Payment for order`,
+            date: new Date()
+          });
+      
+          await user.wallet.save();
+          return true;
+        } catch (error) {
+          console.error('Error processing wallet payment:', error);
+          throw error;
         }
-
-        wallet.balance -= totalAmount;
-        await wallet.save();
-
-        order.payment[0].status = "completed";
-        await order.save();
-
-        return res.status(200).json({
-            success: true,
-            orderId: order._id,
-            redirectTo: '/user/order-confirmation'
-        });
-
       } else {
           // Cash On Delivery
           return res.status(200).json({
@@ -720,13 +740,16 @@ const getMyOrders = async (req, res) => {
 
         
         const totalPages = Math.ceil(totalOrders / limit);
-
+        if(userId){
+          const userData = await User.findById(userId);
        
         res.render('my-orders', {
+          user:userData,
             orders,
             currentPage: page,
             totalPages
         });
+      }
 
     } catch (error) {
         console.error('Error fetching orders:', error);

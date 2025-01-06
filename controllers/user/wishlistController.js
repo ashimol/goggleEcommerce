@@ -39,13 +39,13 @@ const addToWishlist = async (req, res) => {
 
         console.log('Request body:', req.body); 
 
-         // Ensure the user is authenticated
-         const userId = req.session.user; // Assuming user ID is stored in session
+        
+         const userId = req.session.user; 
          if (!userId) {
              return res.status(401).json({ message: 'User  not authenticated' });
          }
  
-         // Get the product ID from the request body
+         
          const { productId } = req.body;
  
          // Validate the product ID
@@ -55,6 +55,7 @@ const addToWishlist = async (req, res) => {
  
          // Check if the product exists
          const product = await Product.findById(productId);
+         
          if (!product) {
              return res.status(404).json({ message: 'Product not found' });
          }

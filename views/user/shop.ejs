@@ -430,62 +430,66 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
   fetch("/add-cart", {
     method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
     },
     body: JSON.stringify(Object.fromEntries(formData)),
-    credentials: 'include' 
-  })
-  .then(response => {
-    return response.json().then(data => {
-      if (!response.ok) {
-        throw data;
-      }
-      return data;
-    });
-  })
-  .then(data => {
-    if (data.message === 'Item already in cart') {
-      Swal.fire({
-        icon: 'info',
-        title: 'Already in Cart',
-        text: 'This item is already in your cart.'
-      });
-    } else {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: data.message
-      });
+    credentials: 'include'
+})
+.then(response => {
+    // Always parse the JSON response
+    return response.json().then(data => ({
+        ok: response.ok, // Pass the response status
+        data
+    }));
+})
+.then(({ ok, data }) => {
+    if (!ok) {
+        throw data; // This will trigger the catch block for non-2xx statuses
     }
-    if (data.cartItemsCount !== undefined) {
-      updateCartItemCount(data.cartItemsCount);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    if (error.error === 'Please login to add items to cart') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Required',
-        text: 'Please login to add items to cart',
-        showCancelButton: true,
-        confirmButtonText: 'Login',
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = '/login';
-        }
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.error || 'An error occurred, please login and try again'
-      });
-    }
-  });
-}
 
+    if (data.message === 'Item already in cart') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Already in Cart',
+            text: 'This item is already in your cart.'
+        });
+    } else {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: data.message
+        });
+    }
+
+    if (data.cartItemsCount !== undefined) {
+        updateCartItemCount(data.cartItemsCount);
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    if (error.message === 'Please login') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Authentication Required',
+            text: 'Please login to add items to cart',
+            showCancelButton: true,
+            confirmButtonText: 'Login',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/login';
+            }
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'An error occurred, please try again.'
+        });
+    }
+});
+
+	}
 function updateCartItemCount(count) {
   const cartCountElement = document.querySelector('.cart-count');
   if (cartCountElement) {

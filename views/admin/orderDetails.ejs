@@ -69,7 +69,7 @@
                         <p><strong>Quantity:</strong> <%= item.quantity %></p>
                         <p><strong>Regular Price:</strong> ₹<%= item.productId.regularPrice.toFixed(2) %></p>
                         <p><strong>Sale Price:</strong> ₹<%= item.productId.salePrice.toFixed(2) %></p>
-                        <p><strong>Current Order Status:</strong> <%= currentStatus %></p>
+                        <p><strong>Current Order Status:</strong> <%= item.itemOrderStatus%></p>
 
                         
                         <div class="status-update">
