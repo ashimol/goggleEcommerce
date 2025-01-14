@@ -30,33 +30,45 @@
         <!-- Orders Table -->
         <div class="table-responsive">
             <table class="table table-striped table-hover">
-                <thead class="table-dark">
+                <thead class="table">
                     <tr>
                         <th>Order ID</th>
+                        <th>Item Order ID</th>
                         <th>User</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
                         <th>Total Amount</th>
                         <th>Payment Method</th>
                         <th>Order Date</th>
-                       
+                        <th>Item Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% orders.forEach(function(order) { %>
-                        <tr>
-                            <td><%= order.orderId %></td>
-                            <td><%= order.userId.name %></td>
-                            <td><%= order.totalAmount.toFixed(2) %></td>
-                            <td><%= order.payment[0].method%></td>
-                            <td><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></td>
-                            
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="/admin/orderDetails/<%= order._id %>?status=<%= order.status %>" class="btn btn-sm btn-info">View</a>
-                                  
-                                </div>
-                            </td>
-                        </tr>
+                        <% order.items.forEach(function(item) { %>
+                            <tr>
+                                <td><%= order.orderId %></td>
+                                <td><%= item.itemOrderId %></td>
+                                <td><%= order.userId.name %></td>
+                                <td><%= item.productId.productName %></td>
+                                <td><%= item.quantity %></td>
+                                <td><%= item.price.toFixed(2) %></td>
+                                <td><%= order.totalAmount.toFixed(2) %></td>
+                                <td><%= order.payment[0].method %></td>
+                                <td><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></td>
+                                <td><%= item.itemOrderStatus %></td>
+                                <td>
+                                    <!-- <div class="btn-group" role="group">
+                                        <a href="/admin/orderDetails/<%= order._id %>?status=<%= order.status %>" class="btn btn-sm btn-info">View</a>
+                                    </div> -->
+                                    <div class="btn-group" role="group">
+                                        <a href="/admin/orderDetails/<%= order._id %>?itemOrderId=<%= item.itemOrderId %>" class="btn btn-sm btn-info">View</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
                     <% }); %>
                 </tbody>
             </table>

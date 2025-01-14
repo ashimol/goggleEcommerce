@@ -5,25 +5,25 @@ const Wishlist = require("../../models/wishlistSchema");
 
 const loadWishlist = async (req, res) => {
     try {
-        const userId = req.session.user; // Assuming user ID is stored in session
+        const userId = req.session.user; 
         if (!userId) {
-            return res.status(401).render('error', { message: 'User  not authenticated' }); // Render an error page or redirect
+            return res.status(401).render('error', { message: 'User  not authenticated' }); 
         }
 
-        // Find the user's wishlist and populate product details
+        
         const wishlist = await Wishlist.findOne({ userId })
             .populate({
                 path: 'products.productId',
-                select: 'productName productImage salePrice category brand', // Select the fields you want
+                select: 'productName productImage salePrice category brand', 
             });
 
-        // If the wishlist is not found, return an empty array
+       
         const products = wishlist ? wishlist.products : [];
 
         if (userId) {
             const userData = await User.findById(userId);
 
-        // Render the wishlist page with the products and user information
+       
         res.render('wishlist', { wishlist: products,  user: userData });
         }
     } catch (error) {
@@ -48,26 +48,26 @@ const addToWishlist = async (req, res) => {
          
          const { productId } = req.body;
  
-         // Validate the product ID
+       
          if (!mongoose.Types.ObjectId.isValid(productId)) {
              return res.status(400).json({ message: 'Invalid product ID' });
          }
  
-         // Check if the product exists
+        
          const product = await Product.findById(productId);
          
          if (!product) {
              return res.status(404).json({ message: 'Product not found' });
          }
  
-         // Find the user's wishlist
+         
          let wishlist = await Wishlist.findOne({ userId });
          if (!wishlist) {
-             // If no wishlist exists, create a new one
+            
              wishlist = new Wishlist({ userId, products: [] });
          }
  
-         // Check if the product is already in the wishlist
+        
          const productExists = wishlist.products.find(
              item => item.productId.toString() === productId
          );
@@ -75,7 +75,7 @@ const addToWishlist = async (req, res) => {
              return res.status(400).json({ message: 'Product already in wishlist' });
          }
  
-         // Add the product to the wishlist
+        
          wishlist.products.push({ productId });
          await wishlist.save();
  

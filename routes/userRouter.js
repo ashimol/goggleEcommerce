@@ -91,7 +91,7 @@ router.post("/cart/remove-coupon", userAuth, orderController.removeCoupon);
 router.get('/orderConfirmation/:orderId',userAuth,orderController.orderConfirmation);
 router.get('/user/my-order',userAuth,orderController.getMyOrders);
 router.get('/my-order/order-details/:orderId/:itemId',userAuth, orderController.getOrderDetails);
-
+//router.get('/my-order/order-details',userAuth,orderController.getOrderDetails);
 router.post("/test-route", (req, res) => {
     console.log("Test route hit");
     res.json({ message: "Test route working" });
@@ -100,6 +100,7 @@ router.post("/test-route", (req, res) => {
 
 router.post("/user/my-order/cancel/:itemOrderId/:cancelReason", userAuth,orderCancelController.cancelOrder);
 router.post("/my-order/return/:itemOrderId", userAuth, orderController.returnOrder);
+router.get("/my-order/:orderId/invoice/:itemId", userAuth, orderController.downloadInvoice);
 
 router.get("/wishlist",userAuth,wishlistController.loadWishlist);
 router.post("/add-wishlist",userAuth,wishlistController.addToWishlist);

@@ -5,7 +5,9 @@ const Category = require("../../models/categorySchema");
 
 const offer = async (req, res) => {
   try {
+
     const searchQuery = req.query.search;
+
     let query = {};
 
     if (searchQuery) {
@@ -19,6 +21,7 @@ const offer = async (req, res) => {
 
       
       const datePattern = /^\d{4}-\d{2}-\d{2}$/; 
+
       if (datePattern.test(searchQuery)) {
         const searchDate = new Date(searchQuery);
         query.$or.push(
@@ -52,6 +55,7 @@ const createOffer = async (req, res) => {
   };
 
   const addOffer = async (req, res) => {
+    
     try {
       const {
         offerCode,
@@ -69,6 +73,7 @@ const createOffer = async (req, res) => {
   
      
       const existingOffer = await Offer.findOne({ offerCode: offerCode });
+
       if (existingOffer) {
         return res.status(400).json({
           success: false,
@@ -101,6 +106,7 @@ const createOffer = async (req, res) => {
         message: "Offer created successfully",
         offer: newOffer
       });
+
     } catch (error) {
       console.error("Error creating offer:", error);
       res.status(500).json({
@@ -123,6 +129,7 @@ const createOffer = async (req, res) => {
   
      
       const deletedOffer = await Offer.findByIdAndDelete(offerId);
+
       if (!deletedOffer) {
         return res.status(500).json({
           success: false,

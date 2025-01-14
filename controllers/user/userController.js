@@ -370,10 +370,10 @@ const loadShopping = async (req, res) => {
         const limit = 8;
         const skip = (page - 1) * limit;
 
-        // Base query with isBlocked filter
+       
         let searchCondition = { isBlocked: false };
 
-        // Add search query if provided - search in productName and description
+        
         if (searchQuery.trim() !== "") {
             const regex = new RegExp(searchQuery, "i");
             searchCondition.$or = [
@@ -386,7 +386,7 @@ const loadShopping = async (req, res) => {
             searchCondition.category = selectedCategory;
         }
 
-        // Configure sort options
+       
         let sortOptions = {};
         switch (sortBy) {
             case "priceLowToHigh":
@@ -405,7 +405,7 @@ const loadShopping = async (req, res) => {
                 sortOptions = {}; 
         }
 
-        // Execute query with search, sort, and pagination
+        
         const products = await Product.find(searchCondition)
             .populate("category")  
             .populate("brand")     
@@ -423,12 +423,15 @@ const loadShopping = async (req, res) => {
             })
             .lean();
 
-        // Get total count for pagination
+        
         const totalProducts = await Product.countDocuments(searchCondition);
         const totalPages = Math.ceil(totalProducts / limit);
 
-        // Get all categories for filter dropdown
+       
         const categories = await Category.find({ isListed: true })
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(limit)
             .select("name")
             .lean();
 

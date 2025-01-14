@@ -6,13 +6,20 @@ const mongoose = require("mongoose");
 const env = require("dotenv").config();
 const session = require('express-session');
 const { use } = require("passport");
-const { ObjectId } = mongoose.Types; // Import ObjectId
+const { ObjectId } = mongoose.Types;
 
 
 
 const addToCart = async (req, res) => {
     try {
         const { productId, quantity } = req.body;
+        console.log("product id : ",productId);
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+          console.log('Invalid productId format');
+          return res.status(400).json({ message: 'Invalid productId' });
+      }
+        
 
         let userId ;
         if (req.user) {
@@ -24,17 +31,24 @@ const addToCart = async (req, res) => {
         
         console.log('Received in server:', { productId, quantity, userId });
 
+
         if (!userId) {
             return res.status(401).json({ message: 'Please login' });
         }
 
-        const product = await Product.findById(productId);
+       const product = await Product.findById(productId);
+       
+       console.log("product :",product);
 
         if (!product) {
+          console.log("Product not found");
+          
             return res.status(404).json({ message: 'Product not found' });
         }
 
         const quantityNumber = parseInt(quantity, 10);
+        console.log("quantity number : 222", quantityNumber);
+        
 
         if (isNaN(quantityNumber) || quantityNumber <= 0) {
             return res.status(400).json({ message: 'Invalid quantity' });
@@ -49,15 +63,19 @@ const addToCart = async (req, res) => {
         }
 
         let cart = await Cart.findOne({ userId });
+        console.log("cart :",cart);
+        console.log("hiiiiiii")
+
+        
 
         if (!cart) {
             cart = new Cart({ userId, items: [] });
         }
-
+        console.log("hiiiiiii11111111111")
         const itemIndex = cart.items.findIndex(item =>
             item.productId.toString() === productId 
         );
-
+        console.log("heloooo")
         if (itemIndex > -1) {
             // return res.status(400).json({ 
             //     message: 'This product is already in the cart.' 
@@ -73,28 +91,30 @@ const addToCart = async (req, res) => {
                 price: price,
                 totalPrice: totalPrice,
                 quantity: quantityNumber,
-                //status: 'placed',
+               
                 cancellationReason: 'none',
             });
-
+            console.log("nnnnnnnnnnn")
             // Reduce the quantity from the product
             product.quantity -= quantityNumber;
 
-            // If quantity reaches zero, mark as out of stock
+            
             if (product.quantity <= 0) {
                 product.status = "Out of Stock";
             }
         }
-
+        console.log("hhhhhhhhhhhhhhhhh")
         console.log('Cart before saving:', JSON.stringify(cart, null, 2));
         console.log('Product after quantity update:', JSON.stringify(product, null, 2));
 
-        // Save both cart and product updates
+        
         await cart.save();
+        console.log("DDDDDDDD")
         await product.save();
-
+        console.log("rrrrrrrrrrrrrrr")
         res.json({ message: 'Product added to cart successfully.' });
     } catch (error) {
+      console.log("hello....")
         console.error('Error adding to cart:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
@@ -305,42 +325,42 @@ const updateQuantity = async (req, res) => {
 };
 
 
-const calculateCartSummary = (cart) => {
-    let totalPrice = 0;
-    let totalDiscount=0;
+// const calculateCartSummary = (cart) => {
+//     let totalPrice = 0;
+//     let totalDiscount=0;
     
-    const deliveryCharges = 0;
+//     const deliveryCharges = 0;
 
-    cart.items.forEach(item => {
-        if (item.product) {
-            let currentPrice = item.product.salePrice < item.product.regularPrice ? item.product.salePrice :item.product.regularPrice ;
+//     cart.items.forEach(item => {
+//         if (item.product) {
+//             let currentPrice = item.product.salePrice < item.product.regularPrice ? item.product.salePrice :item.product.regularPrice ;
                 
 
-            const discountAmount = item.product.regularPrice - currentPrice;
+//             const discountAmount = item.product.regularPrice - currentPrice;
             
-            //totalPrice += item.product.regularPrice * item.quantity;
-            totalPrice += (currentPrice * item.quantity);
+//             //totalPrice += item.product.regularPrice * item.quantity;
+//             totalPrice += (currentPrice * item.quantity);
             
 
-            console.log("total last : ", totalPrice);
+//             console.log("total last : ", totalPrice);
             
             
-            totalDiscount += discountAmount * item.quantity;
-            console.log("total last disc: ", totalDiscount);
+//             totalDiscount += discountAmount * item.quantity;
+//             console.log("total last disc: ", totalDiscount);
             
-        }
-    });
+//         }
+//     });
 
-    const totalAmount = totalPrice - totalDiscount + deliveryCharges;
-    //const totalAmount = currentPrice * item.quantity +deliveryCharges;
+//     const totalAmount = totalPrice - totalDiscount + deliveryCharges;
+//     //const totalAmount = currentPrice * item.quantity +deliveryCharges;
 
-    return {
-        totalPrice,
-        totalDiscount,
-        deliveryCharges,
-        totalAmount
-    };
-};
+//     return {
+//         totalPrice,
+//         totalDiscount,
+//         deliveryCharges,
+//         totalAmount
+//     };
+// };
 
 
 

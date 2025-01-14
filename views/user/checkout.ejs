@@ -67,158 +67,255 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <%- include("../../views/partials/user/header") %>
 
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f7fa; /* Light background for contrast */
-    color: #333; /* Dark text for readability */
+ /* General Body Styles */
+body {
+    font-family: Roboto, Arial, sans-serif;
+    background-color: #f1f3f6;
+    color: #212121;
     margin: 0;
     padding: 0;
 }
-.main{
-    display: flex; /* Use flexbox */
-    /* justify-content: space-between; Space between children */
-    align-items: flex-start; 
-    
-}
-.container1 {
-    max-width: 1200px; /* Maximum width for the container */
-    margin: 20px auto; /* Center the container */
-    padding: 20px; /* Padding for inner spacing */
-    background: white; /* White background for the container */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    
-    
+
+/* Main container setup */
+.main {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    max-width: 1280px;
+    margin: 0 auto;
 }
 
+.container1 {
+    flex: 2;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+}
+
+/* Header Styles */
 .header {
-    text-align: center; /* Center align header text */
-    margin-bottom: 20px; /* Space below header */
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .header h1 {
-    font-size: 2.5rem; /* Large font size for the title */
-    margin-bottom: 10px; /* Space below title */
+    font-size: 18px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0;
 }
 
 .header p {
-    font-size: 1.2rem; /* Slightly larger font for subtitle */
-    color: #777; /* Muted color for subtitle */
+    font-size: 14px;
+    color: #878787;
+    margin-top: 8px;
 }
 
-.addresses, .cart-detail {
-    margin-bottom: 30px; 
-    max-width: 500px;
-    
+/* Address Section Styles */
+.addresses {
+    padding: 16px;
 }
 
-.addresses h2, .cart-detail h2 {
-    font-size: 1.8rem; /* Font size for section titles */
-    margin-bottom: 15px; /* Space below section titles */
-    border-bottom: 2px solid #28a745; /* Green underline for section titles */
-    padding-bottom: 10px; /* Padding below section titles */
+.addresses h2 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    margin-bottom: 16px;
 }
 
+.new-address-btn {
+    background-color: #2874f0;
+    color: white;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+/* Card Styles for Address */
 .card {
-    border: 1px solid #ddd; /* Light border for cards */
-    border-radius: 5px; /* Rounded corners for cards */
-    padding: 15px; /* Padding inside cards */
-    margin-bottom: 15px; /* Space below cards */
-    background-color: #f9f9f9; /* Light background for cards */
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
 .card h5 {
-    margin: 0; /* Remove default margin */
-    font-size: 1.5rem; /* Font size for card titles */
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+    margin-bottom: 8px;
 }
 
 .card p {
-    margin: 5px 0; /* Space between paragraphs */
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0;
 }
 
-.new-address-btn, .edit-btn, .place-order-btn {
-    background-color: #28a745; /* Green background for buttons */
-    color: white; /* White text for buttons */
-    border: none; /* Remove border */
-    padding: 10px 20px; /* Padding for buttons */
-    border-radius: 5px; /* Rounded corners for buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+.card button {
+    background-color: #2874f0;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 2px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
-.new-address-btn:hover, .edit-btn:hover, .place-order-btn:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-
-.cart-detail {
-    background-color: #f1f1f1; /* Light background for cart details */
-    padding: 20px; /* Padding inside cart details */
-    border-radius: 5px; /* Rounded corners for cart details */
-}
-
-.cart-detail ul {
-    list-style: none; /* Remove default list styles */
-    padding: 0; /* Remove padding */
-}
-
-.cart-detail li {
-    display: flex; /* Flexbox for layout */
-    justify-content: space-between; /* Space between items */
-    padding: 10px 0; /* Padding for list items */
-    border-bottom: 1px solid #ddd; /* Light border below items */
-}
-
-.cart-detail li:last-child {
-    border-bottom: none; /* Remove border for last item */
-}
-
-.payment-methods label {
-    display: block; /* Block display for labels */
-    margin-bottom: 10px; /* Space below labels */
-    font-size: 1rem; /* Font size for labels */
-}
-
-.payment-methods input[type="radio"] {
-    margin-right: 10px; /* Space between radio and label */
-}
-
+/* Coupon Section */
 .coupon-section {
-    margin-top: 20px; /* Space above coupon section */
-    display: flex; /* Flexbox for layout */
-    justify-content: space-between; /* Space between items */
+    padding: 16px;
+    border-top: 1px solid #f0f0f0;
 }
 
-.coupon-section input {
-    flex: 1; /* Allow input to grow */
-    padding: 10px; /* Padding for input */
-    margin-right: 10px; /* Space to the right */
-    border:  1px solid #ccc; /* Light border for input */
-    border-radius: 5px; /* Rounded corners for input */
+.coupon-section select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 14px;
 }
 
 .coupon-section button {
-    padding: 10px 20px; /* Padding for buttons */
-    background-color: #28a745; /* Green background for buttons */
-    color: white; /* White text for buttons */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners for buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    background-color: #2874f0;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 2px;
+    font-size: 14px;
+    margin-top: 12px;
 }
 
-.coupon-section button:hover {
-    background-color: #218838; /* Darker green on hover */
+/* Cart Details Section */
+.cart-detail {
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
 }
 
+.cart-detail h2 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    justify-content: space-between;
+}
+
+.cart-detail ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-detail li {
+    padding: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #212121;
+}
+
+.product-price {
+    color: #212121;
+    font-weight: 500;
+}
+
+/* Payment Method Section */
+.payment-methods {
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.payment-methods label {
+    display: block;
+    font-size: 14px;
+    color: #212121;
+    margin-bottom: 12px;
+}
+
+/* Place Order Button */
+.place-order-btn {
+    background-color: #fb641b;
+    color: white;
+    padding: 16px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .coupon-section {
-        flex-direction: column; /* Stack items on smaller screens */
+    .main {
+        flex-direction: column;
+        padding: 12px;
     }
 
-    .coupon-section input {
-        margin-right: 0; /* Remove right margin */
-        margin-bottom: 10px; /* Space below input */
+    .container1 {
+        margin-bottom: 16px;
     }
+    
+    .cart-detail {
+        margin-top: 16px;
+    }
+}
+
+/* Price Details Section */
+.price-details {
+    background: white;
+    padding: 16px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.price-details h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Breadcrumb Styles */
+.services-breadcrumb {
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.inner_breadcrumb ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.inner_breadcrumb li {
+    font-size: 14px;
+    color: #878787;
+}
+
+.inner_breadcrumb a {
+    color: #2874f0;
+    text-decoration: none;
+}
+
+.inner_breadcrumb i {
+    margin: 0 8px;
+    color: #878787;
 }
 </style>
 
@@ -330,8 +427,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <ul>
                         <% cartData.items.forEach(item => { %>
                             <li>
-                                <span> <%= item.productId.productName   %>   x    <%= item.quantity %>    </span> 
+                                <span> <%= item.productId.productName   %>          x      <%= item.quantity %>    </span> 
                                  <span><%= item.discount %>    </span>
+                                 
                                  <span class="product-price">
                                             
                                     <% if (item.productId.salePrice < item.productId.regularPrice) { %>
@@ -345,17 +443,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <% }) %>
                     </ul>
                 </li>
-                
-              
-               
-                <li>
-                    <span>Order Total</span>
-                    <span id="orderTotal">₹<%=subtotal%></span>
-                </li>
                 <li>
                     <span>Discount </span>
                     <span id="discount">₹<%=totalDiscount%></span>
                 </li>
+                <li>
+                    <span>Delivery Charges </span>
+                    <span id="discount"><strike>40</strike> FREE</span>
+                </li>
+                <li>
+                    <span>Platform Fee</span>
+                    <span id="discount">₹3</span>
+                </li>
+               
+                <li>
+                    <span>Order Total</span>
+                    <span id="orderTotal">₹<%=subtotal %></span>
+                </li>
+                
             </ul>
         </div>
         <form id="checkoutForm" onsubmit="handleFormSubmit(event)">
@@ -380,10 +485,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
 </div>
 </div>
+<%-include("../../views/partials/user/footer")%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <script>
 // Toggle new address form for both new and edit operations
 function toggleNewAddressForm(address = null) {
@@ -671,39 +778,7 @@ function verifyPayment(response) {
 }
 
 
-// async function submitOrder(event) {
-//     event.preventDefault(); // Prevent the default form submission
 
-//     const form = document.getElementById('checkoutForm');
-//     const formData = new FormData(form);
-//     const data = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
-
-//     try {
-//         const response = await fetch(form.action, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(data),
-//         });
-
-//         const result = await response.json();
-
-//         if (response.ok) {
-//             // Show success message
-//             swal("Success!", result.message, "success").then(() => {
-//                 // Optionally redirect or reload the page
-//                 window.location.href = "/order-success"; // Redirect to a success page
-//             });
-//         } else {
-//             // Show error message
-//             swal("Error!", result.message, "error");
-//         }
-//     } catch (error) {
-//         console.error('Error:', error);
-//         swal("Error!", "An unexpected error occurred. Please try again.", "error");
-//     }
-// }
 </script>
 <script>
     // Update the existing script section in your EJS file
@@ -764,7 +839,8 @@ $(document).ready(function() {
                  // Update the order total display
                  $('#orderTotal').text(`₹${response.subtotal}`);
 
-                 $('#discount').text(`₹${response.totalDiscount || 0}`);
+                 
+                 $('#discount').text(`₹${response.totalDiscount}`);
 
                 // Reset form hidden input
                 $('input[name="totalAmount"]').val(response.subtotal);
@@ -804,78 +880,4 @@ $(document).ready(function() {
 });
 </script>
 
-<!-- <script>
-    //apply coupon
-     $(document).ready(function() {
-            
-            $('#applyCouponBtn').click(function() {
-                const couponId = $('#availableCoupons').val();
-                if (!couponId) {
-                    $('#couponMessage').text('Please select a coupon').removeClass('text-success').addClass('text-danger');
-                    return;
-                }
-    
-                $.ajax({
-                    url: '/cart/apply-coupon',
-                    method: 'POST',
-                    data: { couponId: couponId },
-                    success: function(response) {
-                        $('#subtotal').text('₹' + response.subtotal);
-                        $('#discount').text('- ₹' + response.discount);
-                        $('#couponDiscount').text('₹' + response.discountAmount); 
-                        $('#shippingCost').text('₹' + response.shippingCost);
-                        $('#totalAmount').text('₹' + response.total);
-                        $('#orderTotal').text('₹' + response.orderTotal);
-                        $('#hiddenorderTotal').val(response.orderTotal);
-                        $('#savingsMessage').text('You will save ₹' + response.discount + ' on this order');
-                        $('#appliedCouponId').val(response.couponId);
-                        $('#couponMessage').text('Coupon applied successfully!').removeClass('text-danger').addClass('text-success');                      
-                        $('#availableCoupons').prop('disabled', true);
-                        $('#applyCouponBtn').hide();
-                        $('#removeCouponBtn').show(); 
-                    },
-                    error: function(xhr) {
-                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while applying the coupon.';
-                        $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
-                    }
-                });
-            });
-    
-    
-            $('#removeCouponBtn').click(function() {
-                $.ajax({
-                    url: '/cart/remove-coupon', 
-                    method: 'POST', 
-                    success: function(response) {
-                        $('#subtotal').text('₹' + response.totalPrice);
-                        $('#discount').text('₹' + response.discount); 
-                       
-                        $('#deliveryCharges').text('₹' + response.deliveryCharges);
-                        $('#totalAmount').text('₹' + response.total);
-                        $('#finalTotal').text('₹' + response.finalTotal);
-                        $('#hiddenFinalTotal').val(response.finalTotal);
-                        $('#savingsMessage').text('Coupon removed.');
-                        $('#appliedCouponId').val(''); 
-                        $('#couponMessage').text('Coupon removed successfully!').removeClass('text-danger').addClass('text-success');
-    
-                        
-                        $('#availableCoupons').prop('disabled', false);
-                        $('#applyCouponBtn').show();
-                        $('#removeCouponBtn').hide(); 
-                    },
-                    error: function(xhr) {
-                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while removing the coupon.';
-                        $('#couponMessage').text(errorMessage).removeClass('text-success').addClass('text-danger');
-                    }
-                });
-            });
-    
-            $('#paymentForm').submit(function() {
-                const finalTotal = $('#finalTotal').text().replace('₹', '');
-                $('#hiddenFinalTotal').val(finalTotal);
-            });
-        });
-    </script> -->
 
-
-<%-include("../../views/partials/user/footer")%>

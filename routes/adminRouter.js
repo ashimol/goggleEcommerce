@@ -69,6 +69,7 @@ router.post('/deleteImage',adminAuth,productController.deleteSingleImage );
 
 router.get('/orders',adminAuth,orderController.getAdminOrders);
 router.get('/orderDetails/:orderId', adminAuth, orderController.getOrderDetails);
+//router.get('/orderDetails/:orderId/:itemOrderId',adminAuth,orderController.getOrderDetails);
 router.post('/updateItemStatus',adminAuth, orderController.updateItemStatus);
 
 

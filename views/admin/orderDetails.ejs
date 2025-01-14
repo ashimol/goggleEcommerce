@@ -19,6 +19,7 @@
         .status-update { margin-top: 10px; }
         .status-update select { margin-right: 10px; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="content">
@@ -44,16 +45,10 @@
                 </div>
 
                 <div>
-                    <p><strong>Payment Method:</strong> <%= order.payment[0].method%></p>
-                    <p><strong>Payment Status:</strong> <%= order.status %></p>
-                    <p><strong>Total Amount:</strong> ₹<%= order.totalAmount.toFixed(2) %></p>
+                    <p><strong>Payment Method:</strong> <%= order.payment[0].method%></p>                  
                 </div>
-
-                <!-- <div>
-                    <p><strong>Actual Price:</strong> ₹<%= order.actualPrice %></p>
-                    <p><strong>Offer Price:</strong> ₹<%= order.offerPrice %></p>
-                    <p><strong>Discount:</strong> ₹<%= order.discount %></p>
-                </div> -->
+                <div><p><strong>Payment Status:</strong> <%= order.status %></p></div>
+               
             </div>
 
             
@@ -61,49 +56,96 @@
 
         <div class="card"> --> 
             <div class="card-header">Ordered Products</div>
-            <% order.items.forEach(item => { %>
-                <div class="ordered-product">
-                    <img src="/uploads/re-images/<%= item.productId.productImage[0] %>" alt="<%= item.productId.productName %>">
-                    <div class="ordered-product-details">
-                        <p><strong>Product:</strong> <%= item.productId.productName %></p>
-                        <p><strong>Quantity:</strong> <%= item.quantity %></p>
-                        <p><strong>Regular Price:</strong> ₹<%= item.productId.regularPrice.toFixed(2) %></p>
-                        <p><strong>Sale Price:</strong> ₹<%= item.productId.salePrice.toFixed(2) %></p>
-                        <p><strong>Current Order Status:</strong> <%= item.itemOrderStatus%></p>
-
-                        
-                        <div class="status-update">
-                            <form action="/admin/updateItemStatus" method="POST"  <%= currentStatus=== 'Cancelled' ? 'style="display:none;"' : '' %>>
-                                <input type="hidden" name="orderId" value="<%= order.orderId %>">
-                                <input type="hidden" name="itemId" value="<%= item._id %>">
-                                <select name="itemStatus">
-                                    <option value="Pending" <%= currentStatus=== 'Pending' ? 'selected' : '' %>>Pending</option>
-                                    <option value="Processing" <%= currentStatus=== 'Processing' ? 'selected' : '' %>>Processing</option>
-                                    <option value="Shipped" <%= currentStatus=== 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                    <option value="Delivered" <%= currentStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
-                                    <option value="Cancelled" <%= currentStatus=== 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
-                                    <option value="Return Requested" <%= currentStatus === 'Return Requested' ? 'selected' : '' %>>Return Requested</option>
-                                    <option value="Return Approved" <%= currentStatus === 'Return Approved' ? 'selected' : '' %>>Return Approved</option>
-                                    <option value="Return Rejected" <%= currentStatus === 'Return Rejected' ? 'selected' : '' %>>Return Rejected</option>
-                                    <option value="Returned" <%= currentStatus === 'Returned' ? 'selected' : '' %>>Returned</option>
-                                </select>
-                                <% if (currentStatus !== 'Cancelled') { %>
-                                    <button style="background-color: chocolate; border-color: transparent; color: white;" type="submit">Update Item Status</button>
-                                <% } %>
-                                
-                                <!-- <button style="background-color: chocolate;border-color: transparent;color: white;" type="submit">Update Item Status</button> -->
-                            </form>
+            
+                
+                    <div class="ordered-product">
+                        <img src="/uploads/re-images/<%= currentItem.productId.productImage[0] %>" alt="<%= currentItem.productId.productName %>">
+                        <div class="ordered-product-details">
+                            <p><strong>Product:</strong> <%= currentItem.productId.productName %></p>
+                            <p><strong>Quantity:</strong> <%= currentItem.quantity %></p>
+                            <p><strong>Regular Price:</strong> ₹<%= currentItem.productId.regularPrice.toFixed(2) %></p>
+                            <p><strong>Sale Price:</strong> ₹<%= currentItem.productId.salePrice.toFixed(2) %></p>
+                            <p><strong>Current Order Status:</strong> <%= currentItem.itemOrderStatus %></p>
                         </div>
                     </div>
+                    
+                        
+                    <div class="status-update">
+                        <% if (currentItem.itemOrderStatus !== 'Cancelled') { %>
+                            <form action="/admin/updateItemStatus" method="POST">
+                                <input type="hidden" name="orderId" value="<%= order.orderId %>">
+                                <input type="hidden" name="itemId" value="<%= currentItem._id %>">
+                                <select name="itemStatus">
+                                    <option value="Pending" <%= currentItem.itemOrderStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                    <option value="Processing" <%= currentItem.itemOrderStatus === 'Processing' ? 'selected' : '' %>>Processing</option>
+                                    <option value="Shipped" <%= currentItem.itemOrderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                    <option value="Delivered" <%= currentItem.itemOrderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                    <option value="Cancelled" <%= currentItem.itemOrderStatus === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                    <option value="Return Requested" <%= currentItem.itemOrderStatus === 'Return Requested' ? 'selected' : '' %>>Return Requested</option>
+                                    <option value="Return Approved" <%= currentItem.itemOrderStatus === 'Return Approved' ? 'selected' : '' %>>Return Approved</option>
+                                    <option value="Return Rejected" <%= currentItem.itemOrderStatus === 'Return Rejected' ? 'selected' : '' %>>Return Rejected</option>
+                                    <option value="Returned" <%= currentItem.itemOrderStatus === 'Returned' ? 'selected' : '' %>>Returned</option>
+                                </select>
+                                <button style="background-color: chocolate; border-color: transparent; color: white;" type="submit">Update Item Status</button>
+                            </form>
+                        <% } else { %>
+                            <p style="color: red;">This item has been cancelled and cannot be updated.</p>
+                        <% } %>
+                    </div>
+                    
                 </div>
-            <% }) %>
-        </div>
+           
+        
 
         <a href="/admin/orders" class="back-to-orders">Back to Orders</a>
     </div>
 
     <script>
-        
+        document.querySelectorAll(".status-update form").forEach(form => {
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault(); // Prevent the default form submission
+    
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+    
+                try {
+                    const response = await fetch("/admin/updateItemStatus", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                    });
+    
+                    const result = await response.json();
+    
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Success!",
+                            text: result.message || "Item status updated successfully.",
+                            icon: "success",
+                            confirmButtonText: "OK",
+                        }).then(() => {
+                            // Optionally reload the page or update the DOM dynamically
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: result.message || "Failed to update item status.",
+                            icon: "error",
+                            confirmButtonText: "Try Again",
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "An unexpected error occurred. Please try again later.",
+                        icon: "error",
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
+        });
     </script>
+    
 </body>
 </html>

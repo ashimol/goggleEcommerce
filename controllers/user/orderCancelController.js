@@ -45,7 +45,7 @@ const cancelOrder = async (req, res) => {
             });
         }
 
-        // Check if the item can be cancelled
+       
         if (['Cancelled', 'Delivered', 'Return Requested', 'Return Approved', 'Return Rejected', 'Returned']
             .includes(order.items[itemIndex].itemOrderStatus)) {
             return res.status(400).json({ 
@@ -63,14 +63,14 @@ const cancelOrder = async (req, res) => {
         order.items[itemIndex].itemOrderStatus = 'Cancelled';
         order.items[itemIndex].cancelReason = cancelReason || "No reason provided";
 
-        // Handle refund for online payments
+        
         if (['Online Payment', 'WalletPayment'].includes(paymentMethod) && paymentStatus === "completed") {
             console.log("Processing refund for online payment");
             
             try {
                 let wallet = null;
                 
-                // Check if user and wallet exist
+                
                 if (!order.userId) {
                     throw new Error('User reference is missing');
                 }
@@ -81,6 +81,7 @@ const cancelOrder = async (req, res) => {
                 }
 
                 // Create new wallet if needed
+
                 if (!wallet) {
                     console.log("Creating new wallet");
                     wallet = new Wallet({ balance: 0, transactions: [] });
@@ -92,6 +93,7 @@ const cancelOrder = async (req, res) => {
                 }
 
                 // Process refund
+
                 const itemTotal = order.items[itemIndex].price * order.items[itemIndex].quantity;
                 console.log("Refund amount:", itemTotal);
 
@@ -111,7 +113,7 @@ const cancelOrder = async (req, res) => {
             }
         }
 
-        // Update product quantity
+       
         const productId = order.items[itemIndex].productId._id;
         const returnQuantity = order.items[itemIndex].quantity;
         
@@ -121,7 +123,7 @@ const cancelOrder = async (req, res) => {
             { new: true }
         );
 
-        // Update overall order status if needed
+        
         if (order.items.every(item => item.itemOrderStatus === 'Cancelled')) {
             order.status = 'Cancelled';
         }

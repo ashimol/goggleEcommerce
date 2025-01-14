@@ -206,7 +206,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                         <td><form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
                                             <input type="hidden" name="productId" value="<%= product._id %>">
                                             <input type="hidden" name="quantity" value="1">
-                                            <button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%= product._id %>')">
+                                            <button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%=product.productId._id %>')">
                                               <i class="fas fa-cart-plus"></i>
                                             </button>
                                           </form>
@@ -278,68 +278,70 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
     
 	
-	function addToCart(productId) {
-  const form = document.getElementById(`addToCartForm-${productId}`);
-  const formData = new FormData(form);
+    async function addToCart(productId) {
+    // Get the selected quantity from the dropdown
+    const quantitySelect = document.getElementById(`quantity-${productId}`);
+    const quantity = '1';
 
-  fetch("/add-cart", {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(Object.fromEntries(formData)),
-    credentials: 'include' 
-  })
-  .then(response => {
-    return response.json().then(data => {
-      if (!response.ok) {
-        throw data;
-      }
-      return data;
-    });
-  })
-  .then(data => {
-    if (data.message === 'Item already in cart') {
-      Swal.fire({
-        icon: 'info',
-        title: 'Already in Cart',
-        text: 'This item is already in your cart.'
-      });
-    } else {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: data.message
-      });
-    }
-    if (data.cartItemsCount !== undefined) {
-      updateCartItemCount(data.cartItemsCount);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    if (error.error === 'Please login to add items to cart') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Required',
-        text: 'Please login to add items to cart',
-        showCancelButton: true,
-        confirmButtonText: 'Login',
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = '/login';
+    try {
+        const response = await fetch('/add-cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, quantity })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            const addToCartButton = document.querySelector(`.googles-cart.pgoogles-cart[data-product-id="${productId}"]`);
+
+            if (result.message === 'Item already in cart') {
+                // If the product is already in the cart, redirect to the cart page
+                window.location.href = '/cart';
+            } else if (result.message === 'Product added to cart successfully.') {
+                
+
+                Swal.fire({
+                    title: 'Added to Cart!',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonText: 'Continue Shopping',
+                    timer: 3000,
+                    timerProgressBar: true
+                })
+                .then(() => {
+                    window.location.reload();
+                });
+            } else {
+                // Handle unexpected success responses
+                Swal.fire({
+                    title: 'Notice',
+                    text: result.message || 'Unexpected response from the server.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            }
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                title: 'Error',
+                text: errorData.message || 'Error adding product to cart.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
         }
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.error || 'An error occurred, please login and try again'
-      });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'An error occurred. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
-  });
 }
+
 
 function updateCartItemCount(count) {
   const cartCountElement = document.querySelector('.cart-count');

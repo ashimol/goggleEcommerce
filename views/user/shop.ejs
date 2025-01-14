@@ -210,6 +210,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 																				<strike>₹<%= product.regularPrice.toLocaleString('en-IN') %></strike>
 																			</span>
 																		</p>
+																		<label>
+																			<%= product.status === 'Out of Stock' ? 'Out of Stock' : ' Items in Stock' %>
+																		</label>
 																		</a>
 																		
 																	
@@ -222,13 +225,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 															</div>
 															<div class="googles single-item hvr-outline-out">
 															
-																<form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
+																<!-- <form id="addToCartForm-<%= product._id %>" onsubmit="return false;">
 																	<input type="hidden" name="productId" value="<%= product._id %>">
 																	<input type="hidden" name="quantity" value="1">
 																	<button type="button" class="googles-cart pgoogles-cart" onclick="addToCart('<%= product._id %>')">
 																	  <i class="fas fa-cart-plus"></i>
 																	</button>
-																  </form>
+																  </form> -->
 																  <form id="addToWishlistForm-<%= product._id %>" onsubmit="return false;">
 																	<input type="hidden" name="productId" value="<%= product._id %>">
 																	<button type="button" class="googles-cart pgoogles-cart" onclick="addToWishlist('<%= product._id %>')">
@@ -573,30 +576,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            if (error.error === 'Please login to add items to Wishlist') {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Authentication Required',
-                    text: 'Please login to add items to Wishlist',
-                    showCancelButton: true,
-                    confirmButtonText: 'Login',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/login';
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.error || 'An error occurred, please login and try again'
-                });
+    console.error('Error:', error);
+    if (error.message === 'Please login to add items to Wishlist') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Authentication Required',
+            text: 'Please login to add items to Wishlist',
+            showCancelButton: true,
+            confirmButtonText: 'Login',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/login';
             }
         });
+    } else if (error.message === 'Product already in wishlist') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Already in Wishlist',
+            text: 'This item is already in your Wishlist.'
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'An error occurred, please login and try again'
+        });
     }
+});
 
+	}
     function updateWishlistItemCount(count) {
         const wishlistCountElement = document.getElementById('wishlistItemCount');
         if (wishlistCountElement) {

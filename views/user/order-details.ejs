@@ -115,22 +115,37 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="col-md-6">
                         <h6>Order Details</h6>
                         <p>Order Date: <%= order.orderDate.toLocaleDateString() %></p>
-                        <p>Payment Method: <%= order.payment.method %></p>
+                        <p>Payment Method: <%= order.payment[0].method %></p>
                         <p>Total Amount: ₹<%= order.totalAmount.toFixed(2) %></p>
-                        <p>Order Status: 
+                        <p>Order Status:
+                        <% if (selectedItem) { %>
                             <span class="badge 
-                                <% if (order.status === 'Pending') { %>
+                                <% if (selectedItem.itemOrderStatus === 'Pending') { %>
                                     badge-warning
-                                <% } else if (order.status === 'Completed') { %>
+                                <% } else if (selectedItem.itemOrderStatus === 'Completed') { %>
                                     badge-success
                                 <% } else { %>
                                     badge-secondary
                                 <% } %>
                             ">
-                                <%= order.status %>
+                                <%= selectedItem.itemOrderStatus %>
                             </span>
+                        <% } else { %>
+                            <span>Selected item not found</span>
+                        <% } %>
                         </p>
+                        <div class="col-md-4">
+                            <% if (selectedItem.itemOrderStatus === 'Delivered') { %>
+                              <h5>More actions</h5>
+                                <button class="btn btn-warning mb-2" id="downloadInvoiceBtn" 
+                                        data-order-id="<%= order._id %>" 
+                                        data-item-id="<%= selectedItem.itemOrderId %>">
+                                    <i class="fas fa-download"></i> Download Invoice
+                                </button>
+                              <% } %>
+                            </div>
                     </div>
+                    
                 </div>
                 <hr>
                 <h6>Ordered Items</h6>
@@ -188,5 +203,37 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         </div>
     <% } %>
 </div>
+
+
+
+<script>
+   document.getElementById("downloadInvoiceBtn").addEventListener("click", function () {
+    const orderId = this.getAttribute("data-order-id");
+    const itemId = this.getAttribute("data-item-id");
+
+   
+    fetch(`/my-order/${orderId}/invoice/${itemId}`, {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/pdf',
+          },
+      })
+      .then(response => response.blob())
+      .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `Invoice-${orderId}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+      })
+      .catch(error => console.error('Error:', error));
+    });
+   
+
+    </script>
+
 
 <%- include("../../views/partials/user/footer") %>

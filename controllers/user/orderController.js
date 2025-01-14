@@ -14,6 +14,8 @@ const env=require("dotenv").config();
 const nodemailer=require("nodemailer");
 const bcrypt=require("bcrypt");
 const crypto = require('crypto');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 const { console } = require('inspector');
 
 const getCheckout = async (req, res) => {
@@ -241,6 +243,7 @@ const applyCoupon = async (req, res) => {
           subtotal: cartTotal, 
           baseDiscount: baseDiscount,
           couponDiscount: 0, 
+          totalDiscount: baseDiscount,
           originalTotal: cartTotal,
           couponApplied: false
       });
@@ -628,6 +631,7 @@ const placeOrder = async (req, res) => {
           }
       
           console.log(totalAmount);
+          console.log("wallet balance :",user.wallet.balance)
           
           if (user.wallet.balance < totalAmount) {
             throw new Error('Insufficient balance in wallet');
@@ -762,193 +766,235 @@ const getMyOrders = async (req, res) => {
     }
 };
 
-const getOrderDetails = async (req,res) =>{
-    try {
-       
-        let userId;
-        if (req.user) {
-            userId = req.user;
-          } else if (req.session.user) {
-            userId = req.session.user;
-          }
-        
-        if (!userId) {
-            return res.status(401).render('order-details', { 
-                order: null,
-                error: "Please log in to view order details" 
-            });
-        }
-
-        const orderId = req.params.orderId;
-        console.log('orderid : ',orderId);
-        
-
-        
-        const order = await Order.findOne({ orderId: orderId, userId })
-            .populate('addressId')
-            .populate('items.productId');
-
-        if (!order) {
-            return res.status(404).render('order-details', { 
-                order: null,
-                error: "Order not found" 
-            });
-        }
-
-        
-        res.render('order-details', { order });
-
-    } catch (error) {
-        console.error('Error fetching order details:', error);
-        res.status(500).render('order-details', { 
-            order: null,
-            error: "An error occurred while fetching order details" 
-        });
-    }
-
-}
-
-
-// const cancelOrder = async (req, res) => {
-//     console.log("Starting cancelOrder function");
+// const getOrderDetails = async (req,res) =>{
 //     try {
-//         console.log("Route hit - before cancelOrder");
-//         console.log("Parameters received:", {
-//             itemOrderId: req.params.itemOrderId,
-//             cancelReason: req.params.cancelReason
-//         });
+       
+//         let userId;
+//         if (req.user) {
+//             userId = req.user;
+//           } else if (req.session.user) {
+//             userId = req.session.user;
+//           }
         
-//         const { itemOrderId, cancelReason } = req.params;
-        
-//         if (!itemOrderId) {
-//             throw new Error('ItemOrderId is required');
+//         if (!userId) {
+//             return res.status(401).render('order-details', { 
+//                 order: null,
+//                 error: "Please log in to view order details" 
+//             });
 //         }
 
-//         const order = await Order.findOne({ "items.itemOrderId": itemOrderId })
-//             .populate('userId')
+//         const orderId = req.params.orderId;
+//         console.log('orderid : ',orderId);
+        
+
+        
+//         const order = await Order.findOne({ orderId: orderId, userId })
+//             .populate('addressId')
 //             .populate('items.productId');
 
-//         console.log("Order found:", order ? 'Yes' : 'No');
 //         if (!order) {
-//             return res.status(404).json({ 
-//                 success: false, 
-//                 message: 'Order not found' 
+//             return res.status(404).render('order-details', { 
+//                 order: null,
+//                 error: "Order not found" 
 //             });
 //         }
 
-//         console.log("Payment details:", {
-//             method: order.payment[0]?.method,
-//             status: order.payment[0]?.status
-//         });
-
-//         const itemIndex = order.items.findIndex(item => item.itemOrderId === itemOrderId);
-//         console.log("Item index in order:", itemIndex);
-
-//         if (itemIndex === -1) {
-//             return res.status(404).json({ 
-//                 success: false, 
-//                 message: 'Item not found in order' 
-//             });
-//         }
-
-//         // Check if the item can be cancelled
-//         if (['Cancelled', 'Delivered', 'Return Requested', 'Return Approved', 'Return Rejected', 'Returned']
-//             .includes(order.items[itemIndex].itemOrderStatus)) {
-//             return res.status(400).json({ 
-//                 success: false, 
-//                 message: 'Order cannot be cancelled in its current status' 
-//             });
-//         }
-
-//         const paymentMethod = order.payment[0].method;
-//         const paymentStatus = order.payment[0].status;
-
-//         // Update item status
-//         order.items[itemIndex].itemOrderStatus = 'Cancelled';
-//         order.items[itemIndex].cancelReason = cancelReason || "No reason provided";
-
-//         // Handle refund for online payments
-//         if (['Online Payment', 'WalletPayment'].includes(paymentMethod) && paymentStatus === "completed") {
-//             console.log("Processing refund for online payment");
-            
-//             try {
-//                 let wallet = null;
-                
-//                 // Check if user and wallet exist
-//                 if (!order.userId) {
-//                     throw new Error('User reference is missing');
-//                 }
-
-//                 if (order.userId.wallet) {
-//                     wallet = await Wallet.findById(order.userId.wallet);
-//                     console.log("Existing wallet found:", wallet ? 'Yes' : 'No');
-//                 }
-
-//                 // Create new wallet if needed
-//                 if (!wallet) {
-//                     console.log("Creating new wallet");
-//                     wallet = new Wallet({ balance: 0, transactions: [] });
-//                     await wallet.save();
-                    
-//                     order.userId.wallet = wallet._id;
-//                     await order.userId.save();
-//                     console.log("New wallet created and linked to user");
-//                 }
-
-//                 // Process refund
-//                 const itemTotal = order.items[itemIndex].price * order.items[itemIndex].quantity;
-//                 console.log("Refund amount:", itemTotal);
-
-//                 wallet.balance += itemTotal;
-//                 wallet.transactions.push({
-//                     type: "credit",
-//                     amount: itemTotal,
-//                     description: `Refund for cancelled order item: ${itemOrderId}`,
-//                     date: new Date()
-//                 });
-
-//                 await wallet.save();
-//                 console.log("Refund processed successfully");
-//             } catch (error) {
-//                 console.error("Error processing refund:", error);
-//                 throw new Error(`Refund processing failed: ${error.message}`);
-//             }
-//         }
-
-//         // Update product quantity
-//         const productId = order.items[itemIndex].productId._id;
-//         const returnQuantity = order.items[itemIndex].quantity;
         
-//         await Product.findByIdAndUpdate(
-//             productId,
-//             { $inc: { quantity: returnQuantity } },
-//             { new: true }
-//         );
+//         res.render('order-details', { order });
 
-//         // Update overall order status if needed
-//         if (order.items.every(item => item.itemOrderStatus === 'Cancelled')) {
-//             order.status = 'Cancelled';
-//         }
-
-//         await order.save();
-//         console.log("Order updated successfully");
-
-//         res.status(200).json({ 
-//             success: true, 
-//             message: 'Order cancelled successfully' 
-//         });
-        
 //     } catch (error) {
-//         console.error("Error in cancelOrder:", error);
-//         res.status(500).json({ 
-//             success: false, 
-//             message: 'Error cancelling order',
-//             error: error.message,
-//             stack: error.stack // Remove this in production
+//         console.error('Error fetching order details:', error);
+//         res.status(500).render('order-details', { 
+//             order: null,
+//             error: "An error occurred while fetching order details" 
 //         });
-//         }
-//     
-// };
+//     }
+
+// }
+
+const getOrderDetails = async (req, res) => {
+  try {
+      let userId;
+      if (req.user) {
+          userId = req.user;
+      } else if (req.session.user) {
+          userId = req.session.user;
+      }
+
+      if (!userId) {
+          return res.status(401).render('order-details', { 
+              order: null,
+              selectedItem: null,
+              error: "Please log in to view order details" 
+          });
+      }
+
+      const { orderId, itemId } = req.params;
+
+      console.log( "ordrer :",orderId);
+      console.log("itemid :",itemId);
+      
+      
+
+      const order = await Order.findOne({ orderId, userId })
+          .populate('addressId')
+          .populate('items.productId');
+
+      if (!order) {
+          return res.status(404).render('order-details', { 
+              order: null,
+              selectedItem: null,
+              error: "Order not found" 
+          });
+      }
+
+      // Find the specific item using itemId
+      const selectedItem = order.items.find(item => item.itemOrderId === itemId);
+
+      if (!selectedItem) {
+        return res.status(404).render('order-details', { 
+            order, 
+            selectedItem: null, 
+            error: "Item not found in the order" 
+        });
+    }
+        console.log(order); // Ensure `order` has `items` and `selectedItem` properly set
+         console.log(selectedItem); // Ensure `selectedItem` is correctly set
+
+
+      res.render('order-details', { 
+          order, 
+          selectedItem 
+      });
+
+  } catch (error) {
+      console.error('Error fetching order details:', error);
+      res.status(500).render('order-details', { 
+          order: null,
+          selectedItem: null,
+          error: "An error occurred while fetching order details" 
+      });
+  }
+};
+
+const downloadInvoice = async (req, res, next) => {
+  try {
+    const { orderId, itemId } = req.params;
+
+    // Fetch the order along with user, address, and product details
+    const order = await Order.findById(orderId)
+      .populate('userId', 'name') // Fetch user name
+      .populate('addressId') // Fetch address details
+      .populate({
+        path: 'items.productId',
+        populate: {
+          path: 'brand',
+          select: 'name' // Fetch brand name
+        }
+      })
+      .exec();
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Find the specific item in the order
+    const selectedItem = order.items.find(item => item.itemOrderId === itemId);
+
+    if (!selectedItem) {
+      return res.status(404).json({ message: 'Item not found in the order' });
+    }
+
+    // Prepare the invoice PDF
+    const doc = new PDFDocument();
+    const chunks = [];
+
+    doc.on('data', chunk => chunks.push(chunk));
+    doc.on('end', () => {
+      const pdfData = Buffer.concat(chunks);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.orderId}.pdf`);
+      res.send(pdfData);
+    });
+
+    // Invoice Header
+    doc.fontSize(20).text('Tax Invoice', { align: 'center' });
+    doc.moveDown(2);
+
+    // Seller Details
+    const leftColumnX = 50;
+    const startY = 110;
+    doc.fontSize(12);
+    doc.text('Sold by', leftColumnX, startY, { underline: true });
+    doc.text('GOOGLE SHOP', leftColumnX, startY + 20);
+    doc.text('No 6 ,CM Complex Building', leftColumnX, startY + 40);
+    doc.text('Koratty, Thrisssur, Kerala', leftColumnX, startY + 60);
+    doc.text('Pin: 680321', leftColumnX, startY + 80);
+
+    // Order Details
+    const rightColumnX = 400;
+    doc.text(`Order Id: ${order.orderId}`, rightColumnX, startY);
+    doc.text(`Order Date: ${order.orderDate.toLocaleString()}`, rightColumnX, startY + 20);
+
+    // Shipping Address
+    const shippingAddressStartY = startY + 120;
+    doc.text('Shipping Address:', leftColumnX, shippingAddressStartY, { underline: true });
+    doc.text(`${order.userId.name}`, leftColumnX, shippingAddressStartY + 20);
+    doc.text(`${order.addressId.house}, ${order.addressId.place}`, leftColumnX, shippingAddressStartY + 40);
+    doc.text(`${order.addressId.city}, ${order.addressId.state} - ${order.addressId.pin}`, leftColumnX, shippingAddressStartY + 60);
+    doc.text(`Phone: ${order.addressId.contactNo}`, leftColumnX, shippingAddressStartY + 80);
+
+    const tableTop = 350;
+
+    // Set column widths
+    const columnWidths = {
+        name: 75,
+        brand: 75,
+        qty: 50,
+        amount: 75,
+        discount: 75,
+        taxableValue: 100,
+        total: 100,
+    };
+
+    // Table Header
+    doc.font('Helvetica-Bold');
+    doc.text('Name', 50, tableTop, { width: columnWidths.name, ellipsis: true });
+    doc.text('Brand', 50 + columnWidths.name, tableTop, { width: columnWidths.brand, ellipsis: true });
+    doc.text('Qty', 50 + columnWidths.name + columnWidths.brand, tableTop, { width: columnWidths.qty });
+    doc.text('Amount', 50 + columnWidths.name + columnWidths.brand + columnWidths.qty, tableTop, { width: columnWidths.amount });
+    doc.text('Discount', 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount, tableTop, { width: columnWidths.discount });
+    doc.text('Taxable Value', 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount, tableTop, { width: columnWidths.taxableValue });
+    doc.text('Total', 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount + columnWidths.taxableValue, tableTop, { width: columnWidths.total });
+
+    // Table Rows
+    doc.font('Helvetica');
+    const tableRow = tableTop + 25;
+    doc.text(selectedItem.productId.productName, 50, tableRow, { width: columnWidths.name, ellipsis: true });
+    doc.text(selectedItem.productId.brand.name, 50 + columnWidths.name, tableRow, { width: columnWidths.brand, ellipsis: true });
+    doc.text(selectedItem.quantity.toString(), 50 + columnWidths.name + columnWidths.brand, tableRow, { width: columnWidths.qty });
+    doc.text(selectedItem.price.toFixed(2), 50 + columnWidths.name + columnWidths.brand + columnWidths.qty, tableRow, { width: columnWidths.amount });
+    const discount = selectedItem.price - selectedItem.price * 0.9; // Example discount calculation
+    doc.text(discount.toFixed(2), 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount, tableRow, { width: columnWidths.discount });
+    const taxableValue = selectedItem.price * 0.9; // Example taxable value
+    doc.text(taxableValue.toFixed(2), 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount, tableRow, { width: columnWidths.taxableValue });
+    doc.text((taxableValue * selectedItem.quantity).toFixed(2), 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount + columnWidths.taxableValue, tableRow, { width: columnWidths.total });
+
+    // Total Amount
+    const totalRow = tableRow + 30;
+    doc.font('Helvetica-Bold');
+    doc.text('Total:', 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount, totalRow, { width: columnWidths.taxableValue });
+    doc.text(`₹${(taxableValue * selectedItem.quantity).toFixed(2)}`, 50 + columnWidths.name + columnWidths.brand + columnWidths.qty + columnWidths.amount + columnWidths.discount + columnWidths.taxableValue, totalRow, { width: columnWidths.total });
+
+    doc.moveDown();
+    doc.text('All values are in INR', 50, 600);
+
+
+    doc.end();
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 
@@ -1033,6 +1079,6 @@ module.exports = {
     orderConfirmation,
     getMyOrders,
     getOrderDetails,
-    //cancelOrder,
-    returnOrder
+    returnOrder,
+    downloadInvoice
 }

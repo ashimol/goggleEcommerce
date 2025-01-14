@@ -59,31 +59,68 @@ const getAdminOrders = async (req, res) => {
 };
 
   
+// const getOrderDetails = async (req, res) => {
+//     try {
+//         const orderId = req.params.orderId;  
+//         const currentStatus = req.query.status;
+//         const order = await Order.findById(orderId) 
+//             .populate('userId')
+//             .populate('addressId')
+//             .populate({
+//               path: 'items.productId',
+//               populate: {
+//                 path: 'brand',
+//                 select: 'productName' 
+//               }
+//             })
+//             .exec();
+            
+//         if (!order) {
+//             return res.status(404).render('error', { message: 'Order not found' });
+//         }
+
+//         res.render('orderDetails', { order, currentStatus });
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).render('error', { message: 'Server error' });
+//     }
+// };
+
 const getOrderDetails = async (req, res) => {
-    try {
-        const orderId = req.params.orderId;  
-        const currentStatus = req.query.status;
-        const order = await Order.findById(orderId) 
-            .populate('userId')
-            .populate('addressId')
-            .populate({
+  try {
+      const orderId = req.params.orderId;  
+      const itemId = req.query.itemOrderId; // Assume itemId is passed as a query parameter
+      const currentStatus = req.query.status;
+
+      const order = await Order.findById(orderId)
+          .populate('userId')
+          .populate('addressId')
+          .populate({
               path: 'items.productId',
               populate: {
-                path: 'brand',
-                select: 'productName' 
+                  path: 'brand',
+                  select: 'productName'
               }
-            })
-            .exec();
-            
-        if (!order) {
-            return res.status(404).render('error', { message: 'Order not found' });
-        }
+          })
+          .exec();
 
-        res.render('orderDetails', { order, currentStatus });
-    } catch (error) {
-        console.error('Error fetching order details:', error);
-        res.status(500).render('error', { message: 'Server error' });
-    }
+      if (!order) {
+          return res.status(404).render('error', { message: 'Order not found' });
+      }
+
+      // Filter the specific item based on itemOrderId
+      const currentItem = order.items.find(item => item.itemOrderId === itemId);
+
+      if (!currentItem) {
+          return res.status(404).render('error', { message: 'Item not found in order' });
+      }
+
+      res.render('orderDetails', { order, currentItem ,currentStatus});
+
+  } catch (error) {
+      console.error('Error fetching order details:', error);
+      res.status(500).render('error', { message: 'Server error' });
+  }
 };
 
 
