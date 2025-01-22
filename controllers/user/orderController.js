@@ -76,30 +76,37 @@ const getCheckout = async (req, res) => {
           });
     
              const subtotal = totalPrice - totalDiscount 
-
-         
-    
+            
           
           if (cartUpdated) {
             await cartData.save();
           }
 
           if(user){
-            const userData = await User.findById(user);
+            //const userData = await User.findById(user);
+            const userData = await User.findById(user)
+            .populate({
+                path: "cart",
+                populate: {
+                    path: "items.productId", 
+                    model: "Product",       
+                },
+            })
+            .exec();
 
-        res.render('checkout', {
-          user:userData,
-            userId, 
-            addresses: userAddresses,            
-            firstName: cartData.userId.firstName,
-            cartData,
-            subtotal,
-            coupons,
-            totalDiscount,
+            res.render('checkout', {
+              user:userData,
+                userId, 
+                addresses: userAddresses,            
+                firstName: cartData.userId.firstName,
+                cartData,
+                subtotal,
+                coupons,
+                totalDiscount,
 
-           // orderTotal,
-            
-        });
+              // orderTotal,
+                
+            });
       }
     } catch (error) {
         console.error("Error during checkout page load:", error);
@@ -575,6 +582,10 @@ const placeOrder = async (req, res) => {
           });
       }
 
+      if (paymentMethod === "Cash On Delivery" && totalAmount > 1000) {
+        return res.status(400).json({ error: "Cash on Delivery is not available for orders above Rs 1000" });
+    }
+
       const orderData = new Order({
           userId,
           addressId,
@@ -591,7 +602,28 @@ const placeOrder = async (req, res) => {
 
       // Clear cart items
       const cart = await Cart.findOne({ userId }); 
+
       if (cart) {
+
+        for (const cartItem of cart.items) {
+          if (paymentMethod !== "Online Payment") {
+          const orderItem = items.find(order => order.productId.toString() === cartItem.productId.toString());
+          if (orderItem) {
+              // Fetch the current product to get the actual quantity
+              const product = await Product.findById(orderItem.productId);
+              if (product) {
+                  const newQuantity = product.quantity - orderItem.quantity;
+      
+                  // Update the product's quantity and status
+                  await Product.findByIdAndUpdate(orderItem.productId, {
+                      $inc: { quantity: -orderItem.quantity },
+                      $set: { status: newQuantity <= 0 ? "Out of Stock" : "Available" }
+                  });
+              }
+          }
+        }
+      }
+      
           cart.items = cart.items.filter(cartItem => 
               !items.some(orderItem => orderItem.productId.toString() === cartItem.productId.toString())
           );
@@ -599,7 +631,7 @@ const placeOrder = async (req, res) => {
       }
 
       
-      if (paymentMethod === "Online Payment") {
+        if (paymentMethod === "Online Payment") {
           const razorpayOptions = {
               amount: Math.round(parseFloat(totalAmount) * 100),
               currency: "INR",
@@ -647,7 +679,15 @@ const placeOrder = async (req, res) => {
           });
       
           await user.wallet.save();
-          return true;
+
+          order.payment[0].status = "completed";
+          await order.save();
+          
+          return res.status(200).json({
+            success: true,
+            orderId: order._id,
+            redirectTo: '/user/order-confirmation'
+        });
         } catch (error) {
           console.error('Error processing wallet payment:', error);
           throw error;
@@ -699,11 +739,41 @@ const verifyPayment = async (req, res) => {
               order.payment[0].status = "completed";
               order.payment[0].paymentId = razorpay_payment_id;
               await order.save();
+
+              for (const orderItem of order.items) {
+                const productInOrder = await Product.findById(orderItem.productId);
+                if (productInOrder) {
+                    const newQuantity = productInOrder.quantity - orderItem.quantity;
+
+                    // Update the product's quantity and status
+                    await Product.findByIdAndUpdate(orderItem.productId, {
+                        $inc: { quantity: -orderItem.quantity },
+                        $set: { status: newQuantity <= 0 ? "Out of Stock" : "Available" }
+                    });
+                }
+            }
+            
               return res.status(200).json({ success: true, orderId: order._id });
           }
-      }
+      }else {
+    
+        const order = await Order.findOne({ 'payment.razorpayOrderId': razorpay_order_id });
+  
+        if (order) {
+          console.log('Updating order status to Pending for failed payment:', order._id);
+          order.status = 'Pending';
+          order.payment[0].status = 'failed';
+  
+         
+          order.items.forEach(item => {
+            item.itemOrderStatus = 'Pending';
+          });
+  
+          await order.save();
+        }
       
       return res.status(400).json({ error: "Payment verification failed" });
+      }
   } catch (error) {
       console.error("Payment verification error:", error);
       return res.status(500).json({ error: "Payment verification failed" });
@@ -744,9 +814,19 @@ const getMyOrders = async (req, res) => {
 
         
         const totalPages = Math.ceil(totalOrders / limit);
+        
         if(userId){
-          const userData = await User.findById(userId);
-       
+          //const userData = await User.findById(userId);
+          const userData = await User.findById(userId)
+          .populate({
+              path: "cart",
+              populate: {
+                  path: "items.productId", // Populate productId within items array
+                  model: "Product",       // Refers to the Product model
+              },
+          })
+          .exec();
+
         res.render('my-orders', {
           user:userData,
             orders,
@@ -858,14 +938,28 @@ const getOrderDetails = async (req, res) => {
             error: "Item not found in the order" 
         });
     }
-        console.log(order); // Ensure `order` has `items` and `selectedItem` properly set
-         console.log(selectedItem); // Ensure `selectedItem` is correctly set
+        console.log(order); 
+         console.log(selectedItem); 
 
+         if(userId){
+          //const userData = await User.findById(userId);
 
+          const userData = await User.findById(userId)
+          .populate({
+              path: "cart",
+              populate: {
+                  path: "items.productId", // Populate productId within items array
+                  model: "Product",       // Refers to the Product model
+              },
+          })
+          .exec();
+          
       res.render('order-details', { 
+        user:userData,
           order, 
           selectedItem 
       });
+    }
 
   } catch (error) {
       console.error('Error fetching order details:', error);
@@ -877,19 +971,25 @@ const getOrderDetails = async (req, res) => {
   }
 };
 
+
+
+                            
+
+
+
 const downloadInvoice = async (req, res, next) => {
   try {
     const { orderId, itemId } = req.params;
 
-    // Fetch the order along with user, address, and product details
+   
     const order = await Order.findById(orderId)
-      .populate('userId', 'name') // Fetch user name
-      .populate('addressId') // Fetch address details
+      .populate('userId', 'name') 
+      .populate('addressId') 
       .populate({
         path: 'items.productId',
         populate: {
           path: 'brand',
-          select: 'name' // Fetch brand name
+          select: 'name' 
         }
       })
       .exec();
@@ -898,14 +998,14 @@ const downloadInvoice = async (req, res, next) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // Find the specific item in the order
+    
     const selectedItem = order.items.find(item => item.itemOrderId === itemId);
 
     if (!selectedItem) {
       return res.status(404).json({ message: 'Item not found in the order' });
     }
 
-    // Prepare the invoice PDF
+   
     const doc = new PDFDocument();
     const chunks = [];
 
@@ -948,7 +1048,7 @@ const downloadInvoice = async (req, res, next) => {
 
     // Set column widths
     const columnWidths = {
-        name: 75,
+        name: 85,
         brand: 75,
         qty: 50,
         amount: 75,
@@ -1010,7 +1110,7 @@ const returnOrder = async (req, res) => {
         });
       }
   
-      // Find the order containing the specific itemOrderId
+      
       const order = await Order.findOne({ "items.itemOrderId": itemOrderId });
   
       if (!order) {

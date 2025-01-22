@@ -59,6 +59,50 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				position: relative;
 				z-index: 500;
 			}
+
+
+
+            /* General button styles */
+button {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Specific styles for the Pay Now button */
+#payNowBtn {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+#payNowBtn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Specific styles for the Download Invoice button */
+#downloadInvoiceBtn {
+    background-color: #ffc107; /* Yellow */
+    color: #212529; /* Dark text for contrast */
+}
+#downloadInvoiceBtn:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+}
+
+/* Additional generic styles for hover and focus states */
+button:focus {
+    outline: 2px solid #0056b3; /* Highlight button when focused */
+    outline-offset: 2px;
+}
+button:disabled {
+    background-color: #d6d6d6; /* Gray for disabled buttons */
+    color: #a1a1a1;
+    cursor: not-allowed;
+}
+
 		</style>
 </head>
 <body>
@@ -116,7 +160,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <h6>Order Details</h6>
                         <p>Order Date: <%= order.orderDate.toLocaleDateString() %></p>
                         <p>Payment Method: <%= order.payment[0].method %></p>
-                        <p>Total Amount: ₹<%= order.totalAmount.toFixed(2) %></p>
+                        <h6>Payment Status</h6> 
+                        <% if (order.payment && order.payment.length > 0) { %>
+                            <p>
+                              <span><%= order.payment[0].status %></span>
+                              <% if (order.payment[0].status === 'pending' && order.payment[0].method !== 'Cash On Delivery' && selectedItem.itemOrderStatus !== 'Cancelled') { %>
+                                <button id="payNowBtn" class="btn btn-success" style="margin-left: 10px;" data-order-id="<%= order.orderId %>" data-razorpay-order-id="<%= order.payment[0].razorpayOrderId %>">
+                                  Pay Now
+                                </button>
+                              <% } %>
+                            </p>
+                          <% } else { %>
+                            <p>No payment status found</p>
+                          <% } %>
+                        
                         <p>Order Status:
                         <% if (selectedItem) { %>
                             <span class="badge 
@@ -134,6 +191,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <span>Selected item not found</span>
                         <% } %>
                         </p>
+
+                        <p>Total Amount: ₹<%= order.totalAmount.toFixed(2) %></p>
                         <div class="col-md-4">
                             <% if (selectedItem.itemOrderStatus === 'Delivered') { %>
                               <h5>More actions</h5>
@@ -203,6 +262,113 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         </div>
     <% } %>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+   // Payment button click handler
+   document.addEventListener('DOMContentLoaded', function() {
+    const payNowBtn = document.getElementById('payNowBtn');
+    if (!payNowBtn) {
+        console.log('Pay Now button not found');
+        return;
+    }
+
+    payNowBtn.addEventListener('click', function() {
+        const orderId = this.getAttribute('data-order-id');
+        const razorpayOrderId = this.getAttribute('data-razorpay-order-id');
+        
+        console.log('Button clicked with Order ID:', orderId);
+        console.log('Button clicked with Razorpay Order ID:', razorpayOrderId);
+
+        fetch('/my-order/order-details', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ 
+                orderId: orderId, 
+                razorpayOrderId: razorpayOrderId 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Order details received:', data);
+            
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to get order details');
+            }
+
+            // Initialize Razorpay payment
+            const options = {
+                key: data.razorpayOrder.key,
+                amount: data.razorpayOrder.amount,
+                currency: data.razorpayOrder.currency,
+                order_id: data.razorpayOrder.id,
+                name: "Goggles",
+                description: "Order Payment",
+                handler: function(response) {
+                    verifyPayment(response, orderId);
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment modal dismissed');
+                    }
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            console.error('Payment initialization error:', error);
+            alert('Failed to initialize payment. Please try again.');
+        });
+    });
+});
+
+function verifyPayment(response, orderId) {
+    console.log('Verifying payment...', response);
+    
+    fetch('/verify-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            orderId: orderId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Payment verified successfully');
+            // window.location.href = '/user/order-confirmation';
+            window.location.href = `/orderConfirmation/${data.orderId}`;
+        } else {
+            throw new Error(data.message || 'Payment verification failed');
+        }
+    })
+    .catch(error => {
+        console.error('Payment verification error:', error);
+        alert('Payment verification failed. Please contact support if amount was deducted.');
+    });
+}
+// Handle payment modal dismissal
+function handlePaymentDismissal() {
+    console.log('Payment modal was dismissed');
+    // Add any cleanup or user notification logic here
+}
+    </script>
 
 
 

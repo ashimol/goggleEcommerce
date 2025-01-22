@@ -155,7 +155,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						
 						<div class="left-ads-display col-lg-9">
 							<div class="wrapper_top_shop">
-								<div class="category-list my-3">
+								<!-- <div class="category-list my-3">
 									<h5>Featured categories</h5>
 									<div class="d-flex flex-wrap">
 										<a href="/shop" class="btn btn-outline-primary m-1 <%= !selectedCategory ? 'active' : '' %>">
@@ -168,7 +168,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</a>
 										<% }); %>
 									</div>
-								</div>
+								</div> -->
 
 
 								
@@ -203,6 +203,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 																			<%= product.productName %>
 																		</a>
 																	</h4>
+																	<p><%= product.category.name%></p>
 																		<p> <%= product.brand.name %></p>
 																		<p>
 																			Price: ₹<%= product.salePrice.toLocaleString('en-IN') %>

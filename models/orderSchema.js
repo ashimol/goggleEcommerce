@@ -59,11 +59,7 @@ const orderSchema = new Schema({
         type: Number,
         required: true
     },
-    // paymentMethod: {
-    //     type: String,
-    //     enum: ['Online Payment', 'Cash On Delivery'],
-    //     required: true
-    // },
+    
     payment: [{
         method: {
           type: String,

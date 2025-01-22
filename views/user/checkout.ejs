@@ -60,278 +60,258 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				z-index: 500;
 			}
 		</style>
+        <style>
+            /* General Body Styles */
+           body {
+               font-family: Roboto, Arial, sans-serif;
+               background-color: #f1f3f6;
+               color: #212121;
+               margin: 0;
+               padding: 0;
+           }
+           
+           /* Main container setup */
+           .main {
+               display: flex;
+               padding: 20px;
+               gap: 20px;
+               max-width: 1280px;
+               margin: 0 auto;
+           }
+           
+           .container1 {
+               flex: 2;
+               background: white;
+               border-radius: 2px;
+               box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+               padding: 16px;
+           }
+           
+           /* Header Styles */
+           .header {
+               padding: 16px;
+               border-bottom: 1px solid #f0f0f0;
+           }
+           
+           .header h1 {
+               font-size: 18px;
+               font-weight: 500;
+               color: #212121;
+               margin: 0;
+           }
+           
+           .header p {
+               font-size: 14px;
+               color: #878787;
+               margin-top: 8px;
+           }
+           
+           /* Address Section Styles */
+           .addresses {
+               padding: 16px;
+           }
+           
+           .addresses h2 {
+               font-size: 16px;
+               font-weight: 500;
+               color: #212121;
+               margin-bottom: 16px;
+           }
+           
+           .new-address-btn {
+               background-color: #2874f0;
+               color: white;
+               padding: 12px 20px;
+               font-size: 14px;
+               font-weight: 500;
+               border: none;
+               border-radius: 2px;
+               cursor: pointer;
+           }
+           
+           /* Card Styles for Address */
+           .card {
+               border: 1px solid #e0e0e0;
+               border-radius: 2px;
+               padding: 16px;
+               margin-bottom: 16px;
+           }
+           
+           .card h5 {
+               font-size: 14px;
+               font-weight: 500;
+               color: #212121;
+               margin-bottom: 8px;
+           }
+           
+           .card p {
+               font-size: 14px;
+               color: #666;
+               margin: 4px 0;
+           }
+           
+           .card button {
+               background-color: #2874f0;
+               color: white;
+               padding: 8px 16px;
+               border: none;
+               border-radius: 2px;
+               font-size: 14px;
+               cursor: pointer;
+           }
+           
+           /* Coupon Section */
+           .coupon-section {
+               padding: 16px;
+               border-top: 1px solid #f0f0f0;
+           }
+           
+           .coupon-section select {
+               width: 100%;
+               padding: 8px;
+               border: 1px solid #e0e0e0;
+               border-radius: 2px;
+               font-size: 14px;
+           }
+           
+           .coupon-section button {
+               background-color: #2874f0;
+               color: white;
+               padding: 10px 20px;
+               border: none;
+               border-radius: 2px;
+               font-size: 14px;
+               margin-top: 12px;
+           }
+           
+           /* Cart Details Section */
+           .cart-detail {
+               background: white;
+               border-radius: 2px;
+               box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+               padding: 16px;
+           }
+           
+           .cart-detail h2 {
+               font-size: 16px;
+               font-weight: 500;
+               color: #212121;
+               padding-bottom: 16px;
+               border-bottom: 1px solid #f0f0f0;
+               justify-content: space-between;
+           }
+           
+           .cart-detail ul {
+               list-style: none;
+               padding: 0;
+               margin: 0;
+           }
+           
+           .cart-detail li {
+               padding: 12px 0;
+               display: flex;
+               justify-content: space-between;
+               font-size: 14px;
+               color: #212121;
+           }
+           
+           .product-price {
+               color: #212121;
+               font-weight: 500;
+           }
+           
+           /* Payment Method Section */
+           .payment-methods {
+               margin-top: 20px;
+               padding: 16px;
+               background: white;
+               border-radius: 2px;
+               box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+           }
+           
+           .payment-methods label {
+               display: block;
+               font-size: 14px;
+               color: #212121;
+               margin-bottom: 12px;
+           }
+           
+           /* Place Order Button */
+           .place-order-btn {
+               background-color: #fb641b;
+               color: white;
+               padding: 16px;
+               width: 100%;
+               font-size: 16px;
+               font-weight: 500;
+               border: none;
+               border-radius: 2px;
+               cursor: pointer;
+               margin-top: 16px;
+           }
+           
+           /* Responsive Adjustments */
+           @media (max-width: 768px) {
+               .main {
+                   flex-direction: column;
+                   padding: 12px;
+               }
+           
+               .container1 {
+                   margin-bottom: 16px;
+               }
+               
+               .cart-detail {
+                   margin-top: 16px;
+               }
+           }
+           
+           /* Price Details Section */
+           .price-details {
+               background: white;
+               padding: 16px;
+               border-radius: 2px;
+               box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+           }
+           
+           .price-details h3 {
+               font-size: 16px;
+               font-weight: 500;
+               color: #212121;
+               padding-bottom: 12px;
+               border-bottom: 1px solid #f0f0f0;
+           }
+           
+           
+           </style>
 </head>
 <body>
 	<div class="banner-top container-fluid" id="home"> 
 		<!-- header -->
 <%- include("../../views/partials/user/header") %>
 
-<style>
- /* General Body Styles */
-body {
-    font-family: Roboto, Arial, sans-serif;
-    background-color: #f1f3f6;
-    color: #212121;
-    margin: 0;
-    padding: 0;
-}
 
-/* Main container setup */
-.main {
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-    max-width: 1280px;
-    margin: 0 auto;
-}
 
-.container1 {
-    flex: 2;
-    background: white;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-    padding: 16px;
-}
-
-/* Header Styles */
-.header {
-    padding: 16px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.header h1 {
-    font-size: 18px;
-    font-weight: 500;
-    color: #212121;
-    margin: 0;
-}
-
-.header p {
-    font-size: 14px;
-    color: #878787;
-    margin-top: 8px;
-}
-
-/* Address Section Styles */
-.addresses {
-    padding: 16px;
-}
-
-.addresses h2 {
-    font-size: 16px;
-    font-weight: 500;
-    color: #212121;
-    margin-bottom: 16px;
-}
-
-.new-address-btn {
-    background-color: #2874f0;
-    color: white;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-}
-
-/* Card Styles for Address */
-.card {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-
-.card h5 {
-    font-size: 14px;
-    font-weight: 500;
-    color: #212121;
-    margin-bottom: 8px;
-}
-
-.card p {
-    font-size: 14px;
-    color: #666;
-    margin: 4px 0;
-}
-
-.card button {
-    background-color: #2874f0;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 2px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-/* Coupon Section */
-.coupon-section {
-    padding: 16px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.coupon-section select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    font-size: 14px;
-}
-
-.coupon-section button {
-    background-color: #2874f0;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 2px;
-    font-size: 14px;
-    margin-top: 12px;
-}
-
-/* Cart Details Section */
-.cart-detail {
-    background: white;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-    padding: 16px;
-}
-
-.cart-detail h2 {
-    font-size: 16px;
-    font-weight: 500;
-    color: #212121;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    justify-content: space-between;
-}
-
-.cart-detail ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.cart-detail li {
-    padding: 12px 0;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #212121;
-}
-
-.product-price {
-    color: #212121;
-    font-weight: 500;
-}
-
-/* Payment Method Section */
-.payment-methods {
-    margin-top: 20px;
-    padding: 16px;
-    background: white;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-}
-
-.payment-methods label {
-    display: block;
-    font-size: 14px;
-    color: #212121;
-    margin-bottom: 12px;
-}
-
-/* Place Order Button */
-.place-order-btn {
-    background-color: #fb641b;
-    color: white;
-    padding: 16px;
-    width: 100%;
-    font-size: 16px;
-    font-weight: 500;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    margin-top: 16px;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .main {
-        flex-direction: column;
-        padding: 12px;
-    }
-
-    .container1 {
-        margin-bottom: 16px;
-    }
-    
-    .cart-detail {
-        margin-top: 16px;
-    }
-}
-
-/* Price Details Section */
-.price-details {
-    background: white;
-    padding: 16px;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-}
-
-.price-details h3 {
-    font-size: 16px;
-    font-weight: 500;
-    color: #212121;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-/* Breadcrumb Styles */
-.services-breadcrumb {
-    background: white;
-    padding: 12px 0;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-
-.inner_breadcrumb ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-
-.inner_breadcrumb li {
-    font-size: 14px;
-    color: #878787;
-}
-
-.inner_breadcrumb a {
-    color: #2874f0;
-    text-decoration: none;
-}
-
-.inner_breadcrumb i {
-    margin: 0 8px;
-    color: #878787;
-}
-</style>
-
-    <div class="banner_inner">
-        <div class="services-breadcrumb">
-            <div class="inner_breadcrumb">
-                <ul class="short">
-                    <li>
-                        <a href="/">Home</a>
-                        <i>|</i>
-                    </li>
-                    <li>checkout</li>
-                </ul>
-            </div>
-        </div>
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+      <div class="inner_breadcrumb">
+  
+        <ul class="short">
+          <li>
+            <a href="/">Home</a>
+            <i>|</i>
+          </li>
+          <li><a href="/shop">shop</a><i>|</i></li>
+          <li>
+            <a href="/wishlist">Wishlist</a>
+            <i>|</i>
+          </li>
+        </ul>
+      </div>
     </div>
+  
+  </div>
+  
     <div class="header">
         <h1>Checkout</h1>
         <p>Please review your order and provide your address.</p>
@@ -424,7 +404,7 @@ body {
                     <!-- <span>Subtotal</span>
                     <span>₹<%= subtotal %></span> -->
 
-                    <ul>
+                    <!-- <ul>
                         <% cartData.items.forEach(item => { %>
                             <li>
                                 <span> <%= item.productId.productName   %>          x      <%= item.quantity %>    </span> 
@@ -437,25 +417,27 @@ body {
                                     <% } else { %>
                                         ₹<%= (item.productId.regularPrice * item.quantity).toFixed(2) %>
                                     <% } %>
+
+                                    ₹<%= (item.productId.regularPrice * item.quantity).toFixed(2) %>
                                  </span>
                                 
                             </li>
                         <% }) %>
-                    </ul>
+                    </ul> -->
                 </li>
                 <li>
-                    <span>Discount </span>
-                    <span id="discount">₹<%=totalDiscount%></span>
+                    <span>Total : </span>
+                    <span> ₹<%= subtotal%></span>
+                </li>
+                <li >
+                    <span>Coupon Discount </span>
+                    <span id="discount"  >₹ 0</span>
                 </li>
                 <li>
                     <span>Delivery Charges </span>
                     <span id="discount"><strike>40</strike> FREE</span>
                 </li>
-                <li>
-                    <span>Platform Fee</span>
-                    <span id="discount">₹3</span>
-                </li>
-               
+                               
                 <li>
                     <span>Order Total</span>
                     <span id="orderTotal">₹<%=subtotal %></span>
@@ -669,30 +651,35 @@ function handleFormSubmit(event) {
                 
                 const rzp = new Razorpay(options);
                 rzp.open();
-            }else if (paymentMethod === 'Wallet Payment') {
+            }else if (paymentMethod === 'WalletPayment') {
                 fetch('/user/check-wallet-balance', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ amount: subtotal }),
-                    // body: JSON.stringify(Object.fromEntries(formData))
+                    body: JSON.stringify({ amount: subtotal, userId, items })
                 })
-                .then(response => response.json())
-                .then(walletData => {
-                    if (walletData.success) {
-                        window.location.href = `/orderConfirmation/${walletData.orderId}`;
-                    } else {
-                        throw new Error(walletData.message);
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.message,
-                        icon: 'error'
+                    .then(response => response.json())
+                    .then(walletData => {
+                        if (walletData.success) {
+                            Swal.fire({
+                                title: 'Payment Successful',
+                                text: 'Your wallet payment was successful!',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href = `/orderConfirmation/${walletData.orderId}`;
+                            });
+                        } else {
+                            throw new Error(walletData.message);
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message,
+                            icon: 'error'
+                        });
                     });
-                });
             } else {
                 // Handle COD or Wallet payment success
                 window.location.href = `/orderConfirmation/${data.orderId}`;
@@ -809,7 +796,7 @@ $(document).ready(function() {
 
 
                
-                const newDiscount =parseInt( response.totalDiscount) + parseInt( response.couponDiscount);
+                const newDiscount = parseInt( response.couponDiscount);
                 $('#discount').text(`₹${newDiscount}`);
                 
                 // Update form hidden input for order total
@@ -840,8 +827,9 @@ $(document).ready(function() {
                  $('#orderTotal').text(`₹${response.subtotal}`);
 
                  
-                 $('#discount').text(`₹${response.totalDiscount}`);
+                //  $('#discount').text(`₹${response.totalDiscount}`);
 
+                $('#discount').text(`₹ 0`);
                 // Reset form hidden input
                 $('input[name="totalAmount"]').val(response.subtotal);
                 

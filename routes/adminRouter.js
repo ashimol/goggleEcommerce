@@ -7,7 +7,6 @@ const categoryController = require('../controllers/admin/categoryController');
 const brandController = require("../controllers/admin/brandController");
 const productController = require('../controllers/admin/productController');
 const orderController = require('../controllers/admin/orderController');
-const adminOfferController = require('../controllers/admin/adminOfferController');
 const couponController =require('../controllers/admin/couponController');
 const salesReportController = require('../controllers/admin/salesReportController');
 
@@ -71,9 +70,6 @@ router.get('/orders',adminAuth,orderController.getAdminOrders);
 router.get('/orderDetails/:orderId', adminAuth, orderController.getOrderDetails);
 //router.get('/orderDetails/:orderId/:itemOrderId',adminAuth,orderController.getOrderDetails);
 router.post('/updateItemStatus',adminAuth, orderController.updateItemStatus);
-
-
-router.get("/adminOffer", adminAuth,adminOfferController.offer);
 
 
 router.get('/coupons',adminAuth,couponController.getCoupons); 

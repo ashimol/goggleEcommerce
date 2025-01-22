@@ -39,7 +39,16 @@ const loadHomepage = async (req, res) => {
       }
   
       if (userId) {
-        const userData = await User.findById(userId);
+        // const userData = await User.findById(userId);
+        const userData = await User.findById(userId)
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
 
         return res.render("home", {
           user: userData,
@@ -159,8 +168,9 @@ const securePassword=async(password)=>{
 const verifyOtp = async(req,res)=>{
     try {
      const {otp}=req.body;
-     console.log(otp);
-     
+     console.log("o1" ,otp);
+     console.log(req.session.userOtp);
+
      if(otp===req.session.userOtp){
          const user=req.session.userData
          const passwordHash=await securePassword(user.password);
@@ -262,6 +272,16 @@ const login=async(req,res)=>{
         }
         req.session.user=user._id;
         console.log("Session user after login:", req.session.user);
+
+        const userData = await User.findOne({isAdmin:0,email:email})
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
 
         //res.redirect("/");    
         res.render('home',{user:user,
@@ -378,7 +398,8 @@ const loadShopping = async (req, res) => {
             const regex = new RegExp(searchQuery, "i");
             searchCondition.$or = [
                 { productName: regex },
-                { description: regex }
+                { description: regex },
+                
             ];
         }
 
@@ -436,8 +457,16 @@ const loadShopping = async (req, res) => {
             .lean();
 
             if(userId){
-                const userData = await User.findById(userId);
-                console.log('user data :',userData);
+                const userData = await User.findById(userId)
+                .populate({
+                    path: "cart",
+                    populate: {
+                        path: "items.productId", 
+                        model: "Product",       
+                    },
+                })
+                .exec();
+               
                             
         res.render("shop", {
             user:userData,
@@ -724,8 +753,15 @@ const productDetails = async (req, res) => {
         const products = await Product.findById(productId).populate('category').populate('brand').lean().exec();
 
         if (userId) {
-            const userData = await User.findById(userId);
-            console.log('userdata :',userData);
+            const userData = await User.findById(userId)
+            .populate({
+                path: "cart",
+                populate: {
+                    path: "items.productId", 
+                    model: "Product",       
+                },
+            })
+            .exec();
             
             return res.render("product-details", {
               user: userData,

@@ -31,6 +31,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }));
 
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));  
 

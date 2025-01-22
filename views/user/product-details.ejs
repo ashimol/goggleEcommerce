@@ -157,9 +157,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											Add to Cart
 										</button>
 									</form>
-									<form id="addToWishlistForm-<%= products._id %>" onsubmit="return false;">
+									<!-- <form id="addToWishlistForm-<%= products._id %>" onsubmit="return false;">
 										<input type="hidden" name="productId" value="<%= products._id %>">
 										<button type="button" class="googles-cart pgoogles-cart" onclick="">
+											<i class="fas fa-heart"></i>
+										</button>
+									</form> -->
+									<form id="addToWishlistForm-<%= products._id %>" onsubmit="return false;">
+										<input type="hidden" name="productId" value="<%= products._id %>">
+										<button type="button" class="googles-cart pgoogles-cart" onclick="addToWishlist('<%= products._id %>')">
 											<i class="fas fa-heart"></i>
 										</button>
 									</form>

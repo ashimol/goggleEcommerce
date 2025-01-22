@@ -1,4 +1,5 @@
 const User=require("../../models/userSchema");
+const Cart = require('../../models/cartSchema');
 const nodemailer=require("nodemailer");
 const bcrypt=require("bcrypt");
 const env=require("dotenv").config();
@@ -16,7 +17,19 @@ const userprofile = async (req,res) =>{
             userId = req.session.user;
         }
 
-        const userData = await User.findById(userId);
+        //const userData = await User.findById(userId);
+        const userData = await User.findById(userId)
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
+    
+        console.log("User with Populated Cart:", userData);
+    
 
         res.render('profile',{
             user:userData,
@@ -40,7 +53,16 @@ const userAccount = async (req,res,next) => {
         } else if (req.session.user) {
             userId = req.session.user;
         }
-        const user = await User.findById(userId);
+        //const user = await User.findById(userId);
+        const user = await User.findById(userId)
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", 
+                model: "Product",       
+            },
+        })
+        .exec();
         
         res.render("user-account-edit", {user});
 

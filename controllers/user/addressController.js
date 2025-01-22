@@ -20,7 +20,17 @@ const userAddress = async (req,res) =>{
             return res.status(401).send('User not authenticated');
         }
 
-        const user = await User.findById(userId).populate('address').exec();
+        const user = await User.findById(userId)
+        .populate('address')
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
+        
 
         if (!user || user.address.length === 0) {
             //console.log('No addresses found');

@@ -400,7 +400,7 @@ const editProduct = async (req, res) => {
             return res.status(400).json({ error: "Product already exists, please try with another name" });
         }
 
-        let images = [...product.productImage]; // Start with existing images
+        let images = [...product.productImage]; 
         
         if (req.files && req.files.length > 0) {
             // Check total number of images won't exceed 3
@@ -527,6 +527,7 @@ const removeProductOffer=async(req,res)=>{
          findProduct.productOffer=0;
 
          await findProduct.save();
+         
          res.json({status:true});
   
     } catch (error) {

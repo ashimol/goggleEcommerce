@@ -5,12 +5,15 @@ const addressController= require('../controllers/user/addressController');
 const passport = require("passport");
 const session = require('express-session');
 const {userAuth,adminAuth}=require('../middlewares/auth');
+const {cartCount} = require('../middlewares/cartCount');
 const profileController= require("../controllers/user/profileController");
 const cartController = require('../controllers/user/cartController');
 const orderController = require('../controllers/user/orderController');
 const wishlistController = require("../controllers/user/wishlistController");
 const userWalletController = require('../controllers/user/userWalletController');
 const orderCancelController = require('../controllers/user/orderCancelController');
+const confirmRePaymentController = require('../controllers/user/confirmRePaymentController');
+
 const Order = require('../models/orderSchema');
 const Wallet = require('../models/walletSchema');
 const Product =require('../models/productSchema')
@@ -30,7 +33,7 @@ const Product =require('../models/productSchema')
 router.get("/pageNotFound",userController.pageNotFound);
 
 
-router.get('/',userAuth,userController.loadHomepage);
+router.get('/',userAuth,cartCount,userController.loadHomepage);
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);
@@ -64,7 +67,7 @@ router.get("/forgot-password",profileController.getForgotPassPage);
  router.post("/resend-forgot-otp",profileController.resendOtp);
  router.post("/reset-password",profileController.postNewPassword);
 
-router.get('/userprofile',userAuth,profileController.userprofile);
+router.get('/userprofile',userAuth,cartCount,profileController.userprofile);
 router.get('/user/account',userAuth,profileController.userAccount);
 router.post('/user/account/edit-user/:id',userAuth,profileController.editUser);
 
@@ -100,7 +103,9 @@ router.post("/test-route", (req, res) => {
 
 router.post("/user/my-order/cancel/:itemOrderId/:cancelReason", userAuth,orderCancelController.cancelOrder);
 router.post("/my-order/return/:itemOrderId", userAuth, orderController.returnOrder);
+router.post('/my-order/order-details', userAuth,confirmRePaymentController.confirmRePayment);
 router.get("/my-order/:orderId/invoice/:itemId", userAuth, orderController.downloadInvoice);
+
 
 router.get("/wishlist",userAuth,wishlistController.loadWishlist);
 router.post("/add-wishlist",userAuth,wishlistController.addToWishlist);
@@ -112,7 +117,7 @@ router.post('/user/check-wallet-balance', userAuth,userWalletController.checkWal
 
 
 
-// Add error handling middleware at the end of your routes
+// Add error handling middleware 
 router.use((error, req, res, next) => {
     console.error("Global error handler caught:", error);
     res.status(500).json({

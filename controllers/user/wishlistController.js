@@ -21,7 +21,17 @@ const loadWishlist = async (req, res) => {
         const products = wishlist ? wishlist.products : [];
 
         if (userId) {
-            const userData = await User.findById(userId);
+            //const userData = await User.findById(userId);
+        
+        const userData = await User.findById(userId)
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
 
        
         res.render('wishlist', { wishlist: products,  user: userData });

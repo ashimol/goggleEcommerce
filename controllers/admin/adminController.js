@@ -59,7 +59,7 @@ const logout = async (req,res) =>{
         
 
         if (req.session.admin) {
-            req.session.admin = null; // Or use req.session.destroy() if needed
+            req.session.admin = null; 
         }
     
         // Optionally clear the session cookie for the user
@@ -136,24 +136,24 @@ const getPaymentMethodsData = async (startDate, endDate) => {
     const pipeline = [
         {
             $match: {
-                orderDate: { $gte: new Date(startDate), $lte: new Date(endDate) } // Match orders within the specified date range
+                orderDate: { $gte: new Date(startDate), $lte: new Date(endDate) } 
             }
         },
-        { $unwind: "$payment" }, // Unwind the payment array to process individual payment objects
+        { $unwind: "$payment" }, 
         {
             $group: {
-                _id: "$payment.method", // Group by the payment method
-                count: { $sum: 1 } // Count occurrences of each payment method
+                _id: "$payment.method", 
+                count: { $sum: 1 } 
             }
         },
-        { $sort: { count: -1 } } // Sort the results by count in descending order
+        { $sort: { count: -1 } } 
     ];
 
     try {
-        const result = await Order.aggregate(pipeline); // Execute the aggregation pipeline on the Order collection
-        return result; // Return the aggregated result
+        const result = await Order.aggregate(pipeline); 
+        return result; 
     } catch (error) {
-        throw error; // Throw any encountered errors
+        throw error; 
     }
 };
 
@@ -234,7 +234,6 @@ const getTopSellingItems = async (type, limit, startDate, endDate) => {
     }
 };
 
-module.exports = getTopSellingItems;
 
 const loadDashboard = async (req, res) => {
     if (req.session.admin) {
@@ -319,6 +318,7 @@ module.exports = {
     loadLogin,
     login,
     loadDashboard,
+    getTopSellingItems,
     pageerror,
     logout,
     

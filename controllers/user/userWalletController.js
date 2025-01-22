@@ -49,8 +49,17 @@ const wallet = async (req, res) => {
         const totalPages = Math.ceil(totalTransactions / limit);
         const paginatedTransactions = sortedTransactions.slice((page - 1) * limit, page * limit);
         if(userId){
-          const userData = await User.findById(userId);
-  
+          //const userData = await User.findById(userId);
+          
+          const userData = await User.findById(userId)
+        .populate({
+            path: "cart",
+            populate: {
+                path: "items.productId", // Populate productId within items array
+                model: "Product",       // Refers to the Product model
+            },
+        })
+        .exec();
         return res.render('wallet', {
           user:userData,
             balance: balance,

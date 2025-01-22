@@ -70,6 +70,8 @@ const addToCart = async (req, res) => {
 
         if (!cart) {
             cart = new Cart({ userId, items: [] });
+            await cart.save();
+            await User.findByIdAndUpdate(userId, { cart: cart._id });
         }
         console.log("hiiiiiii11111111111")
         const itemIndex = cart.items.findIndex(item =>
@@ -96,22 +98,21 @@ const addToCart = async (req, res) => {
             });
             console.log("nnnnnnnnnnn")
             // Reduce the quantity from the product
-            product.quantity -= quantityNumber;
+            // product.quantity -= quantityNumber;
 
             
             if (product.quantity <= 0) {
                 product.status = "Out of Stock";
             }
         }
-        console.log("hhhhhhhhhhhhhhhhh")
+        
         console.log('Cart before saving:', JSON.stringify(cart, null, 2));
         console.log('Product after quantity update:', JSON.stringify(product, null, 2));
 
         
         await cart.save();
-        console.log("DDDDDDDD")
         await product.save();
-        console.log("rrrrrrrrrrrrrrr")
+        
         res.json({ message: 'Product added to cart successfully.' });
     } catch (error) {
       console.log("hello....")
@@ -218,7 +219,16 @@ const getCart = async (req, res) => {
         const totalAmount = totalPrice - totalDiscount + deliveryCharges;
         
         if(userId){
-          const userData = await User.findById(userId);
+          // const userData = await User.findById(userId);
+          const userData = await User.findById(userId)
+          .populate({
+              path: "cart",
+              populate: {
+                  path: "items.productId", 
+                  model: "Product",       
+              },
+          })
+          .exec();
         
                 
         return res.render("cart", { 
@@ -290,21 +300,21 @@ const updateQuantity = async (req, res) => {
 
     const quantityDifference = change;
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      {
-        $inc: { quantity: -quantityDifference },
-      },
-      { new: true }
-    );
+    // const updatedProduct = await Product.findByIdAndUpdate(
+    //   productId,
+    //   {
+    //     $inc: { quantity: -quantityDifference },
+    //   },
+    //   { new: true }
+    // );
 
-    if (updatedProduct.quantity === 0) {
-      updatedProduct.status = "Out of Stock";
-    } else {
-      updatedProduct.status = "Available";
-    }
+    // if (updatedProduct.quantity === 0) {
+    //   updatedProduct.status = "Out of Stock";
+    // } else {
+    //   updatedProduct.status = "Available";
+    // }
 
-    await updatedProduct.save();
+    // await updatedProduct.save();
 
     item.quantity = newQuantity;
     await cart.save();
@@ -404,10 +414,10 @@ const removeFromCart = async (req,res) =>{
 
         const product = await Product.findById(productId);
 
-        product.quantity += itemToRemove.quantity;
+        // product.quantity += itemToRemove.quantity;
         
-        product.status = product.quantity > 0 ? "Available" : "Out of stock";
-        await product.save();
+        // product.status = product.quantity > 0 ? "Available" : "Out of stock";
+        // await product.save();
 
         await cart.save();
 

@@ -205,15 +205,23 @@ body, html {
               </div>
               <div class="form-group mt-3">
                 <label for="password">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                />
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    id="password"
+                    placeholder="Password"
+                  />
+                  <i
+                    id="togglePassword"
+                    class="fas fa-eye"
+                    style="position: absolute; right: 10px; cursor: pointer; color: #aaa;"
+                  ></i>
+                </div>
                 <div id="error2" class="error-message"></div>
               </div>
+              
               <div class="form-group d-flex justify-content-end">
                 <a href="/forgot-password" class="forgot-password-link ms-auto">Forgot Password</a>
               </div>
@@ -244,47 +252,78 @@ body, html {
     
 
   <script>
-    const emailId = document.getElementById("email");
-    const passId = document.getElementById("password");
-    const loginError1 = document.getElementById("login-error1");
-    const loginError2 = document.getElementById("login-error2");
-    const loginForm = document.getElementById("loginform");
+      
+      const emailId = document.getElementById("email");
+      const passId = document.getElementById("password");
+      const loginError1 = document.getElementById("error1");
+      const loginError2 = document.getElementById("error2");
+      const loginForm = document.getElementById("loginform");
 
-    function emailValidationChecking() {
-        const emailVal = emailId.value.trim();
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      function emailValidationChecking() {
+          const emailVal = emailId.value.trim();
+          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-        if (!emailPattern.test(emailVal)) {
-            loginError1.style.display = "block";
-            loginError1.innerHTML = "Invalid Email Format";
-        } else {
-            loginError1.style.display = "none";
-            loginError1.innerHTML = "";
-        }
-    }
+          if (!emailVal) {
+              loginError1.style.display = "block";
+              loginError1.innerHTML = "Please enter your email";
+              return false;
+          } else if (!emailPattern.test(emailVal)) {
+              loginError1.style.display = "block";
+              loginError1.innerHTML = "Invalid Email Format";
+              return false;
+          } else {
+              loginError1.style.display = "none";
+              loginError1.innerHTML = "";
+              return true;
+          }
+      }
 
-    function passValidationChecking() {
-        const passVal = passId.value.trim();
-        if (passVal.length < 8) {
-            loginError2.style.display = "block";
-            loginError2.innerHTML = "Password must be at least 8 characters";
-        } else {
-            loginError2.style.display = "none";
-            loginError2.innerHTML = "";
-        }
-    }
+      function passValidationChecking() {
+          const passVal = passId.value.trim();
+          if (!passVal) {
+              loginError2.style.display = "block";
+              loginError2.innerHTML = "Please enter your password";
+              return false;
+          } else if (passVal.length < 8) {
+              loginError2.style.display = "block";
+              loginError2.innerHTML = "Password must be at least 8 characters";
+              return false;
+          } else {
+              loginError2.style.display = "none";
+              loginError2.innerHTML = "";
+              return true;
+          }
+      }
 
-    loginForm.addEventListener("submit", function (e) {
-        emailValidationChecking();
-        passValidationChecking();
+      loginForm.addEventListener("submit", function (e) {
+          const isEmailValid = emailValidationChecking();
+          const isPasswordValid = passValidationChecking();
 
-        if (loginError1.innerHTML !== "" || loginError2.innerHTML !== "") {
-            e.preventDefault(); // Prevent form submission if there are errors
-        }
-    });
+          // Prevent form submission if there are errors
+          if (!isEmailValid || !isPasswordValid) {
+              e.preventDefault();
+          }
+      });
 
-    emailId.addEventListener("input", emailValidationChecking);
-    passId.addEventListener("input", passValidationChecking);
+      emailId.addEventListener("input", emailValidationChecking);
+      passId.addEventListener("input", passValidationChecking);
+
+</script>
+<script>
+
+const togglePassword = document.getElementById("togglePassword");
+const passwordField = document.getElementById("password");
+
+togglePassword.addEventListener("click", function () {
+  // Toggle the type attribute
+  const type = passwordField.type === "password" ? "text" : "password";
+  passwordField.type = type;
+
+  // Toggle the icon class
+  this.classList.toggle("fa-eye");
+  this.classList.toggle("fa-eye-slash");
+});
+
 </script>
 </body>
 </html>
