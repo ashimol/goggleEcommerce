@@ -166,6 +166,40 @@ body, html {
   margin-top: 5px;
 }
 
+
+
+
+/* Loader Styling */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 6px solid #ddd;
+    border-top: 6px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 /* Responsive Design */
 @media (max-width: 768px) {
   .login-section {
@@ -242,7 +276,11 @@ body, html {
               <div class="text-center mt-3">
                 <p class="text-center mb-4">Don't have an account? <a href="/signup">Sign up</a></p>
               </div>
+              
             </form>
+            <div id="loader" style="display: none;">
+              <div class="spinner"></div>
+            </div>
           </div>
         </div>
         </div>
@@ -324,6 +362,24 @@ togglePassword.addEventListener("click", function () {
   this.classList.toggle("fa-eye-slash");
 });
 
+</script>
+
+<script>
+  const loginForm1 = document.getElementById("loginform");
+  const loader = document.getElementById("loader");
+
+  loginForm.addEventListener("submit", function (e) {
+      const isEmailValid = emailValidationChecking();
+      const isPasswordValid = passValidationChecking();
+
+      // Prevent form submission if there are errors
+      if (!isEmailValid || !isPasswordValid) {
+          e.preventDefault();
+      } else {
+          // Show the loader when the form is being submitted
+          loader.style.display = "flex";
+      }
+  });
 </script>
 </body>
 </html>

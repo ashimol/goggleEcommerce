@@ -63,9 +63,7 @@ const addToCart = async (req, res) => {
         }
 
         let cart = await Cart.findOne({ userId });
-        console.log("cart :",cart);
-        console.log("hiiiiiii")
-
+               
         
 
         if (!cart) {
@@ -73,7 +71,7 @@ const addToCart = async (req, res) => {
             await cart.save();
             await User.findByIdAndUpdate(userId, { cart: cart._id });
         }
-        console.log("hiiiiiii11111111111")
+       
         const itemIndex = cart.items.findIndex(item =>
             item.productId.toString() === productId 
         );

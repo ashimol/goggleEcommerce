@@ -176,7 +176,9 @@ const applyCoupon = async (req, res) => {
           
         
          const baseDiscount = cart.items.reduce((total, item) => {
+
             return total + ((item.productId.regularPrice - item.productId.salePrice) * item.quantity);
+
         }, 0);
 
         console.log("base discount :",baseDiscount);
@@ -609,9 +611,12 @@ const placeOrder = async (req, res) => {
           if (paymentMethod !== "Online Payment") {
           const orderItem = items.find(order => order.productId.toString() === cartItem.productId.toString());
           if (orderItem) {
+
               // Fetch the current product to get the actual quantity
               const product = await Product.findById(orderItem.productId);
+
               if (product) {
+
                   const newQuantity = product.quantity - orderItem.quantity;
       
                   // Update the product's quantity and status
@@ -619,6 +624,7 @@ const placeOrder = async (req, res) => {
                       $inc: { quantity: -orderItem.quantity },
                       $set: { status: newQuantity <= 0 ? "Out of Stock" : "Available" }
                   });
+
               }
           }
         }
@@ -727,6 +733,7 @@ const verifyPayment = async (req, res) => {
       
       // Verify signature
       const sign = razorpay_order_id + "|" + razorpay_payment_id;
+
       const expectedSign = crypto
           .createHmac("sha256", process.env.RAZOR_PAY_KEY_SECRET)
           .update(sign)
@@ -760,6 +767,7 @@ const verifyPayment = async (req, res) => {
         const order = await Order.findOne({ 'payment.razorpayOrderId': razorpay_order_id });
   
         if (order) {
+          
           console.log('Updating order status to Pending for failed payment:', order._id);
           order.status = 'Pending';
           order.payment[0].status = 'failed';

@@ -33,7 +33,7 @@ const Product =require('../models/productSchema')
 router.get("/pageNotFound",userController.pageNotFound);
 
 
-router.get('/',userAuth,cartCount,userController.loadHomepage);
+router.get('/',userController.loadHomepage);
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);

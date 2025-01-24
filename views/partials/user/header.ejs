@@ -1,6 +1,5 @@
 
-<!-- <!DOCTYPE html>
-<html lang="zxx">
+		<html lang="zxx">
 
 <head>
 	<title>Goggles Ecommerce Category Bootstrap responsive Web Template | Home :: w3layouts</title>
@@ -17,54 +16,26 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			window.scrollTo(0, 1);
 		}
 	</script>
-	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
-	<link href="/css/login_overlay.css" rel='stylesheet' type='text/css' />
+	<!-- <link href="css/bootstrap.css" rel='stylesheet' type='text/css' /> -->
+	<link rel="stylesheet" href="/css/loginIcon.css">
 	<link href="/css/style6.css" rel='stylesheet' type='text/css' />
 	<link rel="stylesheet" href="/css/shop.css" type="text/css" />
 	<link rel="stylesheet" href="/css/owl.carousel.css" type="text/css" media="all">
 	<link rel="stylesheet" href="/css/owl.theme.css" type="text/css" media="all">
 	<link href="/css/style.css" rel='stylesheet' type='text/css' />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 	<link href="/css/fontawesome-all.css" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
 	    rel="stylesheet">
-		<style>
-			.dropdown{
-				position: relative;
-				display: inline-block;
-			}
-			.dropdown-content{
-				display: none;
-				position: absolute;
-				background-color: aqua;
-				min-width: 160px;
-				box-shadow: 0px 8px 16px 6px rgba(0, 0, 0,2);
-				z-index: 1000;
-				right: 0;
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-			}
-			.dropdown-content a {
-				color: black;
-				padding: 12px 16px;
-				text-decoration: none;
-				display: block;
-				width: 100%;
-			}
-			.dropdown-content a:hover{
-				background-color:whitesmoke;
-			}
-			.dropdown:hover .dropdown-content{
-				display: block;
-			}
-			.header{
-				position: relative;
-				z-index: 500;
-			}
-		</style>
+        
 </head>
-<body>
-	<div class="banner-top container-fluid" id="home"> -->
-		<!-- header -->
+		
 		<header>
 			<div class="row">
 				<div class="col-md-3 top-info text-left mt-lg-4">
@@ -126,11 +97,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 			</div>
 			<div class="search">
-				<div class="mobile-nav-button">
+				<!-- <div class="mobile-nav-button">
 					<button id="trigger-overlay" type="button">
 						<i class="fas fa-search"></i>
 					</button>
-				</div>
+				</div> -->
 				<!-- open/close -->
 				<div class="overlay overlay-door">
 					<button type="button" class="overlay-close">
@@ -150,8 +121,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<nav class="navbar navbar-expand-lg navbar-light bg-light top-header mb-2">
 
 				<button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-				    aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon">
+				    aria-expanded="false" aria-label="Toggle navigation" >
+					<span class="navbar-toggler-icon" >
 						
 					</span>
 				</button>
@@ -177,3 +148,141 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 			</nav>
 		</header>
+
+
+		<script>
+			$(document).ready(function () {
+				$("#myModal").modal();
+			});
+		</script>
+		<!-- // modal -->
+	
+		<!--search jQuery-->
+		<script src="/js/modernizr-2.6.2.min.js"></script>
+		<script src="/js/classie-search.js"></script>
+		<script src="/js/demo1-search.js"></script>
+		<!--//search jQuery-->
+		<!-- cart-js -->
+		<script src="/js/minicart.js"></script>
+		<script>
+			googles.render();
+	
+			googles.cart.on('googles_checkout', function (evt) {
+				var items, len, i;
+	
+				if (this.subtotal() > 0) {
+					items = this.items();
+	
+					for (i = 0, len = items.length; i < len; i++) {}
+				}
+			});
+		</script>
+		<!-- //cart-js -->
+		<script>
+			$(document).ready(function () {
+				$(".button-log a").click(function () {
+					$(".overlay-login").fadeToggle(200);
+					$(this).toggleClass('btn-open').toggleClass('btn-close');
+				});
+			});
+			$('.overlay-close1').on('click', function () {
+				$(".overlay-login").fadeToggle(200);
+				$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
+				open = false;
+			});
+		</script>
+		<!-- carousel -->
+		<!-- Count-down -->
+		<script src="/js/simplyCountdown.js"></script>
+		<link href="/css/simplyCountdown.css" rel='stylesheet' type='text/css' />
+		<script>
+			var d = new Date();
+			simplyCountdown('simply-countdown-custom', {
+				year: d.getFullYear(),
+				month: d.getMonth() + 2,
+				day: 25
+			});
+		</script>
+		<!--// Count-down -->
+		<script src="/js/owl.carousel.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('.owl-carousel').owlCarousel({
+					loop: true,
+					margin: 10,
+					responsiveClass: true,
+					responsive: {
+						0: {
+							items: 1,
+							nav: true
+						},
+						600: {
+							items: 2,
+							nav: false
+						},
+						900: {
+							items: 3,
+							nav: false
+						},
+						1000: {
+							items: 4,
+							nav: true,
+							loop: false,
+							margin: 20
+						}
+					}
+				})
+			})
+		</script>
+	
+		<!-- //end-smooth-scrolling -->
+	
+	
+		<!-- dropdown nav -->
+		<script>
+			$(document).ready(function () {
+				$(".dropdown").hover(
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+						$(this).toggleClass('open');
+					},
+					function () {
+						$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+						$(this).toggleClass('open');
+					}
+				);
+			});
+		</script>
+		<!-- //dropdown nav -->
+	  <script src="/js/move-top.js"></script>
+		<script src="/js/easing.js"></script>
+		<script>
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({
+						scrollTop: $(this.hash).offset().top
+					}, 900);
+				});
+			});
+		</script>
+		<script>
+			$(document).ready(function() {
+				/*
+										var defaults = {
+											  containerID: 'toTop', // fading element id
+											containerHoverID: 'toTopHover', // fading element hover id
+											scrollSpeed: 1200,
+											easingType: 'linear' 
+										 };
+										*/
+	
+				$().UItoTop({
+					easingType: 'easeOutQuart'
+				});
+	
+			});
+		</script>
+		<!--// end-smoth-scrolling -->
+	
+		<script src="/js/bootstrap.js"></script>

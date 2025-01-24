@@ -25,12 +25,19 @@ const loadHomepage = async (req, res) => {
   
       const categories = await Category.find({ isListed: true });
   
-      const products = await Product.find({
+    //   const products = await Product.find({
+    //     isBlocked: false,
+    //     category: { $in: categories.map((category) => category._id) },
+    //     // quantity: { $gt: 0 },
+    //   });
+  
+    const products = await Product.find({
         isBlocked: false,
         category: { $in: categories.map((category) => category._id) },
-        // quantity: { $gt: 0 },
-      });
-  
+      })
+        .sort({ _id: -1 }) 
+        .limit(4);        
+      
        
       if (req.user) {
         userId = req.user;
@@ -282,9 +289,9 @@ const login=async(req,res)=>{
             },
         })
         .exec();
-
+        
         //res.redirect("/");    
-        res.render('home',{user:user,
+        res.render('home',{user:userData,
             products});
 
     } catch (error) {
