@@ -718,12 +718,12 @@ const placeOrder = async (req, res) => {
 };
 
 const orderConfirmation=async (req, res) => {
-    try {
-       return res.render('order-confirmation');
-    } catch (error) {
-        console.error(error);
-        res.redirect("/pageNotfound");
-      }
+  try {
+     return res.render('order-confirmation');
+  } catch (error) {
+      console.error(error);
+      res.redirect("/pageNotfound");
+    }
 }
 
 

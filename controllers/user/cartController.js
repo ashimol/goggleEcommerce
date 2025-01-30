@@ -75,7 +75,7 @@ const addToCart = async (req, res) => {
         const itemIndex = cart.items.findIndex(item =>
             item.productId.toString() === productId 
         );
-        console.log("heloooo")
+        
         if (itemIndex > -1) {
             // return res.status(400).json({ 
             //     message: 'This product is already in the cart.' 

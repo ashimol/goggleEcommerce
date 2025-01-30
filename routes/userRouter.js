@@ -39,7 +39,7 @@ router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);
 
 router.get('/shop',userAuth,userController.loadShopping);
-// router.get('/filter',userAuth,userController.filterProducts);
+//router.get('/filter',userAuth,userController.filterProducts);
 // router.get('/filterPrice',userAuth,userController.filterByPrice);
 // router.post('/search',userAuth,userController.searchProducts);
 

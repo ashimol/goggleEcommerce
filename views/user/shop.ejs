@@ -146,7 +146,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								</form>
 							</div>
 							<!-- price range -->
-							<form action="/shop" method="GET">
+						<form action="/shop" method="GET">
 								<input type="hidden" name="searchQuery" value="<%= searchQuery %>">
 								<!-- <div class="col-md-6 mb-3" id="categoryField">
 									<label for="category" class="form-label">Select Category</label>
@@ -161,26 +161,26 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									</select>
 								</div> -->
 							
-								<div class="col-md-6 mb-3">
-                  <label for="sortBy" class="form-label">Sort By</label>
-                  <select class="form-control" name="sortBy" onchange="this.form.submit()">
-                      <option value="">Default Sorting</option>
-                      <option value="priceLowToHigh" <%= sortBy === 'priceLowToHigh' ? 'selected' : '' %>>
-                          Price: Low to High
-                      </option>
-                      <option value="priceHighToLow" <%= sortBy === 'priceHighToLow' ? 'selected' : '' %>>
-                          Price: High to Low
-                      </option>
-                      <option value="aToZ" <%= sortBy === 'aToZ' ? 'selected' : '' %>>
-                          Name: A to Z
-                      </option>
-                      <option value="zToA" <%= sortBy === 'zToA' ? 'selected' : '' %>>
-                          Name: Z to A
-                      </option>
-                  </select>
-              </div>
-                
-							</form>
+							<div class="col-md-6 mb-3">
+								<label for="sortBy" class="form-label">Sort By</label>
+								<select class="form-control" name="sortBy" onchange="this.form.submit()">
+									<option value="">Default Sorting</option>
+									<option value="priceLowToHigh" <%= sortBy === 'priceLowToHigh' ? 'selected' : '' %>>
+										Price: Low to High
+									</option>
+									<option value="priceHighToLow" <%= sortBy === 'priceHighToLow' ? 'selected' : '' %>>
+										Price: High to Low
+									</option>
+									<option value="aToZ" <%= sortBy === 'aToZ' ? 'selected' : '' %>>
+										Name: A to Z
+									</option>
+									<option value="zToA" <%= sortBy === 'zToA' ? 'selected' : '' %>>
+										Name: Z to A
+									</option>
+								</select>
+							</div>
+								
+						</form>
 						
 							
 							
@@ -189,10 +189,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						
 						<div class="left-ads-display col-lg-9">
 							<div class="wrapper_top_shop">
-								<!-- <div class="category-list my-3">
+								<div class="category-list my-3">
 									<h5>Featured categories</h5>
 									<div class="d-flex flex-wrap">
-										<a href="/shop" class="btn btn-outline-primary m-1 <%= !selectedCategory ? 'active' : '' %>">
+										<a href="/shop?category=all&searchQuery=<%= searchQuery %>&sortBy=<%= sortBy %>" 
+										   class="btn btn-outline-primary m-1 <%= !selectedCategory ? 'active' : '' %>">
 											All
 										</a>
 										<% categories.forEach(function(category) { %>
@@ -202,7 +203,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</a>
 										<% }); %>
 									</div>
-								</div> -->
+								</div>
 
 
 								
@@ -304,7 +305,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 						<!--//product right-->
 					</div>
-					
+					</div>
 				<!-- </div>
 			</div> -->
 		</section>

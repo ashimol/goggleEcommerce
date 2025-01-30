@@ -109,9 +109,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<div class="flexslider1">
 									<ul class="slides">
 										<% if (products.productImage && products.productImage.length > 0) { %>
-											<% products.productImage.forEach(image => { %>
-												<li>
-													<img src="/uploads/re-images/<%= image %>" data-imagezoom="true" class="img-fluid" alt=" ">
+											<% products.productImage.forEach((image, index) => { %>
+												<li data-thumb="/uploads/re-images/<%= image %>">
+													<img src="/uploads/re-images/<%= image %>" data-imagezoom="true" class="img-fluid" alt="Product Image <%= index + 1 %>">
 												</li>
 											<% }) %>
 										<% } else { %>
@@ -120,9 +120,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</li>
 										<% } %>
 									</ul>
-									<!-- <div class="clearfix"></div> -->
+									<div class="clearfix"></div>
 								</div>
 							</div>
+							
 						</div>
 						<div class="col-lg-8 single-right-left simpleCart_shelfItem">
 							<h3> <%= products.productName %>(<%= products.color %>)</h3>
@@ -190,6 +191,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											<option value="2">2 Qty</option>
 											<option value="3">3 Qty</option>
 											<option value="4">4 Qty</option>
+											<option value="5">5 Qty</option>
 										</select>
 										<button type="button" class="googles-cart pgoogles-cart" data-product-id="<%= products._id %>" onclick="addToCart('<%= products._id %>')">
 											Add to Cart
@@ -407,12 +409,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			});
 		</script>
 		<!-- FlexSlider -->
-		<script src="/js/jquery.flexslider.js"></script>
+		<script src="js/jquery.flexslider.js"></script>
 		<script>
 			$(window).on('load', function() {
 				$('.flexslider1').flexslider({
 					animation: "slide",
-					// controlNav: "thumbnails",
+					controlNav: "thumbnails",
 					start: function(slider) {
 						slider.resize();
 					}

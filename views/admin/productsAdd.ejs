@@ -256,6 +256,18 @@ function viewImage3(event) {
 
 function viewImage(event, index) {
     let input = event.target;
+
+    let file = input.files[0];
+    let validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+    if (!validImageTypes.includes(file.type)) {
+        displayErrorMessage('images-error', 'Please upload a valid image file (JPEG, PNG).');
+        input.value = '';
+        return;
+    } else {
+        clearErrorMessages('images-error');
+    }
+
     let reader = new FileReader();
 
     reader.onload = function () {
@@ -270,6 +282,9 @@ function viewImage(event, index) {
             background: false,
             autoCropArea: 1,
             zoomable: true,
+            zoom: function(event) {
+                console.log(event.detail.ratio); // For debugging zoom
+            }
         });
 
         let cropperContainer = document.querySelector("#croppedImg" + index).parentNode;
