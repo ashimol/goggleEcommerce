@@ -4,97 +4,85 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  
   <link rel="stylesheet" href="/css/style.css" />
   <style>
-    /* General styles for the body */
-body {
-    background-color: #f8f9fa; /* Light background for contrast */
-    font-family: 'Arial', sans-serif; /* Clean font */
-}
-
-/* Container styles */
-.login-container {
-    max-width: 400px; /* Limit the width of the container */
-    margin: 100px auto; /* Center the container vertically and horizontally */
-    padding: 20px; /* Add padding */
-    background-color: #ffffff; /* White background for the form */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-}
-
-
-
-/* Heading styles */
-.login-container h2 {
-    text-align: center; /* Center the heading */
-    margin-bottom: 20px; /* Space below the heading */
-    color: #333; /* Darker text color */
-}
-
-/* Form group styles */
-.form-group {
-    margin-bottom: 15px; /* Space between form groups */
-}
-label {
-    font-weight: bold; /* Bold labels */
-    margin-bottom: 5px; /* Space below the label */
-    display: block; /* Block display for labels */
-}
-
-/* Input styles */
-.form-control {
-    border-radius: 4px; /* Rounded input fields */
-    border: 1px solid #ced4da; /* Border color */
-    padding: 10px; /* Padding inside input */
-    transition: border-color 0.3s; /* Smooth transition for focus */
-}
-
-/* Input focus styles */
-.form-control:focus {
-    border-color: #007bff; /* Blue border on focus */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Subtle shadow on focus */
-}
-
-/* Button styles */
-.btn {
-    background-color: #007bff; /* Primary button color */
-    color: white; /* White text color */
-    border: none; /* No border */
-    padding: 10px; /* Padding inside the button */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; 
-}
-
-/* Alert styles */
-.alert {
-    margin-bottom: 20px; /* Space below alert */
-}
-
-/* Error message styles */
-.error-message {
-    color: red; /* Red color for error messages */
-    font-size: 0.9em; /* Slightly smaller font size */
-}
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* background-image: url('/images/banner2.jpg'); */
+      background-size: cover;
+      background-position: center;
+      font-family: 'Nunito Sans', sans-serif;
+      color: white;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px; /* Increase the width of the form */
+      padding: 40px; /* Increase the padding inside the form */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase the shadow size */
+      background-color: hsl(193, 80%, 17%);
+      border-radius: 12px; /* Increase the border-radius for rounded corners */
+    }
+    .form-group {
+      margin-bottom: 1.5rem; /* Increase space between form groups */
+    }
+    .form-control {
+      height: 2.5rem; /* Increase the height of input fields */
+      font-size: 1.125rem; /* Increase font size in input fields */
+    }
+    .btn {
+      height: 3.5rem; /* Increase the height of the button */
+      font-size: 1.125rem; /* Increase font size of the button */
+      padding: 0.5rem; /* Add padding inside the button */
+    }
+    .error-message {
+      color: red;
+      font-size: 1rem; /* Increase font size of error messages */
+    }
+    .text-center {
+      color: white;
+      margin-bottom: 1.5rem; /* Add space below the heading */
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h2>Admin Login</h2>
+    <h2 class="text-center">Admin Login</h2>
     <% if (message) { %>
     <div class="alert alert-danger text-center"><%= message %></div>
     <% } %>
     <form id="adminLoginForm" method="post" action="/admin/login">
       <div class="form-group">
         <label for="adminEmail">Email address</label>
-        <input type="email" class="form-control" id="adminEmail" name="email" required />
+        <br>
+        <input
+          type="email"
+          class="form-control"
+          id="adminEmail"
+          name="email"
+          required
+        />
         <div id="emailError" class="error-message"></div>
       </div>
       <div class="form-group">
         <label for="adminPassword">Password</label>
-        <input type="password" class="form-control" id="adminPassword" name="password" required />
+        <br>
+        <input
+          type="password"
+          class="form-control"
+          id="adminPassword"
+          name="password"
+          required
+        />
         <div id="passwordError" class="error-message"></div>
       </div>
       <button type="submit" class="btn btn-primary btn-block">Log In</button>
@@ -102,37 +90,36 @@ label {
   </div>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
- 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const adminLoginForm = document.getElementById("adminLoginForm");
+      const emailField = document.getElementById("adminEmail");
+      const passwordField = document.getElementById("adminPassword");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+
+      adminLoginForm.addEventListener("submit", function (event) {
+        let isValid = true;
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(emailField.value)) {
+          emailError.textContent = "Invalid email format";
+          isValid = false;
+        } else {
+          emailError.textContent = "";
+        }
+        if (passwordField.value.length < 8) {
+          passwordError.textContent =
+            "Password should contain at least 8 characters";
+          isValid = false;
+        } else {
+          passwordError.textContent = "";
+        }
+
+        if (!isValid) {
+          event.preventDefault();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const adminLoginForm = document.getElementById("adminLoginForm");
-    const emailField = document.getElementById("adminEmail");
-    const passwordField = document.getElementById("adminPassword");
-    const emailError = document.getElementById("emailError");
-    const passwordError = document.getElementById("passwordError");
-
-    adminLoginForm.addEventListener("submit", function (event) {
-      let isValid = true;
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      if (!emailPattern.test(emailField.value)) {
-        emailError.textContent = "Invalid email format";
-        isValid = false;
-      } else {
-        emailError.textContent = "";
-      }
-      if (passwordField.value.length < 8) {
-        passwordError.textContent = "Password should contain at least 8 characters";
-        isValid = false;
-      } else {
-        passwordError.textContent = "";
-      }
-
-      if (!isValid) {
-        event.preventDefault();
-      }
-    });
-  });
-</script>
-

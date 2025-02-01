@@ -6,7 +6,7 @@ const session = require("express-session");
 const userAddress = async (req,res) =>{
 
     try {
-       // const userId = req.session.user || req.user;
+       
 
        let userId ;
         
@@ -25,15 +25,15 @@ const userAddress = async (req,res) =>{
         .populate({
             path: "cart",
             populate: {
-                path: "items.productId", // Populate productId within items array
-                model: "Product",       // Refers to the Product model
+                path: "items.productId", 
+                model: "Product",      
             },
         })
         .exec();
         
 
         if (!user || user.address.length === 0) {
-            //console.log('No addresses found');
+            
             return res.render('address', { 
                 user:user,
                 address: [], 
@@ -175,7 +175,7 @@ const updateAddress = async (req,res) =>{
              pin:pin,
              landMark:landMark,
              contactNo:contactNo 
-            },{ new: true } // Return the updated document
+            },{ new: true } 
         );
 
         if (updatedAddress) {
