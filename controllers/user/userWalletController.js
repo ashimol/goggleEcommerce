@@ -10,7 +10,7 @@ const Address = require("../../models/addressSchema");
 const Order = require("../../models/orderSchema");
 const Coupon = require("../../models/couponSchema");
 const Wallet = require("../../models/walletSchema");
-const razorpay = require("../../config/razorPay");
+const razorpay = require("../../config/razorpay");
 
 const wallet = async (req, res) => {
   let userId;
