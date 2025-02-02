@@ -8,7 +8,7 @@ const Address = require("../../models/addressSchema");
 const Coupon = require("../../models/couponSchema");
 const Wallet = require("../../models/walletSchema");
 const mongoose = require("mongoose");
-const razorpay = require("../../config/razorPay");
+const razorpay = require("../../config/razorpay");
 
 const env = require("dotenv").config();
 const nodemailer = require("nodemailer");
