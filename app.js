@@ -12,13 +12,8 @@ const cors = require("cors");
 // Connect to the database
 const db = require("./config/db");
 db();
-
-
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://13.60.169.230:3000'
-  ];
   
+const allowedOrigins = ['http://localhost:3000', 'https://ashitha.live'];
 
 app.use(cors({
     origin: function(origin, callback) {
@@ -65,18 +60,17 @@ app.use((req,res,next) =>{
 app.set("view engine", "ejs");
 
 
-// Correctly setting multiple view directories
 app.set("views", [path.join(__dirname, 'views/user'), path.join(__dirname, 'views/admin')]);
 
 
-app.use(express.static(path.join(__dirname, "public"))); // Serving static files
+app.use(express.static(path.join(__dirname, "public"))); 
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 
 
 app.use("/", userRouter);
 app.use('/admin',adminRouter);
 
-// Define the port from the environment variables or use a default one
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, (err) => {
