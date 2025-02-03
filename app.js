@@ -14,7 +14,11 @@ const db = require("./config/db");
 db();
 
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://13.60.169.230:3000'
+  ];
+  
 
 app.use(cors({
     origin: function(origin, callback) {
