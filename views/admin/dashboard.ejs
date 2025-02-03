@@ -166,163 +166,163 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <script>
-
-            const paymentMethodChartCtx = document.getElementById('paymentMethodChart').getContext('2d');
-            const paymentMethodsData = <% - JSON.stringify(paymentMethodsData) %>;
-
-            if (paymentMethodsData && paymentMethodsData.length > 0) {
-                new Chart(paymentMethodChartCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: paymentMethodsData.map(data => data._id),
-                        datasets: [{
-                            label: 'Number of Payments',
-                            data: paymentMethodsData.map(data => data.count),
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 205, 86, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'
-                            ],
-                            borderWidth: 1
-                        }]
+    
+    <script>
+    
+    const paymentMethodChartCtx = document.getElementById('paymentMethodChart').getContext('2d');
+    const paymentMethodsData = <%- JSON.stringify(paymentMethodsData) %>;
+    
+    if (paymentMethodsData && paymentMethodsData.length > 0) {
+        new Chart(paymentMethodChartCtx, {
+            type: 'bar',
+            data: {
+                labels: paymentMethodsData.map(data => data._id),
+                datasets: [{
+                    label: 'Number of Payments',
+                    data: paymentMethodsData.map(data => data.count),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 205, 86, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                    title: {
+                        display: true,
+                        text: 'Payment Methods Distribution'
+                    }
+                }
+            }
+        });
+    } else {
+        paymentMethodChartCtx.font = '20px Arial';
+        paymentMethodChartCtx.fillText('No data available for the selected period', 10, 50);
+    }
+
+    const categoryPieChartCtx = document.getElementById('categoryPieChart').getContext('2d');
+    const categorySalesData = <%- JSON.stringify(categorySalesData) %>;
+
+    if (categorySalesData && categorySalesData.length > 0) {
+        new Chart(categoryPieChartCtx, {
+        type: 'pie',
+        data: {
+            labels: categorySalesData.map(data => data.category),
+            datasets: [{
+                data: categorySalesData.map(data => data.totalSales),
+                backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)'
+                    ]
+                }]
+            },
+            options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Category Sales Distribution'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
                             }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Payment Methods Distribution'
+                            if (context.parsed !== null) {
+                                label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR' }).format(context.parsed);
                             }
+                            return label;
                         }
                     }
-                });
+                }
+            }
+        }
+    });
+} else {
+        categoryPieChartCtx.font = '20px Arial';
+        categoryPieChartCtx.fillText('No data available for the selected period', 10, 50);
+    }
+        
+        document.getElementById('chartFilter').addEventListener('change', function() {
+            const customDateRange = document.getElementById('customDateRange');
+            if (this.value === 'custom') {
+                customDateRange.style.display = 'block';
             } else {
-                paymentMethodChartCtx.font = '20px Arial';
-                paymentMethodChartCtx.fillText('No data available for the selected period', 10, 50);
+                customDateRange.style.display = 'none';
+                document.getElementById('filterForm').submit();
+            }
+        });
+
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const filter = document.getElementById('chartFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const today = new Date().toISOString().split('T')[0];  
+
+            document.getElementById('startDateError').textContent = '';
+            document.getElementById('endDateError').textContent = '';
+
+            let isValid = true;
+
+            if (filter === 'custom') {
+                if (!startDate || !endDate) {
+                    if (!startDate) {
+                        document.getElementById('startDateError').textContent = 'Start date is required.';
+                    }
+                    if (!endDate) {
+                        document.getElementById('endDateError').textContent = 'End date is required.';
+                    }
+                    isValid = false;
+                }
+
+                if (startDate > today) {
+                    document.getElementById('startDateError').textContent = 'Start date cannot be in the future.';
+                    isValid = false;
+                }
+
+                if (endDate > today) {
+                    document.getElementById('endDateError').textContent = 'End date cannot be in the future.';
+                    isValid = false;
+                }
+
+                if (startDate > endDate) {
+                    document.getElementById('endDateError').textContent = 'End date cannot be before the start date.';
+                    isValid = false;
+                }
             }
 
-            const categoryPieChartCtx = document.getElementById('categoryPieChart').getContext('2d');
-            const categorySalesData = <% - JSON.stringify(categorySalesData) %>;
-
-            if (categorySalesData && categorySalesData.length > 0) {
-                new Chart(categoryPieChartCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: categorySalesData.map(data => data.category),
-                        datasets: [{
-                            data: categorySalesData.map(data => data.totalSales),
-                            backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)',
-                                'rgb(75, 192, 192)',
-                                'rgb(153, 102, 255)',
-                                'rgb(255, 159, 64)'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Category Sales Distribution'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed !== null) {
-                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR' }).format(context.parsed);
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                categoryPieChartCtx.font = '20px Arial';
-                categoryPieChartCtx.fillText('No data available for the selected period', 10, 50);
+            if (isValid) {
+                this.submit();
             }
-
-            document.getElementById('chartFilter').addEventListener('change', function () {
-                const customDateRange = document.getElementById('customDateRange');
-                if (this.value === 'custom') {
-                    customDateRange.style.display = 'block';
-                } else {
-                    customDateRange.style.display = 'none';
-                    document.getElementById('filterForm').submit();
-                }
-            });
-
-            document.getElementById('filterForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const filter = document.getElementById('chartFilter').value;
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-                const today = new Date().toISOString().split('T')[0];
-
-                document.getElementById('startDateError').textContent = '';
-                document.getElementById('endDateError').textContent = '';
-
-                let isValid = true;
-
-                if (filter === 'custom') {
-                    if (!startDate || !endDate) {
-                        if (!startDate) {
-                            document.getElementById('startDateError').textContent = 'Start date is required.';
-                        }
-                        if (!endDate) {
-                            document.getElementById('endDateError').textContent = 'End date is required.';
-                        }
-                        isValid = false;
-                    }
-
-                    if (startDate > today) {
-                        document.getElementById('startDateError').textContent = 'Start date cannot be in the future.';
-                        isValid = false;
-                    }
-
-                    if (endDate > today) {
-                        document.getElementById('endDateError').textContent = 'End date cannot be in the future.';
-                        isValid = false;
-                    }
-
-                    if (startDate > endDate) {
-                        document.getElementById('endDateError').textContent = 'End date cannot be before the start date.';
-                        isValid = false;
-                    }
-                }
-
-                if (isValid) {
-                    this.submit();
-                }
-            });
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 
     <%- include("../../views/partials/admin/footer") %>
