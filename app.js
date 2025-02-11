@@ -70,6 +70,13 @@ app.use("/", userRouter);
 app.use('/admin',adminRouter);
 
 
+app.use((req, res) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    res.redirect("/pageNotFound");
+});
+
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, (err) => {

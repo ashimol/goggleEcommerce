@@ -453,7 +453,14 @@ const productDetails = async (req, res) => {
             userId = req.session.user;
           }
 
-          console.log('user id :',userId);
+
+         
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+           
+            return res.redirect("/pageNotFound");
+        }
+
           
         const products = await Product.findById(productId).populate('category').populate('brand').lean().exec();
 
