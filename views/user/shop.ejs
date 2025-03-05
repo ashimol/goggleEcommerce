@@ -247,7 +247,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 																			</span>
 																		</p>
 																		<label>
-																			<%= product.status === 'Out of Stock' ? 'Out of Stock' : ' Items in Stock' %>
+																			<%= product.status === 'Out of stock' ? 'Out of stock' : ' Items in Stock' %>
 																		</label>
 																		</a>
 																		
@@ -475,15 +475,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     credentials: 'include'
 })
 .then(response => {
-    // Always parse the JSON response
+    
     return response.json().then(data => ({
-        ok: response.ok, // Pass the response status
+        ok: response.ok, 
         data
     }));
 })
 .then(({ ok, data }) => {
     if (!ok) {
-        throw data; // This will trigger the catch block for non-2xx statuses
+        throw data;
     }
 
     if (data.message === 'Item already in cart') {

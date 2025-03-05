@@ -497,7 +497,7 @@ const addProductOffer = async (req, res) => {
         const { productId, percentage } = req.body;
         const product = await Product.findOne({ _id: productId });
 
-        if (!product) {
+        if (product === 'false') {
             return res.json({ status: false, message: 'Product not found' });
         }
 
