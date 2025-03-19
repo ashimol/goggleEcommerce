@@ -71,7 +71,7 @@
                     
                         
                     <div class="status-update">
-                        <% if (currentItem.itemOrderStatus !== 'Cancelled') { %>
+                        <% if (currentItem.itemOrderStatus !== 'Cancelled'  || currentItem.itemOrderStatus !== 'Pending') { %>
                             <form action="/admin/updateItemStatus" method="POST">
                                 <input type="hidden" name="orderId" value="<%= order.orderId %>">
                                 <input type="hidden" name="itemId" value="<%= currentItem._id %>">
