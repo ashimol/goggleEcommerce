@@ -764,7 +764,7 @@ const downloadInvoice = async (req, res, next) => {
     });
     doc.text(`${order.userId.name}`, leftColumnX, shippingAddressStartY + 20);
     doc.text(
-      `${order.addressId.house}, ${order.addressId.place}`,
+      `${order.addressId.house},`,
       leftColumnX,
       shippingAddressStartY + 40
     );
